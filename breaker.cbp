@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Breaker" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="default">
+				<Option output="build/Breaker" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="build" />
+				<Option object_output="output" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+			</Target>
+		</Build>
+		<Linker>
+			<Add library="alpng" />
+			<Add library="alleg" />
+			<Add library="fmod" />
+		</Linker>
+		<Unit filename="block.cpp" />
+		<Unit filename="block.h" />
+		<Unit filename="button.cpp" />
+		<Unit filename="button.h" />
+		<Unit filename="globals.cpp" />
+		<Unit filename="globals.h" />
+		<Unit filename="main.cpp" />
+		<Unit filename="particle.cpp" />
+		<Unit filename="particle.h" />
+		<Unit filename="resources.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

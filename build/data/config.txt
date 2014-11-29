@@ -1,0 +1,6 @@
+sound: true
+maxFPS: 200
+mouseSpeedX: 0 
+mouseSpeedY: 0 
+fullscreen: false
+showFPS: false
