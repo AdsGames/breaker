@@ -12,6 +12,11 @@
 				<Option object_output="output" />
 				<Option type="0" />
 				<Option compiler="gcc" />
+				<Linker>
+					<Add option="-lalpng" />
+					<Add option="-lalleg" />
+					<Add option="-lfmod" />
+				</Linker>
 			</Target>
 		</Build>
 		<Linker>
