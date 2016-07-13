@@ -1,6 +1,6 @@
 sound: true
 maxFPS: 200
-mouseSpeedX: 0 
-mouseSpeedY: 0 
+screen_width: 1280
+screen_height: 960
 fullscreen: false
 showFPS: false
