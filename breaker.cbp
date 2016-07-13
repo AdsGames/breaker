@@ -12,6 +12,10 @@
 				<Option object_output="output" />
 				<Option type="0" />
 				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add directory="include" />
+				</Compiler>
 				<Linker>
 					<Add option="-lalpng" />
 					<Add option="-lalleg" />
@@ -24,18 +28,18 @@
 			<Add library="alleg" />
 			<Add library="fmod" />
 		</Linker>
-		<Unit filename="block.cpp" />
-		<Unit filename="block.h" />
-		<Unit filename="button.cpp" />
-		<Unit filename="button.h" />
-		<Unit filename="globals.cpp" />
-		<Unit filename="globals.h" />
-		<Unit filename="main.cpp" />
-		<Unit filename="particle.cpp" />
-		<Unit filename="particle.h" />
-		<Unit filename="resources.rc">
+		<Unit filename="include/block.h" />
+		<Unit filename="include/button.h" />
+		<Unit filename="include/globals.h" />
+		<Unit filename="include/particle.h" />
+		<Unit filename="res/resources.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
+		<Unit filename="src/block.cpp" />
+		<Unit filename="src/button.cpp" />
+		<Unit filename="src/globals.cpp" />
+		<Unit filename="src/main.cpp" />
+		<Unit filename="src/particle.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
