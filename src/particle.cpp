@@ -39,16 +39,6 @@ particle::~particle(){
 void particle::logic(){
   x += random( xMin, xMax);
   y += random( yMin, yMax);
-
-  // Keep in bounds of screen
-  if(x < 0)
-    x = 0;
-  if(x > SCREEN_W)
-    x = SCREEN_W;
-  if(y < 0)
-    y = 0;
-  if(y > SCREEN_H)
-    y = SCREEN_H;
 }
 
 // Draw

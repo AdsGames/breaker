@@ -1,15 +1,15 @@
 #include <allegro.h>
 #include <alpng.h>
-#include <fmod/fmod.h>
-#include <fmod/fmod_errors.h>
 #include <sstream>
 #include <fstream>
 #include <time.h>
+#include <logg.h>
 
 #include "globals.h"
 #include "block.h"
 #include "button.h"
 #include "particle.h"
+#include "mouseListener.h"
 
 // Close button handling
 volatile int close_button_pressed = FALSE;
@@ -45,10 +45,13 @@ BITMAP* title;
 // Sounds
 SAMPLE* block_break;
 SAMPLE* click;
-FSOUND_STREAM* music;
+SAMPLE *music;
 
 // Fonts
 FONT *f1, *f2, *f3, *f4, *f5;
+
+// Mouse listener
+mouseListener m_listener;
 
 // Variables
 int done;
@@ -235,8 +238,6 @@ void setup(bool first){
 
     // Init sound
     if(sound){
-      // Fmod
-      FSOUND_Init ( 44100, 32, 0);
       // Allegro
       install_sound( DIGI_AUTODETECT,MIDI_AUTODETECT,".");
     }
@@ -317,7 +318,7 @@ void setup(bool first){
     // Sets Sounds
     block_break = load_sample( "sounds/break.wav" );
     click = load_sample( "sounds/click.wav" );
-    music = FSOUND_Stream_Open( "sounds/music.ogg", 2, 0, 0);
+    music = logg_load( "sounds/music.ogg");
 
     // Sets menu
     menu = load_bitmap( "images/menu.png", NULL);
@@ -348,7 +349,7 @@ void setup(bool first){
     destroy_font(f5);
 
     // Background Music
-    FSOUND_Stream_Play( 0, music);
+    play_sample( music, 255, 128, 1000, 1);
 
     // Load scores
     updateScores();
@@ -357,8 +358,6 @@ void setup(bool first){
 
   // Sets Variables
   gameScreen = 0;
-  mouse_b = false;
-  mousedown = false;
   helpOn = false;
   viewScores = false;
   score = 0;
@@ -366,7 +365,7 @@ void setup(bool first){
 
   // Resets Timers
   startTime = clock();
-  currentTime = clock();
+    currentTime = clock();
 
   // Sets block info
   for(int i = 0; i < 14; i++){
@@ -378,7 +377,6 @@ void setup(bool first){
       MyBlocks[i][t].SetY( t * 80 + 80);
     }
   }
-
 }
 
 // Does all game loops
@@ -402,7 +400,7 @@ void game(){
   // Menu
   else if( gameScreen == 1){
     // Checks for mouse press
-    if( mouse_b & 1){
+    if( mouseListener::buttonPressed[1] || keypressed()){
       if( start_game.CheckHover()){
         highcolor_fade_out(16);
         gameScreen = 2;
@@ -430,23 +428,18 @@ void game(){
       else if(quit.CheckHover()){
         closeGame = true;
       }
-    }
 
-    // Help if necessary
-    if(helpOn){
-      if(mouse_b || keypressed()){
+      // Help if necessary
+      else if( helpOn){
         highcolor_fade_out(16);
         helpOn = false;
         draw(false);
-        draw(false);
         highcolor_fade_in( buffer, 16);
       }
-    }
 
-    // Scores if necessary
-    if(viewScores){
-      updateScores();
-      if( mouse_b || keypressed()){
+      // Scores if necessary
+      else if(viewScores){
+        updateScores();
         highcolor_fade_out(16);
         viewScores = false;
         draw(false);
@@ -458,7 +451,7 @@ void game(){
   // Difficulty Select
   else if( gameScreen == 2){
     // Press buttons
-    if( mouse_b & 1){
+    if( mouseListener::buttonPressed[1] || keypressed()){
       if( start_easy.CheckHover()){
         highcolor_fade_out(16);
         difficulty = 3;
@@ -545,7 +538,7 @@ void game(){
     }
 
     // Finish Game
-    if( mouse_b & 1){
+    if( mouseListener::buttonPressed[1]){
       // Back button
       if( mouse_y < 60 && mouse_y > 10 && mouse_x < 780 && mouse_x > 500){
         gameScreen = 5;
@@ -659,17 +652,12 @@ void game(){
           gameScreen = 5;
       }
     }
-
-    // Resets Mousdown
-    if( !mouse_b && !key[KEY_SPACE]){
-      mousedown = false;
-    }
   }
 
   // Win screen
   else if( gameScreen == 4){
     // Checks for button press
-    if( mouse_b & 1){
+    if( mouseListener::buttonPressed[1]){
       if( mouse_x < 520 && mouse_x > 340 && mouse_y < 580 && mouse_y > 510){
         highcolor_fade_out(16);
         addScore(edittext);
@@ -678,7 +666,7 @@ void game(){
         draw( false);
         highcolor_fade_in(buffer,16);
       }
-      else if(mouse_x < 940 && mouse_x > 760 && mouse_y < 580 && mouse_y > 510){
+      else if( mouse_x < 940 && mouse_x > 760 && mouse_y < 580 && mouse_y > 510){
         highcolor_fade_out(16);
         addScore(edittext);
         setup(false);
@@ -736,7 +724,7 @@ void game(){
   // Lose Screen
   if( gameScreen == 5){
     // Checks for button press
-    if( mouse_b & 1){
+    if( mouseListener::buttonPressed[1]){
       if( mouse_x < 520 && mouse_x > 340 && mouse_y < 580 && mouse_y > 510){
         highcolor_fade_out(16);
         addScore(edittext);
@@ -804,6 +792,9 @@ void game(){
   if( key[KEY_ESC]){
     closeGame = true;
   }
+
+  // Update mouse listener
+  m_listener.update();
 
   // Counter for FPS
   frames_done++;

@@ -6,13 +6,19 @@
 
 Allan Legemaate, Allan Daniel Software
 -----------------------
-Adsgames 2012
+Adsgames 2012-2017
 Changelog:
 -----------------------
+
+Version 1.2.6
+--------------
+*Now uses libogg, libvobis and liblogg for music
 
 Version 1.2.5
 --------------
 *Cleaned up code
+*Smaller highscores table
+*Change resolution in data/config.dat
 
 Version 1.2.4
 --------------

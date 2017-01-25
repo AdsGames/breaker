@@ -17,20 +17,19 @@
 					<Add directory="include" />
 				</Compiler>
 				<Linker>
+					<Add option="-llogg" />
+					<Add option="-lvorbisfile" />
+					<Add option="-lvorbis" />
+					<Add option="-logg" />
 					<Add option="-lalpng" />
 					<Add option="-lalleg" />
-					<Add option="-lfmod" />
 				</Linker>
 			</Target>
 		</Build>
-		<Linker>
-			<Add library="alpng" />
-			<Add library="alleg" />
-			<Add library="fmod" />
-		</Linker>
 		<Unit filename="include/block.h" />
 		<Unit filename="include/button.h" />
 		<Unit filename="include/globals.h" />
+		<Unit filename="include/mouseListener.h" />
 		<Unit filename="include/particle.h" />
 		<Unit filename="res/resources.rc">
 			<Option compilerVar="WINDRES" />
@@ -39,6 +38,7 @@
 		<Unit filename="src/button.cpp" />
 		<Unit filename="src/globals.cpp" />
 		<Unit filename="src/main.cpp" />
+		<Unit filename="src/mouseListener.cpp" />
 		<Unit filename="src/particle.cpp" />
 		<Extensions>
 			<code_completion />
