@@ -45,3 +45,4 @@ Temporary Items
 *.depend
 build/Breaker.exe
 *.o
+*.res
