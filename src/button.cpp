@@ -9,7 +9,7 @@ Button::~Button(){
 }
 
 // Load images from file
-void Button::SetImages( char image1[], char image2[]){
+void Button::SetImages( const char *image1, const char *image2){
   images[0] = load_bitmap(image1, NULL);
   images[1] = load_bitmap(image2, NULL);
 }

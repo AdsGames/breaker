@@ -11,9 +11,9 @@ Block::~Block(){
 }
 
 // Load images from file
-void Block::SetImages( char image1[], char image2[]){
-  images[0] = load_bitmap(image1, NULL);
-  images[1] = load_bitmap(image2, NULL);
+void Block::SetImages( const char *image1, const char *image2){
+  images[0] = load_bitmap( image1, NULL);
+  images[1] = load_bitmap( image2, NULL);
 }
 
 // Do logic of block

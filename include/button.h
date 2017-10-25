@@ -16,7 +16,7 @@ public:
   ~Button();
 
   // Load images from file
-  void SetImages( char image1[], char image2[]);
+  void SetImages( const char *image1, const char *image2);
 
   // Draw the button
   void draw(BITMAP* tempBitmap);
