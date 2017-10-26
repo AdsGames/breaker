@@ -5,21 +5,25 @@
 
 #include <fstream>
 #include <iostream>
+#include <string>
+#include <stdlib.h>
+
+#include "convert.h"
 
 class scoreTable{
   public:
     scoreTable();
-    scoreTable(const char *filePath);
+    scoreTable( const char *filePath);
     virtual ~scoreTable() {};
 
     bool load();
-    void addScore(std::string name, int score);
+    void addScore( std::string name, int score);
 
-    const char* scoreAt( int index);
-    const char* nameAt( int index);
+    std::string scoreAt( int index);
+    std::string nameAt( int index);
 
   private:
-    const char *scores[TABLE_SIZE][2];
+    std::string scores[TABLE_SIZE][2];
     const char *filePath;
 };
 

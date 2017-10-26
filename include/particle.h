@@ -12,6 +12,8 @@
 #define CIRCLE 2
 #define RANDOM 3
 
+#include <allegro.h>
+
 #include "globals.h"
 
 class particle{

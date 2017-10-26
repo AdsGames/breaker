@@ -18,6 +18,7 @@ Version 1.2.7
 *Buttons hovered do not press when keypressed
 *No transitions (they were so slow)
 *GUI changes
+*Mouse properly aligned with buttons
 
 Version 1.2.6
 --------------

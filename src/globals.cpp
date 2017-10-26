@@ -18,17 +18,3 @@ bool collision(float xMin1, float xMax1, float xMin2, float xMax2, float yMin1, 
   }
   return false;
 }
-
-// Convert int to string
-std::string intToString(int number){
-  std::stringstream ss;
-  ss << number;
-  return ss.str();
-}
-
-// Convert string to int
-int stringToInt(std::string newString){
-  int result;
-  std::stringstream(newString) >> result;
-  return result;
-}

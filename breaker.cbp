@@ -10,8 +10,9 @@
 				<Option output="build/Breaker" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="build" />
 				<Option object_output="output" />
-				<Option type="0" />
+				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
 				<Compiler>
 					<Add option="-Wall" />
 					<Add directory="include" />
@@ -31,6 +32,7 @@
 		<Unit filename="include/globals.h" />
 		<Unit filename="include/mouseListener.h" />
 		<Unit filename="include/particle.h" />
+		<Unit filename="include/scoreTable.h" />
 		<Unit filename="res/resources.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
@@ -40,6 +42,7 @@
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/mouseListener.cpp" />
 		<Unit filename="src/particle.cpp" />
+		<Unit filename="src/scoreTable.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

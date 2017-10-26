@@ -10,6 +10,7 @@
 #include "particle.h"
 #include "mouseListener.h"
 #include "scoreTable.h"
+#include "convert.h"
 
 // Init the blocks on screen
 Block MyBlocks[14][9];
@@ -146,17 +147,17 @@ void setup(bool first){
     read >> config;
     if( config == "maxFPS:"){
       read >> config;
-      maxFPS = stringToInt(config);
+      maxFPS = convert::stringToInt(config);
     }
     read >> config;
     if( config == "screen_width:"){
       read >> config;
-      screen_width = stringToInt(config);
+      screen_width = convert::stringToInt(config);
     }
     read >> config;
     if( config == "screen_height:"){
       read >> config;
-      screen_height = stringToInt(config);
+      screen_height = convert::stringToInt(config);
     }
     read >> config;
     if( config == "fullscreen:"){
@@ -706,13 +707,13 @@ void draw( bool toScreen){
       set_alpha_blender();
       draw_trans_sprite(buffer, highScoresTable, 0, 0);
       for(int i = 0; i < 10; i++){
-        textout_ex(buffer, font, highscores.nameAt(i), 400, (i * 50) + 260, makecol(0,0,0), -1);
-        textout_right_ex(buffer, font, highscores.scoreAt(i), 860, (i * 50) + 260, makecol(0,0,0), -1);
+        textout_ex(buffer, font, highscores.nameAt(i).c_str(), 400, (i * 50) + 260, makecol(0,0,0), -1);
+        textout_right_ex(buffer, font, highscores.scoreAt(i).c_str(), 860, (i * 50) + 260, makecol(0,0,0), -1);
       }
     }
 
     // Draws Cursor
-    draw_sprite( buffer, cursor[(mouse_b & 1)], mouse_x - 20, mouse_y - 20);
+    draw_sprite( buffer, cursor[(mouse_b & 1)], mouse_x, mouse_y);
   }
 
   // Difficulty Select
@@ -727,7 +728,7 @@ void draw( bool toScreen){
     back.draw(buffer);
 
     // Draws Cursor
-    draw_sprite( buffer, cursor[(mouse_b & 1)], mouse_x - 20, mouse_y - 20);
+    draw_sprite( buffer, cursor[(mouse_b & 1)], mouse_x, mouse_y);
   }
 
   // Game
@@ -754,7 +755,7 @@ void draw( bool toScreen){
     textprintf_ex( buffer, font, 40, 0, makecol(0,0,0), -1, "Time: %i", elaspedTime);
 
     // Draws Cursor
-    draw_sprite( buffer, cursor[(mouse_b & 1)], mouse_x - 20, mouse_y - 20);
+    draw_sprite( buffer, cursor[(mouse_b & 1)], mouse_x, mouse_y);
   }
 
   // Win screen
@@ -787,7 +788,7 @@ void draw( bool toScreen){
     vline(buffer, text_length(font, edittext.c_str()) + 494, 412, 448, makecol(0,0,0));
 
     // Draws Cursor
-    draw_sprite( buffer, cursor[(mouse_b & 1)], mouse_x - 20, mouse_y - 20);
+    draw_sprite( buffer, cursor[(mouse_b & 1)], mouse_x, mouse_y);
   }
 
   // Lose Screen
@@ -820,7 +821,7 @@ void draw( bool toScreen){
     vline( buffer, text_length( font, edittext.c_str()) + 494, 412, 448, makecol(0,0,0));
 
     // Draws Cursor
-    draw_sprite( buffer, cursor[(mouse_b & 1)], mouse_x - 20, mouse_y - 20);
+    draw_sprite( buffer, cursor[(mouse_b & 1)], mouse_x, mouse_y);
   }
 
   // FPS counter
