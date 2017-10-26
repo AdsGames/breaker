@@ -1,6 +1,5 @@
 #include <allegro.h>
 #include <alpng.h>
-#include <sstream>
 #include <fstream>
 #include <time.h>
 #include <logg.h>
@@ -10,12 +9,13 @@
 #include "button.h"
 #include "particle.h"
 #include "mouseListener.h"
-
-// Close button handling
-volatile int close_button_pressed = FALSE;
+#include "scoreTable.h"
 
 // Init the blocks on screen
 Block MyBlocks[14][9];
+
+// Score table
+scoreTable highscores;
 
 // Init buttons
 Button start_game;
@@ -43,8 +43,8 @@ BITMAP* highScoresTable;
 BITMAP* title;
 
 // Sounds
-SAMPLE* block_break;
-SAMPLE* click;
+SAMPLE *block_break;
+SAMPLE *click;
 SAMPLE *music;
 
 // Fonts
@@ -62,12 +62,9 @@ int gameScreen;
 int score;
 int startAnimate;
 
-std::string scores[10][2];
-
-bool mousedown;
 bool helpOn;
 bool viewScores;
-bool closeGame;
+bool close_game;
 
 // Config file
 bool showFPS;
@@ -103,82 +100,25 @@ void game_time_ticker(){
 END_OF_FUNCTION(ticker)
 
 void close_button_handler(void){
-  close_button_pressed = TRUE;
+  close_game = TRUE;
 }
 END_OF_FUNCTION(close_button_handler)
-
-// Convert int to string
-std::string convertInt(int number){
-  std::stringstream ss;
-  ss << number;
-  return ss.str();
-}
-
-// Convert bool to string
-std::string convertBool(bool boolean){
-  std::stringstream ss;
-  ss << boolean;
-  return ss.str();
-}
-
-// Convert string to int
-int convertString(std::string newString){
-  int result;
-  std::stringstream(newString) >> result;
-  return result;
-}
-
-// Read High Scores
-void updateScores(){
-  std::ifstream read("data/scores.dat");
-
-  for (int i = 0; i < 10; i++){
-    for( int t = 0; t < 2; t++){
-      read >> scores[i][t];
-    }
-  }
-  read.close();
-}
-
-// Add score
-void addScore(std::string name){
-  // Update table
-  updateScores();
-
-  // Prevent crashing
-  if(name == ""){
-    name = "Player";
-  }
-
-  // Update List
-  for (int i = 0; i < 10; i++){
-    if(score > atoi(scores[i][1].c_str())){
-      for (int t = 9; t > i; t--){
-        scores[t][1] = scores[t - 1][1];
-        scores[t][0] = scores[t - 1][0];
-      }
-      scores[i][1] = convertInt(score);
-      scores[i][0] = name;
-      break;
-    }
-  }
-
-  // Save Scores
-  std::ofstream saveFile;
-  saveFile.open("data/scores.dat");
-
-  for (int i = 0; i < 10; i++){
-    for( int t = 0; t < 2; t++){
-      saveFile<<scores[i][t]<<" ";
-    }
-  }
-  saveFile.close();
-}
 
 // Sets up game
 void setup(bool first){
   // Runs only for full setup
   if(first){
+    // Initializing
+    allegro_init();
+    alpng_init();
+    install_keyboard();
+    install_timer();
+    install_mouse();
+
+    set_color_depth(32);
+
+    set_window_title("Breaker");
+
     // Difficulty
     difficulty = 1;
 
@@ -206,17 +146,17 @@ void setup(bool first){
     read >> config;
     if( config == "maxFPS:"){
       read >> config;
-      maxFPS = convertString(config);
+      maxFPS = stringToInt(config);
     }
     read >> config;
     if( config == "screen_width:"){
       read >> config;
-      screen_width = convertString(config);
+      screen_width = stringToInt(config);
     }
     read >> config;
     if( config == "screen_height:"){
       read >> config;
-      screen_height = convertString(config);
+      screen_height = stringToInt(config);
     }
     read >> config;
     if( config == "fullscreen:"){
@@ -237,10 +177,8 @@ void setup(bool first){
     read.close();
 
     // Init sound
-    if(sound){
-      // Allegro
+    if(sound)
       install_sound( DIGI_AUTODETECT,MIDI_AUTODETECT,".");
-    }
 
     // Set max FPS
     updates_per_second = maxFPS;
@@ -348,13 +286,13 @@ void setup(bool first){
     destroy_font(f4);
     destroy_font(f5);
 
+    // Give score files
+    highscores = scoreTable( "data/scores.dat");
+    highscores.load();
+
     // Background Music
     play_sample( music, 255, 128, 1000, 1);
-
-    // Load scores
-    updateScores();
   }
-
 
   // Sets Variables
   gameScreen = 0;
@@ -365,16 +303,16 @@ void setup(bool first){
 
   // Resets Timers
   startTime = clock();
-    currentTime = clock();
+  currentTime = clock();
 
   // Sets block info
   for(int i = 0; i < 14; i++){
     for(int t = 0; t < 9; t++){
-      MyBlocks[i][t].SetType( random(0, difficulty));
-      MyBlocks[i][t].Change();
-      MyBlocks[i][t].SetSelected(false);
-      MyBlocks[i][t].SetX( i * 80 + 80);
-      MyBlocks[i][t].SetY( t * 80 + 80);
+      MyBlocks[i][t].setType( random(0, difficulty));
+      MyBlocks[i][t].change();
+      MyBlocks[i][t].setSelected(false);
+      MyBlocks[i][t].setX( i * 80 + 80);
+      MyBlocks[i][t].setY( t * 80 + 80);
     }
   }
 }
@@ -384,66 +322,38 @@ void game(){
   // Title
   if( gameScreen == 0){
     // Shows logo
-    /*highcolor_fade_in( intro, 16);
-    rest(2000);
-    highcolor_fade_out(16);
+    //rest(2000);
 
     // Shows title
-    highcolor_fade_in( title, 16);
-    readkey();
-    highcolor_fade_out(16);*/
+    //readkey();
+
     gameScreen = 1;
-    draw(false);
-    // highcolor_fade_in( buffer, 16);
   }
 
   // Menu
   else if( gameScreen == 1){
     // Checks for mouse press
-    if( mouseListener::buttonPressed[1] || keypressed()){
-      if( start_game.CheckHover()){
-        highcolor_fade_out(16);
-        gameScreen = 2;
-        draw(false);
-        highcolor_fade_in( buffer, 16);
-      }
-      else if( viewHighScores.CheckHover()){
-        if( !viewScores && !helpOn){
-          highcolor_fade_out(16);
-          clear_keybuf();
-          viewScores = true;
-          draw(false);
-          highcolor_fade_in( buffer, 16);
-        }
-      }
-      else if( help.CheckHover()){
-        if( !helpOn && !viewScores){
-          highcolor_fade_out(16);
-          clear_keybuf();
-          helpOn = true;
-          draw(false);
-          highcolor_fade_in( buffer, 16);
-        }
-      }
-      else if(quit.CheckHover()){
-        closeGame = true;
-      }
-
+    if( mouseListener::mouse_pressed & 1){
       // Help if necessary
-      else if( helpOn){
-        highcolor_fade_out(16);
+      if( helpOn){
         helpOn = false;
-        draw(false);
-        highcolor_fade_in( buffer, 16);
       }
-
       // Scores if necessary
       else if(viewScores){
-        updateScores();
-        highcolor_fade_out(16);
+        highscores.load();
         viewScores = false;
-        draw(false);
-        highcolor_fade_in( buffer, 16);
+      }
+      else if( start_game.Hover()){
+        gameScreen = 2;
+      }
+      else if( viewHighScores.Hover()){
+        viewScores = true;
+      }
+      else if( help.Hover()){
+        helpOn = true;
+      }
+      else if( quit.Hover()){
+        close_game = true;
       }
     }
   }
@@ -451,37 +361,24 @@ void game(){
   // Difficulty Select
   else if( gameScreen == 2){
     // Press buttons
-    if( mouseListener::buttonPressed[1] || keypressed()){
-      if( start_easy.CheckHover()){
-        highcolor_fade_out(16);
+    if( mouseListener::mouse_pressed & 1){
+      if( start_easy.Hover()){
         difficulty = 3;
         setup(false);
         gameScreen = 3;
-        draw(false);
-        highcolor_fade_in( buffer, 16);
       }
-      else if( start_medium.CheckHover()){
-        highcolor_fade_out(16);
+      else if( start_medium.Hover()){
         difficulty = 4;
         setup(false);
         gameScreen = 3;
-        draw(false);
-        highcolor_fade_in( buffer, 16);
       }
-      else if( start_hard.CheckHover()){
-        highcolor_fade_out(16);
+      else if( start_hard.Hover()){
         difficulty = 5;
         setup(false);
         gameScreen = 3;
-        draw(false);
-        highcolor_fade_in( buffer, 16);
       }
-      else if( back.CheckHover()){
-        highcolor_fade_out(16);
+      else if( back.Hover())
         gameScreen = 1;
-        draw(false);
-        highcolor_fade_in( buffer, 16);
-      }
     }
   }
 
@@ -504,14 +401,14 @@ void game(){
     for( int i = 0; i < 14; i++){
       for( int t = 0; t < 9; t++){
         // Blocks Remaining
-        if( MyBlocks[i][t].GetType() != 6)
+        if( MyBlocks[i][t].getType() != 6)
           blocks_left ++;
 
         // Logic
         MyBlocks[i][t].logic();
 
         // Groups Same Blocks
-        if( MyBlocks[i][t].GetSelected()){
+        if( MyBlocks[i][t].getSelected()){
           int offset_x, offset_y;
           for( int k = 0; k < 4; k ++){
             //1, 0, -1, 0
@@ -519,26 +416,26 @@ void game(){
             //0, +1, 0, -1
             offset_y = sin((k * M_PI_2) + M_PI_2);
 
-            if( i + offset_x < 14 && i + offset_x >= 0 && t + offset_y < 9 && t + offset_y >= 0 && MyBlocks[i + offset_x][t + offset_y].GetType() == MyBlocks[i][t].GetType()){
-              MyBlocks[i + offset_x][t + offset_y].SetSelected(true);
+            if( i + offset_x < 14 && i + offset_x >= 0 && t + offset_y < 9 && t + offset_y >= 0 && MyBlocks[i + offset_x][t + offset_y].getType() == MyBlocks[i][t].getType()){
+              MyBlocks[i + offset_x][t + offset_y].setSelected(true);
             }
           }
         }
 
         // Blocks fall
-        if( MyBlocks[i][t].GetType() != 6 && MyBlocks[i][t+1].GetType() == 6 && t < 8){
-          MyBlocks[i][t+1].SetType( MyBlocks[i][t].GetType());
-          MyBlocks[i][t].SetType(6);
-          MyBlocks[i][t].Change();
-          MyBlocks[i][t+1].Change();
-          MyBlocks[i][t].SetSelected(false);
-          MyBlocks[i][t+1].SetSelected(false);
+        if( MyBlocks[i][t].getType() != 6 && MyBlocks[i][t+1].getType() == 6 && t < 8){
+          MyBlocks[i][t+1].setType( MyBlocks[i][t].getType());
+          MyBlocks[i][t].setType(6);
+          MyBlocks[i][t].change();
+          MyBlocks[i][t+1].change();
+          MyBlocks[i][t].setSelected(false);
+          MyBlocks[i][t+1].setSelected(false);
         }
       }
     }
 
     // Finish Game
-    if( mouseListener::buttonPressed[1]){
+    if( mouseListener::mouse_pressed & 1){
       // Back button
       if( mouse_y < 60 && mouse_y > 10 && mouse_x < 780 && mouse_x > 500){
         gameScreen = 5;
@@ -554,30 +451,28 @@ void game(){
       // Update selections
       for(int i = 0; i < 14; i++){
         for(int t = 0; t < 9; t++){
-          if( MyBlocks[i][t].GetX() == (mouse_x/80)*80 && MyBlocks[i][t].GetY() == (mouse_y/80)*80){
-            if( !mousedown && !MyBlocks[i][t].GetSelected() && MyBlocks[i][t].GetType() != 6){
+          if( MyBlocks[i][t].getX() == (mouse_x/80)*80 && MyBlocks[i][t].getY() == (mouse_y/80)*80){
+            if( !MyBlocks[i][t].getSelected() && MyBlocks[i][t].getType() != 6){
               for(int j = 0; j < 14; j++){
                 for(int k = 0; k < 9; k++){
-                  MyBlocks[j][k].SetSelected(false);
+                  MyBlocks[j][k].setSelected(false);
                 }
               }
-              MyBlocks[i][t].SetSelected(true);
-              mousedown = true;
+              MyBlocks[i][t].setSelected(true);
             }
-            if( !mousedown && MyBlocks[i][t].GetSelected()){
-              if( MyBlocks[i+1][t].GetSelected() || MyBlocks[i-1][t].GetSelected() || MyBlocks[i][t+1].GetSelected() || MyBlocks[i][t-1].GetSelected()){
+            if( MyBlocks[i][t].getSelected()){
+              if( MyBlocks[i+1][t].getSelected() || MyBlocks[i-1][t].getSelected() || MyBlocks[i][t+1].getSelected() || MyBlocks[i][t-1].getSelected()){
                 for(int i = 0; i < 14; i++){
                   for(int t = 0; t < 9; t++){
-                    if(MyBlocks[i][t].GetSelected()){
-                      MyBlocks[i][t].SetSelected(false);
+                    if(MyBlocks[i][t].getSelected()){
+                      MyBlocks[i][t].setSelected(false);
                       MyBlocks[i][t].explode();
-                      MyBlocks[i][t].SetType(6);
-                      MyBlocks[i][t].Change();
-                      play_sample(block_break,255,100,random(400, 2000),0);
+                      MyBlocks[i][t].setType(6);
+                      MyBlocks[i][t].change();
+                      play_sample( block_break, 255, 100, random(400, 2000), 0);
                     }
                   }
                 }
-                mousedown = true;
               }
             }
           }
@@ -587,10 +482,10 @@ void game(){
 
     // Checks for spaces and removes them
     for(int i = 0; i < 13; i++){
-      if( MyBlocks[i][8].GetType() == 6){
+      if( MyBlocks[i][8].getType() == 6){
         int spaces;
         for( int b = 8; b > 0; b--){
-          if(MyBlocks[i][b].GetType() == 6 && MyBlocks[i+1][8].GetType() != 6){
+          if( MyBlocks[i][b].getType() == 6 && MyBlocks[i+1][8].getType() != 6){
             spaces++;
           }
           else{
@@ -599,11 +494,11 @@ void game(){
         }
         if(spaces > 8){
           for(int a = 0; a < 9; a++){
-            MyBlocks[i][a].SetType(MyBlocks[i+1][a].GetType());
-            MyBlocks[i+1][a].SetType(6);
-            MyBlocks[i][a].Change();
-            MyBlocks[i+1][a].Change();
-            play_sample(click,255,155,random(400, 1000),0);
+            MyBlocks[i][a].setType(MyBlocks[i+1][a].getType());
+            MyBlocks[i+1][a].setType(6);
+            MyBlocks[i][a].change();
+            MyBlocks[i+1][a].change();
+            play_sample( click, 255, 155, random(400, 1000), 0);
           }
         }
       }
@@ -613,11 +508,11 @@ void game(){
     int matchesLeft = 0;
     for(int i = 0; i < 14; i++){
       for(int t = 0; t < 9; t++){
-        if(MyBlocks[i][t].GetType() != 6){
-          if((MyBlocks[i][t].GetType() == MyBlocks[i+1][t].GetType() && i < 13) ||
-             (MyBlocks[i][t].GetType() == MyBlocks[i-1][t].GetType() && i > 0 ) ||
-             (MyBlocks[i][t].GetType() == MyBlocks[i][t+1].GetType() && t < 8 ) ||
-             (MyBlocks[i][t].GetType() == MyBlocks[i][t-1].GetType() && t > 0 )){
+        if(MyBlocks[i][t].getType() != 6){
+          if((MyBlocks[i][t].getType() == MyBlocks[i+1][t].getType() && i < 13) ||
+             (MyBlocks[i][t].getType() == MyBlocks[i-1][t].getType() && i > 0 ) ||
+             (MyBlocks[i][t].getType() == MyBlocks[i][t+1].getType() && t < 8 ) ||
+             (MyBlocks[i][t].getType() == MyBlocks[i][t-1].getType() && t > 0 )){
             matchesLeft++;
           }
         }
@@ -629,14 +524,14 @@ void game(){
       bool canWin = true;
       for(int i = 0; i < 14; i++){
         for(int t = 0; t < 9; t++){
-          if( t < 8 && MyBlocks[i][t].GetType() != 6 && MyBlocks[i][t+1].GetType() == 6){
+          if( t < 8 && MyBlocks[i][t].getType() != 6 && MyBlocks[i][t+1].getType() == 6){
             canWin = false;
           }
         }
       }
       // Makes sure all rows have been moved over
       for(int i = 0; i < 14; i++){
-        if( i < 12 && MyBlocks[i][8].GetType() != 6 && MyBlocks[i+1][8].GetType() == 6 && MyBlocks[i+2][8].GetType() != 6){
+        if( i < 12 && MyBlocks[i][8].getType() != 6 && MyBlocks[i+1][8].getType() == 6 && MyBlocks[i+2][8].getType() != 6){
           canWin = false;
         }
       }
@@ -657,22 +552,16 @@ void game(){
   // Win screen
   else if( gameScreen == 4){
     // Checks for button press
-    if( mouseListener::buttonPressed[1]){
+    if( mouseListener::mouse_button & 1){
       if( mouse_x < 520 && mouse_x > 340 && mouse_y < 580 && mouse_y > 510){
-        highcolor_fade_out(16);
-        addScore(edittext);
+        highscores.addScore( edittext, score);
         setup(false);
         gameScreen = 3;
-        draw( false);
-        highcolor_fade_in(buffer,16);
       }
       else if( mouse_x < 940 && mouse_x > 760 && mouse_y < 580 && mouse_y > 510){
-        highcolor_fade_out(16);
-        addScore(edittext);
+        highscores.addScore( edittext, score);
         setup(false);
         gameScreen = 1;
-        draw( false);
-        highcolor_fade_in(buffer,16);
       }
     }
 
@@ -713,7 +602,7 @@ void game(){
           }
         }
         if(scancode == KEY_ENTER){
-          addScore(edittext);
+          highscores.addScore( edittext, score);
           setup(false);
           gameScreen = 3;
         }
@@ -724,22 +613,16 @@ void game(){
   // Lose Screen
   if( gameScreen == 5){
     // Checks for button press
-    if( mouseListener::buttonPressed[1]){
+    if( mouseListener::mouse_button & 1){
       if( mouse_x < 520 && mouse_x > 340 && mouse_y < 580 && mouse_y > 510){
-        highcolor_fade_out(16);
-        addScore(edittext);
+        highscores.addScore( edittext, score);
         setup(false);
         gameScreen = 3;
-        draw( false);
-        highcolor_fade_in(buffer,16);
       }
       else if( mouse_x < 940 && mouse_x > 760 && mouse_y < 580 && mouse_y > 510){
-        highcolor_fade_out(16);
-        addScore(edittext);
+        highscores.addScore( edittext, score);
         setup(false);
         gameScreen = 1;
-        draw( false);
-        highcolor_fade_in(buffer,16);
       }
     }
 
@@ -780,7 +663,7 @@ void game(){
           }
         }
         if( scancode == KEY_ENTER){
-          addScore(edittext);
+          highscores.addScore( edittext, score);
           setup(false);
           gameScreen = 3;
         }
@@ -790,7 +673,7 @@ void game(){
 
   // Exit game
   if( key[KEY_ESC]){
-    closeGame = true;
+    close_game = true;
   }
 
   // Update mouse listener
@@ -814,18 +697,17 @@ void draw( bool toScreen){
 
     // Draw help if nessisary
     if( helpOn){
-      draw_sprite(buffer, menuHelp, 0, 0);
+      set_alpha_blender();
+      draw_trans_sprite(buffer, menuHelp, 0, 0);
     }
 
     // Draw scores if nessisary
     if( viewScores){
-      draw_sprite(buffer, highScoresTable, 0, 0);
+      set_alpha_blender();
+      draw_trans_sprite(buffer, highScoresTable, 0, 0);
       for(int i = 0; i < 10; i++){
-        std::string name = scores[i][0];
-        textout_ex(buffer, font, name.c_str(), 400, (i * 50) + 200, makecol(0,0,0), -1);
-
-        name = scores[i][1];
-        textout_right_ex(buffer, font, name.c_str(), 860, (i * 50) + 200, makecol(0,0,0), -1);
+        textout_ex(buffer, font, highscores.nameAt(i), 400, (i * 50) + 260, makecol(0,0,0), -1);
+        textout_right_ex(buffer, font, highscores.scoreAt(i), 860, (i * 50) + 260, makecol(0,0,0), -1);
       }
     }
 
@@ -854,21 +736,18 @@ void draw( bool toScreen){
     draw_sprite( buffer, background, 0, 0);
 
     // Draws Blocks
-    for(int i = 0; i < 14; i++){
-      for(int t = 0; t < 9; t++){
+    for(int i = 0; i < 14; i++)
+      for(int t = 0; t < 9; t++)
         MyBlocks[i][t].draw( buffer, startAnimate);
-      }
-    }
 
     // Draws post drawing effects for blocks
-    for(int i = 0; i < 14; i++){
-      for(int t = 0; t < 9; t++){
+    for(int i = 0; i < 14; i++)
+      for(int t = 0; t < 9; t++)
         MyBlocks[i][t].postDraw( buffer, startAnimate);
-      }
-    }
 
     // Draws foreground
-    draw_sprite( buffer, foreground, 0, 0);
+    set_alpha_blender();
+    draw_trans_sprite( buffer, foreground, 0, 0);
 
     // Draws text
     textprintf_right_ex( buffer, font, 1240, 0, makecol(0,0,0), -1, "Blocks Left: %i", blocks_left);
@@ -884,15 +763,15 @@ void draw( bool toScreen){
     draw_sprite( buffer, background, 0, 0);
 
     // Draw blocks
-    for(int i=0; i<14; i++){
-      for(int t=0; t<9; t++){
+    for(int i=0; i<14; i++)
+      for(int t=0; t<9; t++)
         MyBlocks[i][t].draw(buffer, 0);
-      }
-    }
 
     // Create gui
     draw_sprite(buffer,menu,300,300);
-    draw_sprite( buffer, foreground, 0, 0);
+
+    set_alpha_blender();
+    draw_trans_sprite( buffer, foreground, 0, 0);
 
     textprintf_centre_ex(buffer,font,640,310, makecol(0,0,0),-1,"You Win!");
     textprintf_centre_ex(buffer,font,640,360, makecol(0,0,0),-1,"Score: %i", score);
@@ -912,20 +791,20 @@ void draw( bool toScreen){
   }
 
   // Lose Screen
-  if(gameScreen == 5){
+  else if(gameScreen == 5){
     // Draw background
     draw_sprite( buffer, background, 0, 0);
 
     // Draw blocks
-    for(int i = 0; i < 14; i++){
-      for(int t = 0; t < 9; t++){
+    for(int i = 0; i < 14; i++)
+      for(int t = 0; t < 9; t++)
         MyBlocks[i][t].draw( buffer, 0);
-      }
-    }
 
     // Create gui
     draw_sprite( buffer, menu, 300, 300);
-    draw_sprite( buffer, foreground, 0, 0);
+
+    set_alpha_blender();
+    draw_trans_sprite( buffer, foreground, 0, 0);
 
     textprintf_centre_ex( buffer, font, 640, 310, makecol(0,0,0),-1, "No more moves");
     textprintf_centre_ex( buffer, font, 640, 360, makecol(0,0,0),-1, "Score: %i", score);
@@ -943,35 +822,23 @@ void draw( bool toScreen){
     // Draws Cursor
     draw_sprite( buffer, cursor[(mouse_b & 1)], mouse_x - 20, mouse_y - 20);
   }
-  // FPS counter
-  if(showFPS){
-    textprintf_ex( buffer, font, 0, 80, makecol(0,0,0), -1, "FPS-%i", fps);
-  }
 
-  if( toScreen){
-    // Draws buffer
+  // FPS counter
+  if(showFPS)
+    textprintf_ex( buffer, font, 0, 0, makecol(0,0,0), -1, "FPS-%i", fps);
+
+  // Draws buffer
+  if( toScreen)
     stretch_sprite( screen, buffer, 0, 0, SCREEN_W, SCREEN_H);
-  }
 }
 
 // main function of program
 int main(){
-  // Initializing
-  allegro_init();
-  alpng_init();
-  install_keyboard();
-  install_timer();
-  install_mouse();
-
-  set_color_depth(32);
-
-  set_window_title("Breaker");
-
   // Setup game
   setup(true);
 
   // Starts Game
-  while(!closeGame && !close_button_pressed){
+  while( !close_game){
     // Runs FPS system
     while(ticks == 0){
       rest(1);
@@ -998,4 +865,4 @@ int main(){
 
   return 0;
 }
-END_OF_MAIN()
+END_OF_MAIN();

@@ -5,10 +5,19 @@
  |____/|_|  \___|\__,_|_|\_\___|_|   
 
 Allan Legemaate, Allan Daniel Software
------------------------
-Adsgames 2012-2017
-Changelog:
------------------------
+-------------------------
+ A.D.S. Games 2012-2017
+ Changelog:
+-------------------------
+
+Version 1.2.7
+--------------
+*Removed code warnings
+*Properly fix memory leaks
+*FPS counter displays properly
+*Buttons hovered do not press when keypressed
+*No transitions (they were so slow)
+*GUI changes
 
 Version 1.2.6
 --------------

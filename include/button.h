@@ -19,13 +19,13 @@ public:
   void SetImages( const char *image1, const char *image2);
 
   // Draw the button
-  void draw(BITMAP* tempBitmap);
+  void draw( BITMAP* tempBitmap);
 
   // Set position on screen
-  void SetPosition( int newX, int newY);
+  void SetPosition( int x, int y);
 
   // Check if being hovered over
-  bool CheckHover();
+  bool Hover();
 
   // Get the x/y position of button
   int GetX(){ return x; }

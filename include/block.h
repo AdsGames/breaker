@@ -8,8 +8,6 @@
 #define BLOCK_H
 
 #include <allegro.h>
-#include <string>
-#include <time.h>
 #include <vector>
 
 #include "particle.h"
@@ -21,12 +19,11 @@ public:
 	~Block();
 
   // Load images from file
-	void SetImages( const char *image1, const char *image2);
+	void setImages( const char *image1, const char *image2);
 
   // Draw
-	void draw(BITMAP* tempBitmap, int offset);
-	void postDraw(BITMAP* tempBitmap, int offset);
-	void DrawNewSprite( BITMAP* tempBitmap, BITMAP* spriteToDraw, int offset);
+	void draw( BITMAP* buffer, int offset);
+	void postDraw( BITMAP* buffer, int offset);
 
   // Do logic of block
 	void logic();
@@ -35,27 +32,27 @@ public:
 	void explode();
 
   // Change images depending on block
-	void Change();
+	void change();
 
 	// Get position on screen
-	int GetX(){ return x; }
-	int GetY(){ return y; }
+	int getX(){ return x; }
+	int getY(){ return y; }
 
 	// Set position
-	void SetX( int newValue){ x = newValue; }
-	void SetY( int newValue){ y = newValue; }
+	void setX( int x){ this -> x = x; }
+	void setY( int y){ this -> y = y; }
 
   // Get the type (color) of block
-	int GetType(){ return type; }
+	int getType(){ return type; }
 
   // Set type of block
-	void SetType( int newType){ type = newType; }
+	void setType( int type){ this -> type = type; }
 
   // Check if its selected
-	bool GetSelected(){ return selected; }
+	bool getSelected(){ return selected; }
 
 	// Set wheather block is selected or not
-	void SetSelected( bool newSelected){ selected = newSelected; }
+	void setSelected( bool selected){ this -> selected = selected; }
 
 private:
   // Coordinates for screen
@@ -79,4 +76,3 @@ private:
 };
 
 #endif
-
