@@ -123,7 +123,7 @@ void game::destroy_selected_blocks(){
         MyBlocks[i][t].setType(6);
 
         if( config_sound)
-          play_sample( block_break, 255, 100, random(400, 2000), 0);
+          play_sample( block_break, 64, 100, random(400, 2000), 0);
       }
     }
   }

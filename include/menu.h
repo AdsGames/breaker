@@ -41,12 +41,16 @@ class menu : public state
     Button viewHighScores;
 
     // Images
-    BITMAP* buffer;
-    BITMAP* mainmenu;
-    BITMAP* menuHelp;
-    BITMAP* highScoresTable;
-    BITMAP* cursor[2];
-    BITMAP* trans_overlay;
+    BITMAP *buffer;
+    BITMAP *mainmenu;
+    BITMAP *menuHelp;
+    BITMAP *highScoresTable;
+    BITMAP *cursor[2];
+    BITMAP *trans_overlay;
+
+    // Button sounds
+    SAMPLE *button_hover;
+    SAMPLE *button_select;
 
     // Variables
     bool viewHelp;

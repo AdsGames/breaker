@@ -42,6 +42,22 @@ menu::menu(){
   // Trans overlay
   trans_overlay = load_bitmap( "images/overlay.png", NULL);
 
+  if( config_sound){
+    // Samples
+    button_hover = load_sample( "sounds/button_click.wav");
+    button_select = load_sample( "sounds/button_select.wav");
+
+    // Sounds
+    start_game.SetSamples( button_hover, button_select);
+    viewHighScores.SetSamples( button_hover, button_select);
+    help.SetSamples( button_hover, button_select);
+    quit.SetSamples( button_hover, button_select);
+    start_easy.SetSamples( button_hover, button_select);
+    start_medium.SetSamples( button_hover, button_select);
+    start_hard.SetSamples( button_hover, button_select);
+    back.SetSamples( button_hover, button_select);
+  }
+
   // Give score files
   highscores = scoreTable( "data/scores.dat");
   highscores.load();
@@ -60,6 +76,9 @@ menu::~menu(){
   destroy_bitmap( cursor[0]);
   destroy_bitmap( cursor[1]);
   destroy_bitmap( trans_overlay);
+
+  destroy_sample( button_hover);
+  destroy_sample( button_select);
 }
 
 // Update
@@ -78,22 +97,26 @@ void menu::update(){
         viewHelp = false;
       }
       // Scores if necessary
-      else if(viewScores){
+      else if( viewScores){
         highscores.load();
         viewScores = false;
       }
       // Buttons
       else if( start_game.Hover()){
         viewDifficulty = true;
+        start_game.Select();
       }
       else if( viewHighScores.Hover()){
         viewScores = true;
+        viewHighScores.Select();
       }
       else if( help.Hover()){
         viewHelp = true;
+        help.Select();
       }
       else if( quit.Hover()){
         set_next_state( STATE_EXIT);
+        quit.Select();
       }
     }
 
@@ -102,17 +125,21 @@ void menu::update(){
       if( start_easy.Hover()){
         difficulty = 3;
         set_next_state( STATE_GAME);
+        start_easy.Select();
       }
       else if( start_medium.Hover()){
         difficulty = 4;
         set_next_state( STATE_GAME);
+        start_medium.Select();
       }
       else if( start_hard.Hover()){
         difficulty = 5;
         set_next_state( STATE_GAME);
+        start_hard.Select();
       }
       else if( back.Hover()){
         viewDifficulty = false;
+        back.Select();
       }
     }
   }

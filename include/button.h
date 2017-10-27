@@ -27,14 +27,27 @@ public:
   // Check if being hovered over
   bool Hover();
 
+  // Select
+  void Select();
+
   // Get the x/y position of button
   int GetX(){ return x; }
   int GetY(){ return y; }
+
+  // Set samples
+  void SetSamples( SAMPLE *hover, SAMPLE *select);
 
 private:
   // Positioning
   int x;
   int y;
+
+  // Samples
+  SAMPLE *sample_hover;
+  SAMPLE *sample_select;
+
+  // Was hovering before
+  bool hovering;
 
   // Images
   BITMAP *images[2];

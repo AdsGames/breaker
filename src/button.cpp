@@ -6,6 +6,11 @@ Button::Button(){
 
 	this -> images[0] = NULL;
 	this -> images[1] = NULL;
+
+	this -> sample_hover = NULL;
+	this -> sample_select = NULL;
+
+	hovering = false;
 }
 
 Button::~Button(){
@@ -21,15 +26,34 @@ void Button::SetImages( const char *image1, const char *image2){
 
 // Check if being hovered over
 bool Button::Hover(){
+  bool newHover = false;
   if( mouse_x >= x && mouse_x < (x + images[0] -> w) && mouse_y >= y  && mouse_y < (y + images[0] -> h))
-    return true;
-  return false;
+    newHover = true;
+
+  if( sample_hover != NULL && newHover == true && hovering == false)
+    play_sample( sample_hover, 64, 128, 1000, 0);
+
+  hovering = newHover;
+
+  return hovering;
+}
+
+// Select button
+void Button::Select(){
+  if( sample_select != NULL)
+    play_sample( sample_select, 128, 128, 1000, 0);
 }
 
 // Set position on screen
 void Button::SetPosition( int x, int y){
   this -> x = x;
   this -> y = y;
+}
+
+// Set samples
+void Button::SetSamples( SAMPLE *hover, SAMPLE *select){
+  this -> sample_hover = hover;
+  this -> sample_select = select;
 }
 
 // Draw the button
