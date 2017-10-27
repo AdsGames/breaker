@@ -20,15 +20,17 @@ Block::~Block(){
 }
 
 // Explode that block
-void Block::explode( std::vector<particle> &particle_list){
+void Block::explode( particle_emitter &emitter){
   // Number of particles to expode into
-	int numberDivision = 10;
+	int numberDivision = 5;
 
 	// Select pixels to make into particles
 	for(int i = 0; i < Block::images[type] -> w; i += numberDivision){
     for(int t = 0; t < Block::images[type] -> h; t += numberDivision){
-      particle newParticle( i + x, t + y, getpixel( Block::images[type], i, t), random(-8,-1), random(1,8), random(-8,-1), random(1,8), SQUARE, numberDivision);
-      particle_list.push_back( newParticle);
+      particle newPart( i + x, t + y,
+                        vec2( randomf( -0.2, 0.2), randomf( -0.2, 0.2)), vec2( randomf( -0.2, 0.2), randomf( -0.2, 0.2)),
+                        vec2( random( 3, 8)), getpixel( Block::images[type], i, t), getpixel( Block::images[type], i, t), random( 5, 30), RECTANGLE, false);
+      emitter.create_particle(newPart);
     }
 	}
 }

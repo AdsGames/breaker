@@ -37,6 +37,7 @@ game::game(){
   // Resets Timers
   startTime = clock();
   currentTime = clock();
+  lastTickTime = clock();
 
   // Sets block info
   for(int i = 0; i < 14; i++){
@@ -217,11 +218,10 @@ void game::update(){
     elaspedTime = int( currentTime - startTime) / CLOCKS_PER_SEC;
 
     // Update particles
-    for( unsigned int i = 0; i < particles.size(); i++){
-      particles.at(i).logic();
-      if(random(0,20) == 0)
-        particles.erase( particles.begin() + i);
-    }
+    particles.move_to( vec2( mouse_x, mouse_y));
+    particles.update( currentTime - lastTickTime);
+
+    lastTickTime = currentTime;
 
     // Select blocks
     if( mouseListener::mouse_pressed & 1){
@@ -335,8 +335,7 @@ void game::draw(){
   done.draw( buffer);
 
   // Draw particles
-  for( unsigned int i = 0; i < particles.size(); i++)
-    particles.at(i).draw( buffer);
+  particles.draw( buffer);
 
   // Draws text
   textprintf_right_ex( buffer, font, 1240, 16, makecol(0,0,0), -1, "Blocks Left: %i", count_blocks());

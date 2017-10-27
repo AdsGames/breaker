@@ -1,72 +1,106 @@
 #include "particle.h"
 
 // Constructor
-particle::particle(int newX, int newY, int newColor, int newXMin, int newXMax, int newYMin, int newYMax, char newType, int newSize){
-  // Position
-  x = newX;
-  y = newY;
+particle::particle( int x = 0, int y = 0, vec2 velocity = vec2( 0), vec2 acceleration = vec2( 0), vec2 size = vec2( 1), int colorStart = 0xFFFFFF, int colorEnd = 0xFFFFFF, int life = 100, char type = PIXEL, bool trans_life = false){
+  this -> x = x;
+  this -> y = y;
 
-  // Colors
-  particleColor = newColor;
-  particleRed = getr(particleColor);
-  particleGreen = getg(particleColor);
-  particleBlue = getb(particleColor);
+  this -> velocity = velocity;
+  this -> acceleration = acceleration;
 
-  // Type
-  type = newType;
+  this -> colorStart = colorStart;
+  this -> colorEnd = colorEnd;
+  this -> color = colorStart;
 
-  // Select one
-  if( type == RANDOM){
-    type = random( 0, 2);
-  }
+  this -> size = size;
 
-  // Size
-  size = newSize;
+  this -> life = life;
+  this -> life_start = life;
 
-  // Max movement in each direction
-  xMin = newXMin;
-  xMax = newXMax;
-  yMin = newYMin;
-  yMax = newYMax;
+  this -> image = NULL;
+
+  this -> type = type;
+  this -> trans_life = trans_life;
+
+  this -> onDeath = NULL;
+
+  mix_colors();
 }
 
-// Destructor
-particle::~particle(){
+// Make new color
+void particle::mix_colors(){
+  // For readability
+  int c_red = (getr(colorStart) * life + getr(colorEnd) * (life_start - life)) / life_start;
+  int c_green = (getg(colorStart) * life + getg(colorEnd) * (life_start - life)) / life_start;
+  int c_blue = (getb(colorStart) * life + getb(colorEnd) * (life_start - life)) / life_start;
 
+  this -> color = makecol( c_red, c_green, c_blue);
+}
+
+// Is dead
+bool particle::dead(){
+  if( life <= 0){
+    if( onDeath == NULL){
+      return true;
+    }
+    else{
+      velocity = onDeath -> velocity;
+      acceleration = onDeath -> acceleration;
+      size = onDeath -> size;
+      colorStart = onDeath -> colorStart;
+      colorEnd = onDeath -> colorEnd;
+      life = onDeath -> life;
+      type = onDeath -> type;
+      trans_life = onDeath -> trans_life;
+      image = onDeath -> image;
+      onDeath = onDeath -> onDeath;
+    }
+  }
+  return false;
+}
+
+// Set image
+void particle::set_image( BITMAP *image){
+  this -> image = image;
+  this -> type = IMAGE;
+}
+
+// Set particle to spawn on death
+void particle::set_particle_ondeath( particle *onDeath){
+  this -> onDeath = onDeath;
 }
 
 // Logic
-void particle::logic(){
-  x += random( xMin, xMax);
-  y += random( yMin, yMax);
+void particle::update( int dt){
+  if( !dead()){
+    life -= dt;
+    x += velocity.x * dt;
+    y += velocity.y * dt;
+    velocity.x += acceleration.x * dt;
+    velocity.y += acceleration.y * dt;
+    mix_colors();
+  }
 }
 
 // Draw
 void particle::draw( BITMAP* tempBitmap){
-  // Single pixel
-  if(type == PIXEL){
-    putpixel( tempBitmap, x, y, makecol( particleRed, particleGreen, particleBlue));
-  }
-  // Square
-  else if(type == SQUARE){
-    rectfill( tempBitmap, x, y, x + size, y + size, makecol( particleRed, particleGreen, particleBlue));
-  }
-  // Ellipse
-  else if(type == CIRCLE){
-    circlefill( tempBitmap, x, y, size, makecol( particleRed, particleGreen, particleBlue));
-  }
-  // Randomly change
-  else if(type == RANDOM){
-    switch(random(0,3)){
-      case 0:
-        putpixel( tempBitmap, x, y, makecol( particleRed, particleGreen, particleBlue));
-        break;
-      case 1:
-        circlefill( tempBitmap, x, y, size, makecol( particleRed, particleGreen, particleBlue));
-        break;
-      case 2:
-        rectfill( tempBitmap, x, y, x + size, y + size, makecol( particleRed, particleGreen, particleBlue));
-        break;
+  if( !dead()){
+    if( trans_life){
+      set_trans_blender( 255, 255, 255, int(float(life)/life_start * 255));
+    }
+
+    if( type == IMAGE && image != NULL){
+      set_alpha_blender();
+      draw_trans_sprite( tempBitmap, image, x - image -> w / 2, y - image -> w / 2);
+    }
+    else if( type == PIXEL){
+      putpixel( tempBitmap, x, y, color);
+    }
+    else if( type == CIRCLE){
+      circlefill( tempBitmap, x, y, size.x/2, color);
+    }
+    else if( type == RECTANGLE){
+      rectfill( tempBitmap, x, y, x + size.x, y + size.y, color);
     }
   }
 }

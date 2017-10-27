@@ -17,7 +17,7 @@
 #include "state.h"
 #include "globals.h"
 #include "block.h"
-#include "particle.h"
+#include "particle_emitter.h"
 #include "convert.h"
 #include "particle.h"
 #include "scoreTable.h"
@@ -81,6 +81,7 @@ class game : public state
     // Timers
     clock_t startTime;
     clock_t currentTime;
+    clock_t lastTickTime;
 
     // Scores
     scoreTable highscores;
@@ -95,7 +96,7 @@ class game : public state
     int count_remaining_moves();
 
     // Particles
-    std::vector <particle> particles;
+    particle_emitter particles;
 };
 
 #endif // GAME_H

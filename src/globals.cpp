@@ -6,8 +6,8 @@ float Get2dDistance( float x1, float y1, float x2, float y2){
 }
 
 // Random number generator. Use int random(highest,lowest);
-int random( int min, int max){
-  int random_number = (rand() % ((max + 1) - min)) + min;
+int random( int lowest, int highest){
+  int random_number = (rand() % ((highest + 1) - lowest)) + lowest;
   return random_number;
 }
 
@@ -18,6 +18,15 @@ bool collision(float xMin1, float xMax1, float xMin2, float xMax2, float yMin1, 
   }
   return false;
 }
+
+// Random float
+float randomf(float lowest, float highest){
+  float random = ((float) rand()) / (float) RAND_MAX;
+  float diff = highest - lowest;
+  float r = random * diff;
+  return lowest + r;
+}
+
 
 // Config
 bool config_sound = true;

@@ -10,7 +10,7 @@
 #include <allegro.h>
 #include <vector>
 
-#include "particle.h"
+#include "particle_emitter.h"
 
 class Block{
 
@@ -25,7 +25,7 @@ public:
 	void draw( BITMAP* buffer, int offset);
 
   // Explode that block
-	void explode( std::vector<particle> &particle_list);
+	void explode( particle_emitter &emitter);
 
   // Change images depending on block
 	void change();
