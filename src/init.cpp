@@ -80,7 +80,8 @@ init::init(){
   // Seeds random generator with time
   srand(time(NULL));
 
-  music = logg_load( "sounds/music.ogg");
+  // Fonts
+  FONT *f1, *f2, *f3, *f4, *f5;
 
   // Sets Font
   f1 = load_font( "fonts/arial_black.pcx", NULL, NULL);
@@ -99,7 +100,10 @@ init::init(){
   destroy_font(f5);
 
   // Background Music
-  play_sample( music, 255, 128, 1000, 1);
+  if( config_sound){
+    music = logg_load( "sounds/music.ogg");
+    play_sample( music, 255, 128, 1000, 1);
+  }
 }
 
 // Update

@@ -21,6 +21,7 @@
 #include "convert.h"
 #include "particle.h"
 #include "scoreTable.h"
+#include "button.h"
 
 #include "mouseListener.h"
 
@@ -54,10 +55,16 @@ class game : public state
     BITMAP* cursor[2];
     BITMAP* foreground;
     BITMAP* dialog_box;
+    BITMAP* trans_overlay;
 
     // Sounds
     SAMPLE *block_break;
     SAMPLE *click;
+
+    // Buttons
+    Button done;
+    Button dialog_yes;
+    Button dialog_no;
 
     // Variables
     int elaspedTime;

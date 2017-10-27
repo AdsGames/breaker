@@ -46,6 +46,7 @@ class menu : public state
     BITMAP* menuHelp;
     BITMAP* highScoresTable;
     BITMAP* cursor[2];
+    BITMAP* trans_overlay;
 
     // Variables
     bool viewHelp;

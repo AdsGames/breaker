@@ -39,6 +39,9 @@ menu::menu(){
   // Sets the high score table image
   highScoresTable = load_bitmap( "images/highScoresTable.png", NULL);
 
+  // Trans overlay
+  trans_overlay = load_bitmap( "images/overlay.png", NULL);
+
   // Give score files
   highscores = scoreTable( "data/scores.dat");
   highscores.load();
@@ -56,12 +59,17 @@ menu::~menu(){
   destroy_bitmap( highScoresTable);
   destroy_bitmap( cursor[0]);
   destroy_bitmap( cursor[1]);
+  destroy_bitmap( trans_overlay);
 }
 
 // Update
 void menu::update(){
   // Menu
   // Checks for mouse press
+  if( mouseListener::mouse_pressed & 2){
+    set_next_state( STATE_MENU);
+  }
+
   if( mouseListener::mouse_pressed & 1){
     // Main menu
     if( !viewDifficulty){
@@ -123,16 +131,20 @@ void menu::draw(){
     quit.draw( buffer);
     viewHighScores.draw( buffer);
 
-    // Draw help if nessisary
+    // Draw help if necessary
     if( viewHelp){
       set_alpha_blender();
-      draw_trans_sprite( buffer, menuHelp, 0, 0);
+      draw_trans_sprite( buffer, trans_overlay, 0, 0);
+      draw_sprite( buffer, menuHelp, 36, 98);
     }
 
-    // Draw scores if nessisary
+    // Draw scores if necessary
     if( viewScores){
       set_alpha_blender();
-      draw_trans_sprite( buffer, highScoresTable, 0, 0);
+      draw_trans_sprite( buffer, trans_overlay, 0, 0);
+
+      draw_sprite( buffer, highScoresTable, 318, 100);
+
       for( int i = 0; i < 10; i++){
         textout_ex( buffer, font, highscores.nameAt(i).c_str(), 400, (i * 50) + 260, makecol(0,0,0), -1);
         textout_right_ex( buffer, font, highscores.scoreAt(i).c_str(), 860, (i * 50) + 260, makecol(0,0,0), -1);

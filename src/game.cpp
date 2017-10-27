@@ -18,6 +18,9 @@ game::game(){
   // Sets menu
   dialog_box = load_bitmap( "images/menu.png", NULL);
 
+  // Trans overlay
+  trans_overlay = load_bitmap( "images/overlay.png", NULL);
+
   // Sets Sounds
   block_break = load_sample( "sounds/break.wav" );
   click = load_sample( "sounds/click.wav" );
@@ -58,6 +61,15 @@ game::game(){
   // Give score files
   highscores = scoreTable( "data/scores.dat");
   highscores.load();
+
+  // Buttons
+  done.SetImages( "images/buttons/done.png", "images/buttons/done_hover.png");
+  dialog_yes.SetImages( "images/buttons/yes.png", "images/buttons/yes_hover.png");
+  dialog_no.SetImages( "images/buttons/no.png", "images/buttons/no_hover.png");
+
+  done.SetPosition( 500, 10);
+  dialog_yes.SetPosition( 41 + 300, 215 + 300);
+  dialog_no.SetPosition( 461 + 300, 215 + 300);
 }
 
 // DESTORY
@@ -68,6 +80,7 @@ game::~game(){
   destroy_bitmap( cursor[1]);
   destroy_bitmap( foreground);
   destroy_bitmap( dialog_box);
+  destroy_bitmap( trans_overlay);
 
   destroy_sample( block_break);
   destroy_sample( click);
@@ -108,7 +121,9 @@ void game::destroy_selected_blocks(){
         MyBlocks[i][t].setSelected(false);
         MyBlocks[i][t].explode( particles);
         MyBlocks[i][t].setType(6);
-        play_sample( block_break, 255, 100, random(400, 2000), 0);
+
+        if( config_sound)
+          play_sample( block_break, 255, 100, random(400, 2000), 0);
       }
     }
   }
@@ -223,16 +238,9 @@ void game::update(){
       }
 
       // Quit
-      if( mouse_y < 60 && mouse_y > 10 && mouse_x < 780 && mouse_x > 500){
+      if( done.Hover()){
         game_over = true;
         game_over_message = "Game Over";
-
-        // Assign score
-        score = (((126 - count_blocks() + 1) * 10) * (difficulty)) - ((elaspedTime + 2) * 10);
-
-        // No negative scores
-        if(score < 0)
-          score = 0;
       }
     }
 
@@ -248,13 +256,19 @@ void game::update(){
 
   // Game over state
   else{
+    // Set score
+    if( score == 0)
+      score = difficulty * (((BLOCKS_WIDE * BLOCKS_HIGH) - count_blocks()) - elaspedTime);
+    if(score <= 0)
+      score = 1;
+
     // Checks for button press
     if( mouseListener::mouse_button & 1){
-      if( mouse_x < 520 && mouse_x > 340 && mouse_y < 580 && mouse_y > 510){
+      if( dialog_yes.Hover()){
         highscores.addScore( edittext, score);
         set_next_state( STATE_GAME);
       }
-      else if( mouse_x < 940 && mouse_x > 760 && mouse_y < 580 && mouse_y > 510){
+      else if( dialog_no.Hover()){
         highscores.addScore( edittext, score);
         set_next_state( STATE_MENU);
       }
@@ -317,16 +331,23 @@ void game::draw(){
   set_alpha_blender();
   draw_trans_sprite( buffer, foreground, 0, 0);
 
+  // Draw done button
+  done.draw( buffer);
+
   // Draw particles
   for( unsigned int i = 0; i < particles.size(); i++)
     particles.at(i).draw( buffer);
 
   // Draws text
-  textprintf_right_ex( buffer, font, 1240, 0, makecol(0,0,0), -1, "Blocks Left: %i", count_blocks());
-  textprintf_ex( buffer, font, 40, 0, makecol(0,0,0), -1, "Time: %i", elaspedTime);
+  textprintf_right_ex( buffer, font, 1240, 16, makecol(0,0,0), -1, "Blocks Left: %i", count_blocks());
+  textprintf_ex( buffer, font, 40, 16, makecol(0,0,0), -1, "Time: %i", elaspedTime);
 
   // End game dialog
   if( game_over){
+    // Blur background
+    set_alpha_blender();
+    draw_trans_sprite( buffer, trans_overlay, 0, 0);
+
     // Create gui
     draw_sprite( buffer, dialog_box, 300, 300);
 
@@ -346,8 +367,9 @@ void game::draw(){
     // draw the caret
     vline( buffer, text_length( font, edittext.c_str()) + 494, 412, 448, makecol(0,0,0));
 
-    // Draws Cursor
-    draw_sprite( buffer, cursor[(mouse_b & 1)], mouse_x, mouse_y);
+    // Buttons
+    dialog_yes.draw( buffer);
+    dialog_no.draw( buffer);
   }
 
   // Draws Cursor

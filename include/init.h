@@ -28,9 +28,6 @@ class init : public state
 
   private:
     SAMPLE *music;
-
-    // Fonts
-    FONT *f1, *f2, *f3, *f4, *f5;
 };
 
 #endif // INIT_H
