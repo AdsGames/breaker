@@ -24,8 +24,8 @@ class mouseListener{
     static unsigned char mouse_pressed;
     static unsigned char mouse_released;
 
-    static unsigned int res_mouse_x;
-    static unsigned int res_mouse_y;
+    static int res_mouse_x;
+    static int res_mouse_y;
 
     static float res_x_multiplier;
     static float res_y_multiplier;

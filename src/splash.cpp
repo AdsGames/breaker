@@ -5,11 +5,8 @@ splash::splash(){
   title = load_bitmap( "images/title.png", NULL);
   intro = load_bitmap( "images/intro.png", NULL);
 
-  // Draw
-  stretch_sprite( screen, title, 0, 0, SCREEN_W, SCREEN_H);
-  //rest( 400);
-  stretch_sprite( screen, intro, 0, 0, SCREEN_W, SCREEN_H);
-  //rest( 400);
+  // Start timer
+  intro_time = clock();
 }
 
 splash::~splash(){
@@ -20,6 +17,14 @@ splash::~splash(){
 
 // Update
 void splash::update(){
-  // Goto menu
-  set_next_state( STATE_MENU);
+  if( clock() - intro_time >= 3400 || keypressed())
+    set_next_state( STATE_MENU);
+}
+
+// Draw
+void splash::draw(){
+  if( clock() - intro_time < 1700)
+    stretch_sprite( screen, title, 0, 0, SCREEN_W, SCREEN_H);
+  else
+    stretch_sprite( screen, intro, 0, 0, SCREEN_W, SCREEN_H);
 }

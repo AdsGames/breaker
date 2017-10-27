@@ -8,6 +8,7 @@
 
 #include <allegro.h>
 #include <alpng.h>
+#include <time.h>
 
 #include "state.h"
 
@@ -18,7 +19,7 @@ class splash : public state
     virtual ~splash();
 
     void update();
-    void draw() {};
+    void draw();
 
   protected:
 
@@ -26,6 +27,9 @@ class splash : public state
     // Title images
     BITMAP* intro;
     BITMAP* title;
+
+    // Time
+    clock_t intro_time;
 };
 
 #endif // SPLASH_H

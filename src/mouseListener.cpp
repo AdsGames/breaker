@@ -5,8 +5,8 @@ unsigned char mouseListener::mouse_pressed = 0;
 unsigned char mouseListener::mouse_released = 0;
 unsigned char mouseListener::mouse_old = 0;
 
-unsigned int mouseListener::res_mouse_x = 0;
-unsigned int mouseListener::res_mouse_y = 0;
+int mouseListener::res_mouse_x = 0;
+int mouseListener::res_mouse_y = 0;
 
 float mouseListener::res_x_multiplier = 0;
 float mouseListener::res_y_multiplier = 0;
