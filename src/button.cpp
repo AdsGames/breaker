@@ -27,7 +27,7 @@ void Button::SetImages( const char *image1, const char *image2){
 // Check if being hovered over
 bool Button::Hover(){
   bool newHover = false;
-  if( mouse_x >= x && mouse_x < (x + images[0] -> w) && mouse_y >= y  && mouse_y < (y + images[0] -> h))
+  if( mouseListener::res_mouse_x >= x && mouseListener::res_mouse_x < (x + images[0] -> w) && mouseListener::res_mouse_y >= y  && mouseListener::res_mouse_y < (y + images[0] -> h))
     newHover = true;
 
   if( sample_hover != NULL && newHover == true && hovering == false)

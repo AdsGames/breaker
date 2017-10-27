@@ -55,6 +55,14 @@ init::init(){
     else
       config_show_fps = false;
   }
+  read >> config;
+  if( config == "doubleClick:"){
+    read >> config;
+    if( config == "true")
+      config_double_click = true;
+    else
+      config_double_click = false;
+  }
   read.close();
 
   // Init sound
@@ -64,18 +72,30 @@ init::init(){
   // Set screenmode
   if( config_fullscreen){
     if( set_gfx_mode( GFX_AUTODETECT_FULLSCREEN, config_screen_width, config_screen_height, 0, 0) !=0){
-      set_gfx_mode( GFX_TEXT, 0, 0, 0, 0);
-      allegro_message( "Unable to go into fullscreen graphic mode\n%s\n", allegro_error);
-      exit(1);
+      if( set_gfx_mode( GFX_AUTODETECT_FULLSCREEN, 1280, 960, 0, 0) !=0){
+        if( set_gfx_mode( GFX_AUTODETECT_FULLSCREEN, 640, 480, 0, 0) !=0){
+          set_gfx_mode( GFX_TEXT, 0, 0, 0, 0);
+          allegro_message( "Unable to go into fullscreen graphic mode\n%s\n", allegro_error);
+          exit(1);
+        }
+      }
     }
   }
   else{
     if(set_gfx_mode( GFX_AUTODETECT_WINDOWED, config_screen_width, config_screen_height, 0, 0) !=0){
-      set_gfx_mode( GFX_TEXT, 0, 0, 0, 0);
-      allegro_message( "Unable to set any windowed graphic mode\n%s\n", allegro_error);
-      exit(1);
+      if( set_gfx_mode( GFX_AUTODETECT_WINDOWED, 1280, 960, 0, 0) !=0){
+        if( set_gfx_mode( GFX_AUTODETECT_WINDOWED, 640, 480, 0, 0) !=0){
+          set_gfx_mode( GFX_TEXT, 0, 0, 0, 0);
+          allegro_message( "Unable to go into windowed graphic mode\n%s\n", allegro_error);
+          exit(1);
+        }
+      }
     }
   }
+
+  // Mouse listener division
+  mouseListener::res_x_multiplier = 1280.0f / config_screen_width;
+  mouseListener::res_y_multiplier = 960.0f / config_screen_height;
 
   // Seeds random generator with time
   srand(time(NULL));

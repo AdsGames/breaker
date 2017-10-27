@@ -29,7 +29,7 @@ void Block::explode( particle_emitter &emitter){
     for(int t = 0; t < Block::images[type] -> h; t += numberDivision){
       particle newPart( i + x, t + y,
                         vec2( randomf( -0.2, 0.2), randomf( -0.2, 0.2)), vec2( randomf( -0.2, 0.2), randomf( -0.2, 0.2)),
-                        vec2( random( 3, 8)), getpixel( Block::images[type], i, t), getpixel( Block::images[type], i, t), random( 5, 30), RECTANGLE, false);
+                        vec2( random( 2, 8)), getpixel( Block::images[type], i, t), getpixel( Block::images[type], i, t), random( 5, 30), RECTANGLE, false);
       emitter.create_particle(newPart);
     }
 	}

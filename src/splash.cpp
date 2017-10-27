@@ -6,9 +6,9 @@ splash::splash(){
   intro = load_bitmap( "images/intro.png", NULL);
 
   // Draw
-  draw_sprite( screen, title, 0, 0);
+  stretch_sprite( screen, title, 0, 0, SCREEN_W, SCREEN_H);
   //rest( 400);
-  draw_sprite( screen, intro, 0, 0);
+  stretch_sprite( screen, intro, 0, 0, SCREEN_W, SCREEN_H);
   //rest( 400);
 }
 

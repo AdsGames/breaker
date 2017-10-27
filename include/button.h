@@ -9,6 +9,8 @@
 
 #include <allegro.h>
 
+#include "mouseListener.h"
+
 class Button{
 
 public:

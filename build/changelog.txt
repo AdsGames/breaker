@@ -10,7 +10,7 @@ Allan Legemaate, Allan Daniel Software
  Changelog:
 -------------------------
 
-Version 1.2.7
+Version 1.3
 --------------
 *Removed code warnings
 *Properly fix memory leaks
@@ -21,6 +21,10 @@ Version 1.2.7
 *Mouse properly aligned with buttons
 *Faster animation
 *Backend changes to optimize!
+*Better particles
+*Mouse works better (buttons, position)
+*Single Click to break (config enables legacy mode)
+*Any Resolution
 
 Version 1.2.6
 --------------

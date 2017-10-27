@@ -5,6 +5,12 @@ unsigned char mouseListener::mouse_pressed = 0;
 unsigned char mouseListener::mouse_released = 0;
 unsigned char mouseListener::mouse_old = 0;
 
+unsigned int mouseListener::res_mouse_x = 0;
+unsigned int mouseListener::res_mouse_y = 0;
+
+float mouseListener::res_x_multiplier = 0;
+float mouseListener::res_y_multiplier = 0;
+
 // Check those buttons!
 void mouseListener::update(){
   // Check button just pressed
@@ -29,4 +35,8 @@ void mouseListener::update(){
     if( ((mouse_button >> i) & 1) != ((mouse_old >> i) & 1))
       mouse_old ^= 1 << i;
   }
+
+  // Mouse res adjusted
+  res_mouse_x = mouse_x * res_x_multiplier;
+  res_mouse_y = mouse_y * res_y_multiplier;
 }

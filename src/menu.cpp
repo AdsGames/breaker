@@ -187,8 +187,8 @@ void menu::draw(){
   }
 
   // Draws Cursor
-  draw_sprite( buffer, cursor[(mouse_b & 1)], mouse_x, mouse_y);
+  draw_sprite( buffer, cursor[(mouse_b & 1)], mouseListener::res_mouse_x, mouseListener::res_mouse_y);
 
   // Draw buffer
-  draw_sprite( screen, buffer, 0, 0);
+  stretch_sprite( screen, buffer, 0, 0, SCREEN_W, SCREEN_H);
 }

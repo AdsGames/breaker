@@ -32,6 +32,9 @@ class particle_emitter{
     // Size
     void set_size( vec2 size){ this -> size = size; };
 
+    // Clear
+    void clear_all(){ particles.clear(); };
+
     // Update
     void update( int dt);
 

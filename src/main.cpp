@@ -127,6 +127,16 @@ void update(){
   currentState -> update();
 }
 
+// Draw
+void draw(){
+  // Update state
+  currentState -> draw();
+
+  // Draw fps if requested
+  if( config_show_fps)
+    textprintf_ex( screen, font, 0, 0, 0xFFFFFF, 0x000000, "%i", fps);
+}
+
 // main function of program
 int main(){
   // Setup
@@ -152,7 +162,7 @@ int main(){
 			frames_done = 0;
 			old_time += 1;
 		}
-    currentState -> draw();
+    draw();
     frames_done++;
   }
 	return 0;

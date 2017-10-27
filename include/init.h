@@ -10,10 +10,12 @@
 #include <alpng.h>
 #include <fstream>
 #include <logg.h>
+#include <iostream>
 
 #include "state.h"
 #include "convert.h"
 #include "globals.h"
+#include "mouseListener.h"
 
 class init : public state
 {

@@ -218,14 +218,13 @@ void game::update(){
     elaspedTime = int( currentTime - startTime) / CLOCKS_PER_SEC;
 
     // Update particles
-    particles.move_to( vec2( mouse_x, mouse_y));
     particles.update( currentTime - lastTickTime);
 
     lastTickTime = currentTime;
 
     // Select blocks
     if( mouseListener::mouse_pressed & 1){
-      coordinate selected_block = get_block_index( mouse_x, mouse_y);
+      coordinate selected_block = get_block_index( mouseListener::res_mouse_x, mouseListener::res_mouse_y);
       if( selected_block.x != -1){ // Ensure existing block
         if( blocks_selected > 1 && block_at( selected_block.x, selected_block.y) -> getSelected()){
           destroy_selected_blocks();
@@ -234,6 +233,11 @@ void game::update(){
         else{
           deselect_blocks();
           blocks_selected = select_block( selected_block.x, selected_block.y); // Select and count blocks
+
+          if( !config_double_click && blocks_selected > 1 && block_at( selected_block.x, selected_block.y) -> getSelected()){
+            destroy_selected_blocks();
+            blocks_selected = 0;
+          }
         }
       }
 
@@ -263,7 +267,7 @@ void game::update(){
       score = 1;
 
     // Checks for button press
-    if( mouseListener::mouse_button & 1){
+    if( mouseListener::mouse_pressed & 1){
       if( dialog_yes.Hover()){
         highscores.addScore( edittext, score);
         set_next_state( STATE_GAME);
@@ -343,6 +347,9 @@ void game::draw(){
 
   // End game dialog
   if( game_over){
+    // Clear particle emitter particles
+    particles.clear_all();
+
     // Blur background
     set_alpha_blender();
     draw_trans_sprite( buffer, trans_overlay, 0, 0);
@@ -372,8 +379,8 @@ void game::draw(){
   }
 
   // Draws Cursor
-  draw_sprite( buffer, cursor[(mouse_b & 1)], mouse_x, mouse_y);
+  draw_sprite( buffer, cursor[(mouse_b & 1)], mouseListener::res_mouse_x, mouseListener::res_mouse_y);
 
   // Buffer
-  draw_sprite( screen, buffer, 0, 0);
+  stretch_sprite( screen, buffer, 0, 0, SCREEN_W, SCREEN_H);
 }
