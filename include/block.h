@@ -1,8 +1,8 @@
-/*
+/**
  * Block
  * A block object to break
  * Allan Legemaate
- */
+**/
 
 #ifndef BLOCK_H
 #define BLOCK_H

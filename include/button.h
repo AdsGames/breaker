@@ -1,8 +1,8 @@
-/*
+/**
  * Button
  * A clickable button
  * Allan Legemaate
- */
+**/
 
 #ifndef BUTTON_H
 #define BUTTON_H

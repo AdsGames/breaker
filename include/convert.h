@@ -1,3 +1,9 @@
+/**
+ * Convert
+ * Allan Legemaate
+ * 26/10/2017
+ * Converts stuff, strings mainly
+**/
 #ifndef CONVERT_H
 #define CONVERT_H
 

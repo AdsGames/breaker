@@ -10,7 +10,6 @@
 #include <alpng.h>
 #include <fstream>
 #include <logg.h>
-#include <iostream>
 
 #include "state.h"
 #include "convert.h"

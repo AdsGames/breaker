@@ -1,3 +1,10 @@
+/**
+ * Score Table
+ * Allan Legemaate
+ * 26/10/2017
+ * Easy highscore management
+**/
+
 #ifndef SCORETABLE_H
 #define SCORETABLE_H
 

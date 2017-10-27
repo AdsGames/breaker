@@ -1,9 +1,9 @@
-/*
+/**
  * Particle
  * Allan Legemaate
  * 07/01/2017
  * A better particle
- */
+**/
 #ifndef PARTICLE_H
 #define PARTICLE_H
 
