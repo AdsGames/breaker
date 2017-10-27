@@ -25,8 +25,6 @@ class particle{
     void draw(BITMAP* tempBitmap);
 
   private:
-    BITMAP* image[2];
-
     int x;
     int y;
 

@@ -23,13 +23,9 @@ public:
 
   // Draw
 	void draw( BITMAP* buffer, int offset);
-	void postDraw( BITMAP* buffer, int offset);
-
-  // Do logic of block
-	void logic();
 
   // Explode that block
-	void explode();
+	void explode( std::vector<particle> &particle_list);
 
   // Change images depending on block
 	void change();
@@ -37,6 +33,10 @@ public:
 	// Get position on screen
 	int getX(){ return x; }
 	int getY(){ return y; }
+
+	// Get width
+	int getWidth() { return images[0] -> w; }
+	int getHeight(){ return images[0] -> h; }
 
 	// Set position
 	void setX( int x){ this -> x = x; }
@@ -54,6 +54,8 @@ public:
 	// Set wheather block is selected or not
 	void setSelected( bool selected){ this -> selected = selected; }
 
+	// Images
+	static BITMAP *images[8];
 private:
   // Coordinates for screen
 	int x;
@@ -67,12 +69,6 @@ private:
 
   // Selected by flash
 	bool selected;
-
-  // Debris for explosions
-	std::vector <particle> debris;
-
-  // Images
-	BITMAP *images[2];
 };
 
 #endif

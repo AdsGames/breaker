@@ -30,7 +30,7 @@ particle::particle(int newX, int newY, int newColor, int newXMin, int newXMax, i
   yMax = newYMax;
 }
 
-// Deconstructor
+// Destructor
 particle::~particle(){
 
 }

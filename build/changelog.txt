@@ -19,6 +19,8 @@ Version 1.2.7
 *No transitions (they were so slow)
 *GUI changes
 *Mouse properly aligned with buttons
+*Faster animation
+*Backend changes to optimize!
 
 Version 1.2.6
 --------------

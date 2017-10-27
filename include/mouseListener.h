@@ -6,7 +6,6 @@
  * 18/01/2017
 **/
 
-//#include <iostream>
 #include <allegro.h>
 
 #ifndef MOUSELISTENER_H
@@ -16,8 +15,8 @@
 
 class mouseListener{
   public:
-    mouseListener();
-    virtual ~mouseListener();
+    mouseListener() {};
+    virtual ~mouseListener() {};
 
     void update();
 
