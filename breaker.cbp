@@ -10,11 +10,15 @@
 				<Option output="build/Breaker" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="build" />
 				<Option object_output="output" />
-				<Option type="1" />
+				<Option type="0" />
 				<Option compiler="gcc" />
-				<Option use_console_runner="0" />
 				<Compiler>
+					<Add option="-Wunreachable-code" />
+					<Add option="-Wswitch-default" />
+					<Add option="-Wmain" />
+					<Add option="-Wextra" />
 					<Add option="-Wall" />
+					<Add option="-g" />
 					<Add directory="include" />
 				</Compiler>
 				<Linker>
@@ -29,20 +33,36 @@
 		</Build>
 		<Unit filename="include/block.h" />
 		<Unit filename="include/button.h" />
+		<Unit filename="include/convert.h" />
+		<Unit filename="include/game.h" />
 		<Unit filename="include/globals.h" />
+		<Unit filename="include/init.h" />
+		<Unit filename="include/menu.h" />
 		<Unit filename="include/mouseListener.h" />
 		<Unit filename="include/particle.h" />
+		<Unit filename="include/particle_emitter.h" />
 		<Unit filename="include/scoreTable.h" />
+		<Unit filename="include/splash.h" />
+		<Unit filename="include/state.h" />
+		<Unit filename="include/vec2.h" />
 		<Unit filename="res/resources.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Unit filename="src/block.cpp" />
 		<Unit filename="src/button.cpp" />
+		<Unit filename="src/convert.cpp" />
+		<Unit filename="src/game.cpp" />
 		<Unit filename="src/globals.cpp" />
+		<Unit filename="src/init.cpp" />
 		<Unit filename="src/main.cpp" />
+		<Unit filename="src/menu.cpp" />
 		<Unit filename="src/mouseListener.cpp" />
 		<Unit filename="src/particle.cpp" />
+		<Unit filename="src/particle_emitter.cpp" />
 		<Unit filename="src/scoreTable.cpp" />
+		<Unit filename="src/splash.cpp" />
+		<Unit filename="src/state.cpp" />
+		<Unit filename="src/vec2.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

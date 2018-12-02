@@ -43,7 +43,7 @@ Temporary Items
 .apdisk
 
 *.depend
-build/Breaker.exe
+*.exe
 *.o
 *.res
-*.o
+.layout
