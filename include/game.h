@@ -18,7 +18,6 @@
 #include "globals.h"
 #include "block.h"
 #include "particle_emitter.h"
-#include "convert.h"
 #include "particle.h"
 #include "ScoreManager.h"
 #include "button.h"

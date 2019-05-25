@@ -10,7 +10,7 @@
 				<Option output="build/Breaker" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="build" />
 				<Option object_output="output" />
-				<Option type="1" />
+				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-Wunreachable-code" />
@@ -34,7 +34,6 @@
 		<Unit filename="include/ScoreManager.h" />
 		<Unit filename="include/block.h" />
 		<Unit filename="include/button.h" />
-		<Unit filename="include/convert.h" />
 		<Unit filename="include/game.h" />
 		<Unit filename="include/globals.h" />
 		<Unit filename="include/init.h" />
@@ -51,7 +50,6 @@
 		<Unit filename="src/ScoreManager.cpp" />
 		<Unit filename="src/block.cpp" />
 		<Unit filename="src/button.cpp" />
-		<Unit filename="src/convert.cpp" />
 		<Unit filename="src/game.cpp" />
 		<Unit filename="src/globals.cpp" />
 		<Unit filename="src/init.cpp" />

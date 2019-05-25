@@ -12,7 +12,6 @@
 #include <logg.h>
 
 #include "state.h"
-#include "convert.h"
 #include "globals.h"
 #include "mouseListener.h"
 
