@@ -60,7 +60,7 @@ game::game() {
   Block::images[7] = load_png ("images/blocks/flash.png", NULL);
 
   // Give score files
-  highscores = scoreTable ("data/scores.dat");
+  highscores = scoreTable ("scores.dat");
   highscores.load();
 
   // Buttons

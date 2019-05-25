@@ -14,6 +14,16 @@ scoreTable::scoreTable (const char *filePath) {
 bool scoreTable::load() {
   std::ifstream read (filePath);
 
+  if (!read) {
+    read.close();
+
+    std::ofstream write (filePath);
+    write << "Allan 400\nDanward 350\nL.K. 300\nDudefaceIII 250\nJohnny 200\nSlimeKnight 175\nBilly 150\nJimothy 125\nCarter 100\nAndrew 10";
+    write.close();
+
+    read.open (filePath);
+  }
+
   for (int i = 0; i < 10; i++) {
     for (int t = 0; t < 2; t++) {
       read >> scores[i][t];

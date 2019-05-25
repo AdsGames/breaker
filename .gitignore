@@ -47,3 +47,4 @@ Temporary Items
 *.o
 *.res
 .layout
+build/scores.dat

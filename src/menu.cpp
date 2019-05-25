@@ -59,7 +59,7 @@ menu::menu() {
   }
 
   // Give score files
-  highscores = scoreTable ("data/scores.dat");
+  highscores = scoreTable ("scores.dat");
   highscores.load();
 
   viewHelp = false;
