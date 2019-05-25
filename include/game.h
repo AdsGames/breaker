@@ -20,7 +20,7 @@
 #include "particle_emitter.h"
 #include "convert.h"
 #include "particle.h"
-#include "scoreTable.h"
+#include "ScoreManager.h"
 #include "button.h"
 
 #include "mouseListener.h"
@@ -32,8 +32,6 @@ class game : public state {
 
     void update();
     void draw();
-
-  protected:
 
   private:
     struct coordinate {
@@ -83,7 +81,7 @@ class game : public state {
     clock_t lastTickTime;
 
     // Scores
-    scoreTable highscores;
+    ScoreManager highscores;
 
     // Select group of blocks
     void deselect_blocks();

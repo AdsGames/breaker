@@ -11,7 +11,7 @@
 
 #include "state.h"
 #include "button.h"
-#include "scoreTable.h"
+#include "ScoreManager.h"
 #include "mouseListener.h"
 #include "globals.h"
 
@@ -27,7 +27,7 @@ class menu : public state {
 
   private:
     // Score table
-    scoreTable highscores;
+    ScoreManager highscores;
 
     // Init buttons
     Button start_game;

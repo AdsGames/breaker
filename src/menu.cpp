@@ -59,8 +59,7 @@ menu::menu() {
   }
 
   // Give score files
-  highscores = scoreTable ("scores.dat");
-  highscores.load();
+  highscores = ScoreManager("scores.dat");
 
   viewHelp = false;
   viewScores = false;
@@ -98,7 +97,6 @@ void menu::update() {
       }
       // Scores if necessary
       else if (viewScores) {
-        highscores.load();
         viewScores = false;
       }
       // Buttons
@@ -173,8 +171,8 @@ void menu::draw() {
       draw_sprite (buffer, highScoresTable, 318, 100);
 
       for (int i = 0; i < 10; i++) {
-        textout_ex (buffer, font, highscores.nameAt (i).c_str(), 400, (i * 50) + 260, makecol (0, 0, 0), -1);
-        textout_right_ex (buffer, font, highscores.scoreAt (i).c_str(), 860, (i * 50) + 260, makecol (0, 0, 0), -1);
+        textout_ex (buffer, font, highscores.getName (i).c_str(), 400, (i * 50) + 260, makecol (0, 0, 0), -1);
+        textprintf_right_ex (buffer, font, 860, (i * 50) + 260, makecol (0, 0, 0), -1, "%d", highscores.getScore (i));
       }
     }
   }

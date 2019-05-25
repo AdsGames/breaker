@@ -60,8 +60,7 @@ game::game() {
   Block::images[7] = load_png ("images/blocks/flash.png", NULL);
 
   // Give score files
-  highscores = scoreTable ("scores.dat");
-  highscores.load();
+  highscores = ScoreManager ("scores.dat");
 
   // Buttons
   done.SetImages ("images/buttons/done.png", "images/buttons/done_hover.png");
@@ -298,11 +297,11 @@ void game::update() {
     // Checks for button press
     if (mouseListener::mouse_pressed & 1) {
       if (dialog_yes.Hover()) {
-        highscores.addScore (edittext, score);
+        highscores.add (edittext, score);
         set_next_state (STATE_GAME);
       }
       else if (dialog_no.Hover()) {
-        highscores.addScore (edittext, score);
+        highscores.add (edittext, score);
         set_next_state (STATE_MENU);
       }
     }
@@ -345,7 +344,7 @@ void game::update() {
           }
 
         if (scancode == KEY_ENTER) {
-          highscores.addScore (edittext, score);
+          highscores.add (edittext, score);
           set_next_state (STATE_MENU);
         }
       }
