@@ -42,22 +42,9 @@ game::game() {
   // Sets block info
   for (int i = 0; i < 14; i++) {
     for (int t = 0; t < 9; t++) {
-      MyBlocks[i][t].setType (random (0, difficulty));
-      MyBlocks[i][t].setSelected (false);
-      MyBlocks[i][t].setX (i * 80 + 80);
-      MyBlocks[i][t].setY (t * 80 + 80);
+      MyBlocks[i][t] = Block(i * 80 + 80, t * 80 + 80, random (0, difficulty));
     }
   }
-
-  // Sets block images
-  Block::images[0] = load_png ("images/blocks/red.png", NULL);
-  Block::images[1] = load_png ("images/blocks/orange.png", NULL);
-  Block::images[2] = load_png ("images/blocks/yellow.png", NULL);
-  Block::images[3] = load_png ("images/blocks/green.png", NULL);
-  Block::images[4] = load_png ("images/blocks/blue.png", NULL);
-  Block::images[5] = load_png ("images/blocks/purple.png", NULL);
-  Block::images[6] = load_png ("images/blocks/none.png", NULL);
-  Block::images[7] = load_png ("images/blocks/flash.png", NULL);
 
   // Give score files
   highscores = ScoreManager ("scores.dat");
@@ -84,10 +71,6 @@ game::~game() {
 
   destroy_sample (block_break);
   destroy_sample (click);
-
-  for (int i = 0; i < 8; i++) {
-    destroy_bitmap (Block::images[i]);
-  }
 }
 
 // Deselect all blocks

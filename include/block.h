@@ -8,18 +8,16 @@
 #define BLOCK_H
 
 #include <allegro.h>
-#include <vector>
 
 #include "particle_emitter.h"
 
 class Block {
 
   public:
+    // Ctor / Dtor
     Block();
+    Block(int x, int y, int type);
     ~Block();
-
-    // Load images from file
-    void setImages (const char *image1, const char *image2);
 
     // Draw
     void draw (BITMAP *buffer, int offset);
@@ -31,55 +29,33 @@ class Block {
     void change();
 
     // Get position on screen
-    int getX() {
-      return x;
-    }
-    int getY() {
-      return y;
-    }
+    int getX();
+    int getY();
 
     // Get width
-    int getWidth() {
-      return images[0] -> w;
-    }
-    int getHeight() {
-      return images[0] -> h;
-    }
+    int getWidth();
+    int getHeight();
 
-    // Set position
-    void setX (int x) {
-      this -> x = x;
-    }
-    void setY (int y) {
-      this -> y = y;
-    }
+    // Get type
+    int getType();
 
-    // Get the type (color) of block
-    int getType() {
-      return type;
-    }
-
-    // Set type of block
-    void setType (int type) {
-      this -> type = type;
-    }
+    // Set type
+    void setType(int type);
 
     // Check if its selected
-    bool getSelected() {
-      return selected;
-    }
+    bool getSelected();
 
     // Set wheather block is selected or not
-    void setSelected (bool selected) {
-      this -> selected = selected;
-    }
+    void setSelected (bool selected);
 
-    // Images
-    static BITMAP *images[8];
   private:
+    // Load images
+    void loadImages();
+    static BITMAP *images[8];
+    static int block_count;
+
     // Coordinates for screen
-    int x;
-    int y;
+    int x, y;
 
     // Frame on for flashing
     int frame;
