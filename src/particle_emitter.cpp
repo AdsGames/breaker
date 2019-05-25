@@ -3,6 +3,8 @@
 #include <allegro.h>
 #include <loadpng.h>
 
+#include "globals.h"
+
 // Constructor basic
 particle_emitter::particle_emitter() {
   // Position

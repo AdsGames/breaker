@@ -1,6 +1,9 @@
 #include "block.h"
 
 #include <loadpng.h>
+#include <math.h>
+
+#include "globals.h"
 
 // Images
 BITMAP *Block::images[8] = { nullptr };

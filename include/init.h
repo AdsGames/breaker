@@ -7,13 +7,8 @@
 #define INIT_H
 
 #include <allegro.h>
-#include <loadpng.h>
-#include <fstream>
-#include <logg.h>
 
 #include "state.h"
-#include "globals.h"
-#include "mouseListener.h"
 
 class init : public state {
   public:

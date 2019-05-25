@@ -1,5 +1,9 @@
 #include "menu.h"
 
+#include <loadpng.h>
+
+#include "globals.h"
+
 // INIT
 menu::menu() {
   // Sets button images

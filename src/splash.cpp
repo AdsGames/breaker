@@ -1,5 +1,7 @@
 #include "splash.h"
 
+#include <loadpng.h>
+
 splash::splash() {
   // Sets Starting Images
   title = load_png ("images/title.png", NULL);

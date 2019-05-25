@@ -1,5 +1,10 @@
 #include "init.h"
 
+#include <logg.h>
+
+#include "globals.h"
+#include "mouseListener.h"
+
 // Init state (and game)
 init::init() {
   // Initializing
@@ -76,24 +81,8 @@ init::init() {
   // Seeds random generator with time
   srand (time (NULL));
 
-  // Fonts
-  FONT *f1, *f2, *f3, *f4, *f5;
-
   // Sets Font
-  f1 = load_font ("fonts/arial_black.pcx", NULL, NULL);
-  f2 = extract_font_range (f1, ' ', 'A' - 1);
-  f3 = extract_font_range (f1, 'A', 'Z');
-  f4 = extract_font_range (f1, 'Z' + 1, 'z');
-
-  // Merge fonts
-  font = merge_fonts (f4, f5 = merge_fonts (f2, f3));
-
-  // Destroy temporary fonts
-  destroy_font (f1);
-  destroy_font (f2);
-  destroy_font (f3);
-  destroy_font (f4);
-  destroy_font (f5);
+  font = load_font ("fonts/arial_black.pcx", NULL, NULL);
 
   // Background Music
   if (config_sound) {

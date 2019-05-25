@@ -39,8 +39,6 @@ class particle {
     // Draw
     void draw (BITMAP *tempBitmap);
 
-
-
     // Make new color
     void mix_colors();
 

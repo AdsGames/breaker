@@ -7,13 +7,11 @@
 #define MENU_H
 
 #include <allegro.h>
-#include <loadpng.h>
 
 #include "state.h"
 #include "button.h"
 #include "ScoreManager.h"
 #include "mouseListener.h"
-#include "globals.h"
 
 class menu : public state {
   public:

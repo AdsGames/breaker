@@ -11,7 +11,7 @@
 
 #include "vec2.h"
 #include "particle.h"
-#include "globals.h"
+
 
 class particle_emitter {
   public:

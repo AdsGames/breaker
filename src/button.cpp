@@ -2,15 +2,17 @@
 
 #include <loadpng.h>
 
+#include "mouseListener.h"
+
 Button::Button() {
   this -> x = 0;
   this -> y = 0;
 
-  this -> images[0] = NULL;
-  this -> images[1] = NULL;
+  this -> images[0] = nullptr;
+  this -> images[1] = nullptr;
 
-  this -> sample_hover = NULL;
-  this -> sample_select = NULL;
+  this -> sample_hover = nullptr;
+  this -> sample_select = nullptr;
 
   hovering = false;
 }
@@ -22,8 +24,8 @@ Button::~Button() {
 
 // Load images from file
 void Button::SetImages (const char *image1, const char *image2) {
-  images[0] = load_png (image1, NULL);
-  images[1] = load_png (image2, NULL);
+  images[0] = load_png (image1, nullptr);
+  images[1] = load_png (image2, nullptr);
 }
 
 // Check if being hovered over
@@ -34,7 +36,7 @@ bool Button::Hover() {
     newHover = true;
   }
 
-  if (sample_hover != NULL && newHover == true && hovering == false) {
+  if (sample_hover != nullptr && newHover == true && hovering == false) {
     play_sample (sample_hover, 64, 128, 1000, 0);
   }
 
@@ -45,7 +47,7 @@ bool Button::Hover() {
 
 // Select button
 void Button::Select() {
-  if (sample_select != NULL) {
+  if (sample_select != nullptr) {
     play_sample (sample_select, 128, 128, 1000, 0);
   }
 }

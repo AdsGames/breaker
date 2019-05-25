@@ -1,5 +1,10 @@
 #include "game.h"
 
+#include <loadpng.h>
+
+#include "globals.h"
+#include "mouseListener.h"
+
 // INIT
 game::game() {
   // Sets Cursors

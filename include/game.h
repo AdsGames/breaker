@@ -11,18 +11,17 @@
 #define MAX_BLOCK_DIMENSION 1000
 
 #include <allegro.h>
-#include <loadpng.h>
 #include <time.h>
 
 #include "state.h"
-#include "globals.h"
+
 #include "block.h"
 #include "particle_emitter.h"
 #include "particle.h"
 #include "ScoreManager.h"
 #include "button.h"
 
-#include "mouseListener.h"
+
 
 class game : public state {
   public:
