@@ -74,6 +74,9 @@ init::init() {
     }
   }
 
+  // Run in background
+  set_display_switch_mode(SWITCH_BACKGROUND);
+
   // Mouse listener division
   mouseListener::res_x_multiplier = 1280.0f / config_screen_width;
   mouseListener::res_y_multiplier = 960.0f / config_screen_height;
