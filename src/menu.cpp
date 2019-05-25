@@ -24,23 +24,23 @@ menu::menu() {
   back.SetPosition (380, 800);
 
   // Sets Cursors
-  cursor[0] = load_bitmap ("images/cursor1.png", NULL);
-  cursor[1] = load_bitmap ("images/cursor2.png", NULL);
+  cursor[0] = load_png ("images/cursor1.png", NULL);
+  cursor[1] = load_png ("images/cursor2.png", NULL);
 
   // Creates a buffer
   buffer = create_bitmap (1280, 960);
 
   // Sets help
-  menuHelp = load_bitmap ("images/help.png", NULL);
+  menuHelp = load_png ("images/help.png", NULL);
 
   // Sets main menu
-  mainmenu = load_bitmap ("images/mainmenu.png", NULL);
+  mainmenu = load_png ("images/mainmenu.png", NULL);
 
   // Sets the high score table image
-  highScoresTable = load_bitmap ("images/highScoresTable.png", NULL);
+  highScoresTable = load_png ("images/highScoresTable.png", NULL);
 
   // Trans overlay
-  trans_overlay = load_bitmap ("images/overlay.png", NULL);
+  trans_overlay = load_png ("images/overlay.png", NULL);
 
   if (config_sound) {
     // Samples

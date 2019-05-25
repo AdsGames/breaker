@@ -4,7 +4,7 @@
 init::init() {
   // Initializing
   allegro_init();
-  alpng_init();
+
   install_timer();
   install_mouse();
   install_keyboard();

@@ -11,7 +11,7 @@
 #define MAX_BLOCK_DIMENSION 1000
 
 #include <allegro.h>
-#include <alpng.h>
+#include <loadpng.h>
 #include <time.h>
 
 #include "state.h"

@@ -7,7 +7,7 @@
 #define MENU_H
 
 #include <allegro.h>
-#include <alpng.h>
+#include <loadpng.h>
 
 #include "state.h"
 #include "button.h"

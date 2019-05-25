@@ -18,7 +18,7 @@
 					<Add option="-Wmain" />
 					<Add option="-Wextra" />
 					<Add option="-Wall" />
-					<Add option="-g" />
+					<Add option="-std=c++14" />
 					<Add directory="include" />
 				</Compiler>
 				<Linker>
@@ -26,8 +26,8 @@
 					<Add option="-lvorbisfile" />
 					<Add option="-lvorbis" />
 					<Add option="-logg" />
-					<Add option="-lalpng" />
-					<Add option="-lalleg" />
+					<Add option="-lloadpng" />
+					<Add option="-lalleg44" />
 				</Linker>
 			</Target>
 		</Build>

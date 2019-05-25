@@ -1,5 +1,5 @@
 #include <allegro.h>
-#include <alpng.h>
+#include <loadpng.h>
 
 #include "mouseListener.h"
 

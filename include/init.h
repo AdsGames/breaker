@@ -7,7 +7,7 @@
 #define INIT_H
 
 #include <allegro.h>
-#include <alpng.h>
+#include <loadpng.h>
 #include <fstream>
 #include <logg.h>
 

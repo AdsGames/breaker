@@ -2,8 +2,8 @@
 
 splash::splash() {
   // Sets Starting Images
-  title = load_bitmap ("images/title.png", NULL);
-  intro = load_bitmap ("images/intro.png", NULL);
+  title = load_png ("images/title.png", NULL);
+  intro = load_png ("images/intro.png", NULL);
 
   // Start timer
   intro_time = clock();

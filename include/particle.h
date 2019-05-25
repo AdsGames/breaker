@@ -14,7 +14,6 @@
 #define IMAGE 4
 
 #include <allegro.h>
-#include <alleggl.h>
 #include "vec2.h"
 
 class particle {

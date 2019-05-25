@@ -3,23 +3,23 @@
 // INIT
 game::game() {
   // Sets Cursors
-  cursor[0] = load_bitmap ("images/cursor1.png", NULL);
-  cursor[1] = load_bitmap ("images/cursor2.png", NULL);
+  cursor[0] = load_png ("images/cursor1.png", NULL);
+  cursor[1] = load_png ("images/cursor2.png", NULL);
 
   // Creates a buffer
   buffer = create_bitmap (1280, 960);
 
   // Sets background
-  background = load_bitmap ("images/background.png", NULL);
+  background = load_png ("images/background.png", NULL);
 
   // Sets Foreground
-  foreground = load_bitmap ("images/foreground.png", NULL);
+  foreground = load_png ("images/foreground.png", NULL);
 
   // Sets menu
-  dialog_box = load_bitmap ("images/menu.png", NULL);
+  dialog_box = load_png ("images/menu.png", NULL);
 
   // Trans overlay
-  trans_overlay = load_bitmap ("images/overlay.png", NULL);
+  trans_overlay = load_png ("images/overlay.png", NULL);
 
   // Sets Sounds
   block_break = load_sample ("sounds/break.wav");
@@ -50,14 +50,14 @@ game::game() {
   }
 
   // Sets block images
-  Block::images[0] = load_bitmap ("images/blocks/red.png", NULL);
-  Block::images[1] = load_bitmap ("images/blocks/orange.png", NULL);
-  Block::images[2] = load_bitmap ("images/blocks/yellow.png", NULL);
-  Block::images[3] = load_bitmap ("images/blocks/green.png", NULL);
-  Block::images[4] = load_bitmap ("images/blocks/blue.png", NULL);
-  Block::images[5] = load_bitmap ("images/blocks/purple.png", NULL);
-  Block::images[6] = load_bitmap ("images/blocks/none.png", NULL);
-  Block::images[7] = load_bitmap ("images/blocks/flash.png", NULL);
+  Block::images[0] = load_png ("images/blocks/red.png", NULL);
+  Block::images[1] = load_png ("images/blocks/orange.png", NULL);
+  Block::images[2] = load_png ("images/blocks/yellow.png", NULL);
+  Block::images[3] = load_png ("images/blocks/green.png", NULL);
+  Block::images[4] = load_png ("images/blocks/blue.png", NULL);
+  Block::images[5] = load_png ("images/blocks/purple.png", NULL);
+  Block::images[6] = load_png ("images/blocks/none.png", NULL);
+  Block::images[7] = load_png ("images/blocks/flash.png", NULL);
 
   // Give score files
   highscores = scoreTable ("data/scores.dat");

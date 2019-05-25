@@ -1,5 +1,8 @@
 #include "particle_emitter.h"
 
+#include <allegro.h>
+#include <loadpng.h>
+
 // Constructor basic
 particle_emitter::particle_emitter() {
   // Position
@@ -17,9 +20,9 @@ particle_emitter::particle_emitter (vec2 position, vec2 size) {
   launch_velocity = vec2 (-10, 10);
 
   // Load image
-  image = load_bitmap ("images/fuzzball.png", NULL);
-  image2 = load_bitmap ("images/fuzzball2.png", NULL);
-  image3 = load_bitmap ("images/fuzzball_blue.png", NULL);
+  image = load_png ("images/fuzzball.png", NULL);
+  image2 = load_png ("images/fuzzball2.png", NULL);
+  image3 = load_png ("images/fuzzball_blue.png", NULL);
 }
 
 // Destructor

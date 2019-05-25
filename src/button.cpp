@@ -1,5 +1,7 @@
 #include "button.h"
 
+#include <loadpng.h>
+
 Button::Button() {
   this -> x = 0;
   this -> y = 0;
@@ -20,8 +22,8 @@ Button::~Button() {
 
 // Load images from file
 void Button::SetImages (const char *image1, const char *image2) {
-  images[0] = load_bitmap (image1, NULL);
-  images[1] = load_bitmap (image2, NULL);
+  images[0] = load_png (image1, NULL);
+  images[1] = load_png (image2, NULL);
 }
 
 // Check if being hovered over

@@ -7,7 +7,7 @@
 #define SPLASH_H
 
 #include <allegro.h>
-#include <alpng.h>
+#include <loadpng.h>
 #include <time.h>
 
 #include "state.h"
