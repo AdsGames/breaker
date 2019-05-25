@@ -13,82 +13,32 @@ init::init() {
 
   set_window_title ("Breaker");
 
-  // Read config file
-  std::ifstream read ("data/config.txt");
 
-  std::string config;
-  read >> config;
+  // Load config
+  int count;
+  push_config_state();
+  set_config_file("config.ini");
+  char **data = nullptr;
 
-  if (config == "sound:") {
-    read >> config;
-    config_sound = false;
+  data = get_config_argv("audio", "sound", &count);
+  config_sound = count == 1 ? atoi(data[0]) : 0;
 
-    if (config == "true") {
-      config_sound = true;
-    }
-  }
+  data = get_config_argv("graphics", "fpscap", &count);
+  config_max_FPS = count == 1 ? atoi(data[0]) : 100;
 
-  read >> config;
+  data = get_config_argv("graphics", "width", &count);
+  config_screen_width = count == 1 ? atoi(data[0]) : 1280;
 
-  if (config == "maxFPS:") {
-    read >> config;
-    config_max_FPS = convert::stringToInt (config);
-  }
+  data = get_config_argv("graphics", "height", &count);
+  config_screen_height = count == 1 ? atoi(data[0]) : 960;
 
-  read >> config;
+  data = get_config_argv("graphics", "fullscreen", &count);
+  config_fullscreen = count == 1 ? atoi(data[0]) : false;
 
-  if (config == "screen_width:") {
-    read >> config;
-    config_screen_width = convert::stringToInt (config);
-  }
+  data = get_config_argv("graphics", "showfps", &count);
+  config_show_fps = count == 1 ? atoi(data[0]) : false;
 
-  read >> config;
-
-  if (config == "screen_height:") {
-    read >> config;
-    config_screen_height = convert::stringToInt (config);
-  }
-
-  read >> config;
-
-  if (config == "fullscreen:") {
-    read >> config;
-
-    if (config == "true") {
-      config_fullscreen = true;
-    }
-    else {
-      config_fullscreen = false;
-    }
-  }
-
-  read >> config;
-
-  if (config == "showFPS:") {
-    read >> config;
-
-    if (config == "true") {
-      config_show_fps = true;
-    }
-    else {
-      config_show_fps = false;
-    }
-  }
-
-  read >> config;
-
-  if (config == "doubleClick:") {
-    read >> config;
-
-    if (config == "true") {
-      config_double_click = true;
-    }
-    else {
-      config_double_click = false;
-    }
-  }
-
-  read.close();
+  pop_config_state();
 
   // Init sound
   if (config_sound) {

@@ -1,7 +1,0 @@
-sound: true
-maxFPS: 200
-screen_width: 1280
-screen_height: 960
-fullscreen: false
-showFPS: false
-doubleClick: false
