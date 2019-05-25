@@ -17,10 +17,10 @@
 #include <alleggl.h>
 #include "vec2.h"
 
-class particle{
+class particle {
   public:
     // Constructor
-    particle( int x, int y, vec2 velocity, vec2 acceleration, vec2 size, int colorStart, int colorEnd, int life, char type, bool trans_life);
+    particle (int x, int y, vec2 velocity, vec2 acceleration, vec2 size, int colorStart, int colorEnd, int life, char type, bool trans_life);
 
     // Destructor
     ~particle() {};
@@ -29,16 +29,16 @@ class particle{
     bool dead();
 
     // Set image
-    void set_image( BITMAP *image);
+    void set_image (BITMAP *image);
 
     // Set particle to spawn on death
-    void set_particle_ondeath( particle *onDeath);
+    void set_particle_ondeath (particle *onDeath);
 
     // Update
-    void update( int dt);
+    void update (int dt);
 
     // Draw
-    void draw(BITMAP *tempBitmap);
+    void draw (BITMAP *tempBitmap);
 
 
 
@@ -57,7 +57,7 @@ class particle{
     char type;
     bool trans_life;
 
-    BITMAP* image;
+    BITMAP *image;
 
     particle *onDeath;
 

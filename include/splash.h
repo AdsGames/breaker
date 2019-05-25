@@ -12,8 +12,7 @@
 
 #include "state.h"
 
-class splash : public state
-{
+class splash : public state {
   public:
     splash();
     virtual ~splash();
@@ -25,8 +24,8 @@ class splash : public state
 
   private:
     // Title images
-    BITMAP* intro;
-    BITMAP* title;
+    BITMAP *intro;
+    BITMAP *title;
 
     // Time
     clock_t intro_time;

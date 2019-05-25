@@ -10,14 +10,13 @@
 #include <string>
 #include <sstream>
 
-class convert
-{
+class convert {
   public:
     // Convert int to string
-    static std::string intToString( int number);
+    static std::string intToString (int number);
 
     // Convert string to int
-    static int stringToInt( std::string newString);
+    static int stringToInt (std::string newString);
   protected:
 
   private:

@@ -15,8 +15,7 @@
 #include "mouseListener.h"
 #include "globals.h"
 
-class menu : public state
-{
+class menu : public state {
   public:
     menu();
     virtual ~menu();

@@ -25,8 +25,7 @@
 
 #include "mouseListener.h"
 
-class game : public state
-{
+class game : public state {
   public:
     game();
     virtual ~game();
@@ -37,8 +36,8 @@ class game : public state
   protected:
 
   private:
-    struct coordinate{
-      coordinate( int x, int y){
+    struct coordinate {
+      coordinate (int x, int y) {
         this -> x = x;
         this -> y = y;
       }
@@ -50,12 +49,12 @@ class game : public state
     Block MyBlocks[BLOCKS_WIDE][BLOCKS_HIGH];
 
     // Images
-    BITMAP* buffer;
-    BITMAP* background;
-    BITMAP* cursor[2];
-    BITMAP* foreground;
-    BITMAP* dialog_box;
-    BITMAP* trans_overlay;
+    BITMAP *buffer;
+    BITMAP *background;
+    BITMAP *cursor[2];
+    BITMAP *foreground;
+    BITMAP *dialog_box;
+    BITMAP *trans_overlay;
 
     // Sounds
     SAMPLE *block_break;
@@ -88,9 +87,9 @@ class game : public state
 
     // Select group of blocks
     void deselect_blocks();
-    int select_block( int x, int y, int type);
-    Block *block_at( int x, int y);
-    coordinate get_block_index( int screen_x, int screen_y);
+    int select_block (int x, int y, int type);
+    Block *block_at (int x, int y);
+    coordinate get_block_index (int screen_x, int screen_y);
     void destroy_selected_blocks();
     int count_blocks();
     int count_remaining_moves();

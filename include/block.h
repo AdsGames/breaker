@@ -12,63 +12,83 @@
 
 #include "particle_emitter.h"
 
-class Block{
+class Block {
 
-public:
-	Block();
-	~Block();
+  public:
+    Block();
+    ~Block();
 
-  // Load images from file
-	void setImages( const char *image1, const char *image2);
+    // Load images from file
+    void setImages (const char *image1, const char *image2);
 
-  // Draw
-	void draw( BITMAP* buffer, int offset);
+    // Draw
+    void draw (BITMAP *buffer, int offset);
 
-  // Explode that block
-	void explode( particle_emitter &emitter);
+    // Explode that block
+    void explode (particle_emitter &emitter);
 
-  // Change images depending on block
-	void change();
+    // Change images depending on block
+    void change();
 
-	// Get position on screen
-	int getX(){ return x; }
-	int getY(){ return y; }
+    // Get position on screen
+    int getX() {
+      return x;
+    }
+    int getY() {
+      return y;
+    }
 
-	// Get width
-	int getWidth() { return images[0] -> w; }
-	int getHeight(){ return images[0] -> h; }
+    // Get width
+    int getWidth() {
+      return images[0] -> w;
+    }
+    int getHeight() {
+      return images[0] -> h;
+    }
 
-	// Set position
-	void setX( int x){ this -> x = x; }
-	void setY( int y){ this -> y = y; }
+    // Set position
+    void setX (int x) {
+      this -> x = x;
+    }
+    void setY (int y) {
+      this -> y = y;
+    }
 
-  // Get the type (color) of block
-	int getType(){ return type; }
+    // Get the type (color) of block
+    int getType() {
+      return type;
+    }
 
-  // Set type of block
-	void setType( int type){ this -> type = type; }
+    // Set type of block
+    void setType (int type) {
+      this -> type = type;
+    }
 
-  // Check if its selected
-	bool getSelected(){ return selected; }
+    // Check if its selected
+    bool getSelected() {
+      return selected;
+    }
 
-	// Set wheather block is selected or not
-	void setSelected( bool selected){ this -> selected = selected; }
+    // Set wheather block is selected or not
+    void setSelected (bool selected) {
+      this -> selected = selected;
+    }
 
-	// Images
-	static BITMAP *images[8];
-private:
-  // Coordinates for screen
-	int x;
-	int y;
+    // Images
+    static BITMAP *images[8];
+  private:
+    // Coordinates for screen
+    int x;
+    int y;
 
-  // Frame on for flashing
-	int frame;
+    // Frame on for flashing
+    int frame;
 
-	// Type of block
-	int type;
+    // Type of block
+    int type;
 
-  // Selected by flash
-	bool selected;
+    // Selected by flash
+    bool selected;
 };
 
 #endif

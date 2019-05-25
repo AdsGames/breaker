@@ -11,48 +11,52 @@
 
 #include "mouseListener.h"
 
-class Button{
+class Button {
 
-public:
-  Button();
-  ~Button();
+  public:
+    Button();
+    ~Button();
 
-  // Load images from file
-  void SetImages( const char *image1, const char *image2);
+    // Load images from file
+    void SetImages (const char *image1, const char *image2);
 
-  // Draw the button
-  void draw( BITMAP* tempBitmap);
+    // Draw the button
+    void draw (BITMAP *tempBitmap);
 
-  // Set position on screen
-  void SetPosition( int x, int y);
+    // Set position on screen
+    void SetPosition (int x, int y);
 
-  // Check if being hovered over
-  bool Hover();
+    // Check if being hovered over
+    bool Hover();
 
-  // Select
-  void Select();
+    // Select
+    void Select();
 
-  // Get the x/y position of button
-  int GetX(){ return x; }
-  int GetY(){ return y; }
+    // Get the x/y position of button
+    int GetX() {
+      return x;
+    }
+    int GetY() {
+      return y;
+    }
 
-  // Set samples
-  void SetSamples( SAMPLE *hover, SAMPLE *select);
+    // Set samples
+    void SetSamples (SAMPLE *hover, SAMPLE *select);
 
-private:
-  // Positioning
-  int x;
-  int y;
+  private:
+    // Positioning
+    int x;
+    int y;
 
-  // Samples
-  SAMPLE *sample_hover;
-  SAMPLE *sample_select;
+    // Samples
+    SAMPLE *sample_hover;
+    SAMPLE *sample_select;
 
-  // Was hovering before
-  bool hovering;
+    // Was hovering before
+    bool hovering;
 
-  // Images
-  BITMAP *images[2];
+    // Images
+    BITMAP *images[2];
 };
 
 #endif

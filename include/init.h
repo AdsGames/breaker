@@ -16,14 +16,13 @@
 #include "globals.h"
 #include "mouseListener.h"
 
-class init : public state
-{
+class init : public state {
   public:
     init();
-    virtual ~init(){};
+    virtual ~init() {};
 
     void update();
-    void draw(){};
+    void draw() {};
 
   protected:
 

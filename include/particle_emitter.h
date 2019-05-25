@@ -13,36 +13,42 @@
 #include "particle.h"
 #include "globals.h"
 
-class particle_emitter{
+class particle_emitter {
   public:
     // Constructor
     particle_emitter();
-    particle_emitter( vec2 position, vec2 size);
+    particle_emitter (vec2 position, vec2 size);
 
     // Destructor
     virtual ~particle_emitter();
 
     // Create particle
-    void create_particle( int type);
-    void create_particle( particle newPart);
+    void create_particle (int type);
+    void create_particle (particle newPart);
 
     // Move
-    void move_to( vec2 position);
+    void move_to (vec2 position);
 
     // Size
-    void set_size( vec2 size){ this -> size = size; };
+    void set_size (vec2 size) {
+      this -> size = size;
+    };
 
     // Clear
-    void clear_all(){ particles.clear(); };
+    void clear_all() {
+      particles.clear();
+    };
 
     // Update
-    void update( int dt);
+    void update (int dt);
 
     // Get size
-    int get_size(){ return particles.size(); }
+    int get_size() {
+      return particles.size();
+    }
 
     // Draw
-    void draw( BITMAP *temp_image);
+    void draw (BITMAP *temp_image);
   protected:
 
   private:
@@ -59,7 +65,7 @@ class particle_emitter{
     vec2 size;
 
     // Create particle
-    void create_particle( int x, int y);
+    void create_particle (int x, int y);
 
     int type;
 
