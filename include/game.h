@@ -11,7 +11,6 @@
 #define MAX_BLOCK_DIMENSION 1000
 
 #include <allegro.h>
-#include <time.h>
 
 #include "state.h"
 
@@ -19,17 +18,17 @@
 #include "particle_emitter.h"
 #include "particle.h"
 #include "ScoreManager.h"
-#include "button.h"
-
-
+#include "utility/Timer.h"
+#include "ui/Button.h"
+#include "ui/InputBox.h"
 
 class game : public state {
   public:
     game();
     virtual ~game();
 
-    void update();
-    void draw();
+    virtual void update() override;
+    virtual void draw() override;
 
   private:
     struct coordinate {
@@ -57,26 +56,18 @@ class game : public state {
     SAMPLE *click;
 
     // Buttons
-    Button done;
-    Button dialog_yes;
-    Button dialog_no;
+    Button done, dialog_yes, dialog_no;
+    InputBox ib_name;
 
     // Variables
-    int elaspedTime;
     int score;
     int startAnimate;
     int blocks_selected;
     bool game_over;
     std::string game_over_message;
 
-    // Text input
-    std::string edittext;
-    std::string::iterator iter;
-
     // Timers
-    clock_t startTime;
-    clock_t currentTime;
-    clock_t lastTickTime;
+    Timer game_time;
 
     // Scores
     ScoreManager highscores;

@@ -30,9 +30,6 @@ class particle {
     // Set image
     void set_image (BITMAP *image);
 
-    // Set particle to spawn on death
-    void set_particle_ondeath (particle *onDeath);
-
     // Update
     void update (int dt);
 
@@ -55,8 +52,6 @@ class particle {
     bool trans_life;
 
     BITMAP *image;
-
-    particle *onDeath;
 
     // Behavior
     vec2 velocity;

@@ -89,33 +89,38 @@
 		</Linker>
 		<Unit filename="include/ScoreManager.h" />
 		<Unit filename="include/block.h" />
-		<Unit filename="include/button.h" />
 		<Unit filename="include/game.h" />
 		<Unit filename="include/globals.h" />
 		<Unit filename="include/init.h" />
 		<Unit filename="include/menu.h" />
-		<Unit filename="include/mouseListener.h" />
 		<Unit filename="include/particle.h" />
 		<Unit filename="include/particle_emitter.h" />
 		<Unit filename="include/splash.h" />
 		<Unit filename="include/state.h" />
+		<Unit filename="include/ui/Button.h" />
+		<Unit filename="include/ui/InputBox.h" />
+		<Unit filename="include/utility/Timer.h" />
+		<Unit filename="include/utility/tools.h" />
 		<Unit filename="include/vec2.h" />
 		<Unit filename="res/resources.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Unit filename="src/ScoreManager.cpp" />
 		<Unit filename="src/block.cpp" />
-		<Unit filename="src/button.cpp" />
 		<Unit filename="src/game.cpp" />
 		<Unit filename="src/globals.cpp" />
 		<Unit filename="src/init.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/menu.cpp" />
-		<Unit filename="src/mouseListener.cpp" />
 		<Unit filename="src/particle.cpp" />
 		<Unit filename="src/particle_emitter.cpp" />
 		<Unit filename="src/splash.cpp" />
 		<Unit filename="src/state.cpp" />
+		<Unit filename="src/ui/Button.cpp" />
+		<Unit filename="src/ui/InputBox.cpp" />
+		<Unit filename="src/utility/MouseListener.cpp" />
+		<Unit filename="src/utility/Timer.cpp" />
+		<Unit filename="src/utility/tools.cpp" />
 		<Unit filename="src/vec2.cpp" />
 		<Extensions>
 			<code_completion />

@@ -6,33 +6,27 @@
  * 18/01/2017
 **/
 
+//#include <iostream>
 #include <allegro.h>
 
-#ifndef MOUSELISTENER_H
-#define MOUSELISTENER_H
+#ifndef MouseListener_H
+#define MouseListener_H
 
 #define MAX_MOUSE_BUTTONS 3
 
-class mouseListener {
+class MouseListener {
   public:
-    mouseListener() {};
-    virtual ~mouseListener() {};
+    static void update();
 
-    void update();
-
+    static unsigned int x;
+    static unsigned int y;
     static unsigned char mouse_button;
     static unsigned char mouse_pressed;
     static unsigned char mouse_released;
-
-    static int res_mouse_x;
-    static int res_mouse_y;
-
-    static float res_x_multiplier;
-    static float res_y_multiplier;
-  protected:
-
+    static int mouse_z_change;
   private:
     static unsigned char mouse_old;
+    static int mouse_z_old;
 };
 
-#endif // MOUSELISTENER_H
+#endif // MouseListener_H

@@ -15,10 +15,8 @@ class init : public state {
     init();
     virtual ~init() {};
 
-    void update();
-    void draw() {};
-
-  protected:
+    virtual void update() override;
+    virtual void draw() override {};
 
   private:
     SAMPLE *music;

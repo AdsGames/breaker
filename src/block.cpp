@@ -2,36 +2,27 @@
 
 #include <math.h>
 
-#include "globals.h"
+#include "utility/tools.h"
 
 // Images
 BITMAP *Block::images[8] = { nullptr };
 int Block::block_count = 0;
 
 // Default Constructor
-Block::Block() {
-  this -> x = 0;
-  this -> y = 0;
+Block::Block()
+  : Block(0, 0, 0) {
 
-  this -> frame = 0;
-  this -> type = 0;
+}
 
-  this -> selected = false;
+// Constructor
+Block::Block(int x, int y, int type)
+  : x(x), y(y), type(type), frame(0), selected(false) {
 
   if (!images[0]) {
     loadImages();
   }
 
   block_count++;
-}
-
-// Constructor
-Block::Block(int x, int y, int type) :
-  Block() {
-  this -> x = x;
-  this -> y = y;
-
-  this -> type = type;
 }
 
 // Deconstructor
@@ -61,16 +52,11 @@ void Block::loadImages() {
 // Explode that block
 void Block::explode (particle_emitter &emitter) {
   // Number of particles to expode into
-  int numberDivision = 5;
+  int num_particles = 10;
+  emitter.set_position(vec2(x, y));
 
-  // Select pixels to make into particles
-  for (int i = 0; i < Block::images[type] -> w; i += numberDivision) {
-    for (int t = 0; t < Block::images[type] -> h; t += numberDivision) {
-      particle newPart (i + x, t + y,
-                        vec2 (randomf (-0.2, 0.2), randomf (-0.2, 0.2)), vec2 (randomf (-0.2, 0.2), randomf (-0.2, 0.2)),
-                        vec2 (random (2, 8)), getpixel (Block::images[type], i, t), getpixel (Block::images[type], i, t), random (5, 30), RECTANGLE, false);
-      emitter.create_particle (newPart);
-    }
+  for (int i = 0; i < num_particles; i++) {
+    emitter.create_particle();
   }
 }
 

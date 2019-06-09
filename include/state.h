@@ -16,7 +16,7 @@ extern void set_next_state (int newState);
 
 //Game states
 enum programStates {
-  STATE_nullptr,
+  STATE_NULL,
   STATE_INIT,
   STATE_SPLASH,
   STATE_MENU,
@@ -29,10 +29,6 @@ class state {
   public:
     // Deconstructor
     virtual ~state() {};
-
-    int getStateID() {
-      return stateID;
-    }
 
     // Draw to screen
     virtual void draw() = 0;

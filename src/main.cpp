@@ -1,7 +1,7 @@
 #include <allegro.h>
 #include <chrono>
 
-#include "mouseListener.h"
+#include "utility/MouseListener.h"
 
 #include "state.h"
 #include "init.h"
@@ -16,7 +16,7 @@ using namespace std::chrono;
 constexpr nanoseconds timestep(16ms);
 
 // Mouse listener
-mouseListener m_listener;
+MouseListener m_listener;
 
 // Current state object
 state *currentState = nullptr;
@@ -46,7 +46,7 @@ void clean_up() {
 // Change game screen
 void change_state() {
   // If the state needs to be changed
-  if (nextState != STATE_nullptr) {
+  if (nextState != STATE_NULL) {
     // Delete the current state
     if (nextState != STATE_EXIT) {
       delete currentState;
@@ -82,7 +82,7 @@ void change_state() {
     stateID = nextState;
 
     //nullptr the next state ID
-    nextState = STATE_nullptr;
+    nextState = STATE_NULL;
   }
 }
 
@@ -141,6 +141,8 @@ int main() {
 
     draw();
   }
+
+  clean_up();
 
   return 0;
 }

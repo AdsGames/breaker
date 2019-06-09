@@ -1,6 +1,6 @@
 #include "splash.h"
 
-#include "globals.h"
+#include "utility/tools.h"
 
 splash::splash() {
   // Sets Starting Images

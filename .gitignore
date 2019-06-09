@@ -50,3 +50,4 @@ Temporary Items
 *.layout
 build/scores.dat
 build/Breaker*
+CppCheckResults.xml

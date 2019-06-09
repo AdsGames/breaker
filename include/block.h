@@ -57,11 +57,11 @@ class Block {
     // Coordinates for screen
     int x, y;
 
-    // Frame on for flashing
-    int frame;
-
     // Type of block
     int type;
+
+    // Frame on for flashing
+    int frame;
 
     // Selected by flash
     bool selected;

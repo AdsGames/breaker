@@ -23,51 +23,33 @@ class particle_emitter {
     virtual ~particle_emitter();
 
     // Create particle
-    void create_particle (int type);
-    void create_particle (particle newPart);
+    void create_particle ();
 
-    // Move
-    void move_to (vec2 position);
-
-    // Size
-    void set_size (vec2 size) {
-      this -> size = size;
-    };
-
-    // Clear
-    void clear_all() {
-      particles.clear();
-    };
+    // Set position
+    void set_position(vec2 position);
 
     // Update
     void update (int dt);
 
-    // Get size
-    int get_size() {
-      return particles.size();
-    }
-
     // Draw
-    void draw (BITMAP *temp_image);
-  protected:
+    void draw (BITMAP *buffer);
 
   private:
-    // Fuzzy image
-    BITMAP *image;
-    BITMAP *image2;
-    BITMAP *image3;
-
-    // Velocity
-    vec2 launch_velocity;
-
     // Emitter area
     vec2 position;
     vec2 size;
 
+    // Velocity
+    vec2 launch_velocity;
+
+    // Type
+    int type;
+
+    // Fuzzy image
+    BITMAP *images[3];
+
     // Create particle
     void create_particle (int x, int y);
-
-    int type;
 
     // Particles
     std::vector <particle> particles;

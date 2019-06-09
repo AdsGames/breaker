@@ -16,10 +16,8 @@ class splash : public state {
     splash();
     virtual ~splash();
 
-    void update();
-    void draw();
-
-  protected:
+    virtual void update() override;
+    virtual void draw() override;
 
   private:
     // Title images

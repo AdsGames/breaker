@@ -1,8 +1,8 @@
 #include "state.h"
 
 //State variables
-int stateID = STATE_nullptr;
-int nextState = STATE_nullptr;
+int stateID = STATE_NULL;
+int nextState = STATE_NULL;
 
 // Set next state
 void set_next_state (int newState) {

@@ -3,7 +3,8 @@
 #include <logg.h>
 
 #include "globals.h"
-#include "mouseListener.h"
+#include "utility/tools.h"
+#include "utility/MouseListener.h"
 
 // Init state (and game)
 init::init() {
@@ -43,6 +44,9 @@ init::init() {
   data = get_config_argv("graphics", "showfps", &count);
   config_show_fps = count == 1 ? atoi(data[0]) : false;
 
+  data = get_config_argv("gameplay", "doubleclick", &count);
+  config_double_click = count == 1 ? atoi(data[0]) : false;
+
   pop_config_state();
 
   // Init sound
@@ -77,15 +81,8 @@ init::init() {
   // Run in background
   set_display_switch_mode(SWITCH_BACKGROUND);
 
-  // Mouse listener division
-  mouseListener::res_x_multiplier = 1280.0f / config_screen_width;
-  mouseListener::res_y_multiplier = 960.0f / config_screen_height;
-
-  // Seeds random generator with time
-  srand (time (nullptr));
-
   // Sets Font
-  font = load_font ("fonts/arial_black.pcx", nullptr, nullptr);
+  font = load_font_ex ("fonts/arial_black.pcx");
 
   // Background Music
   if (config_sound) {

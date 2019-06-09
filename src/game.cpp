@@ -1,7 +1,8 @@
 #include "game.h"
 
 #include "globals.h"
-#include "mouseListener.h"
+#include "utility/tools.h"
+#include "utility/MouseListener.h"
 
 // INIT
 game::game() {
@@ -34,13 +35,6 @@ game::game() {
   blocks_selected = 0;
   game_over = false;
   game_over_message = "Game Over";
-  edittext = "Player";
-  iter = edittext.end();
-
-  // Resets Timers
-  startTime = clock();
-  currentTime = clock();
-  lastTickTime = clock();
 
   // Sets block info
   for (int i = 0; i < 14; i++) {
@@ -53,13 +47,33 @@ game::game() {
   highscores = ScoreManager ("scores.dat");
 
   // Buttons
+  done = Button (500, 10);
+  dialog_yes = Button (41 + 300, 215 + 300);
+  dialog_no = Button (461 + 300, 215 + 300);
+
+  // Images
   done.SetImages ("images/buttons/done.png", "images/buttons/done_hover.png");
   dialog_yes.SetImages ("images/buttons/yes.png", "images/buttons/yes_hover.png");
   dialog_no.SetImages ("images/buttons/no.png", "images/buttons/no_hover.png");
 
-  done.SetPosition (500, 10);
-  dialog_yes.SetPosition (41 + 300, 215 + 300);
-  dialog_no.SetPosition (461 + 300, 215 + 300);
+  // On clicks
+  done.SetOnClick([this]() {
+    game_over = true;
+  });
+
+  dialog_yes.SetOnClick([this]() {
+    highscores.add (ib_name.GetValue(), score);
+    set_next_state (STATE_GAME);
+  });
+
+  dialog_no.SetOnClick([this]() {
+    highscores.add (ib_name.GetValue(), score);
+    set_next_state (STATE_MENU);
+  });
+
+  ib_name = InputBox(488, 405, 404, 44, "Player");
+
+  particles = particle_emitter(vec2(0, 0), vec2(64, 64));
 }
 
 // DESTORY
@@ -104,18 +118,21 @@ int game::select_block (int x, int y, int type = -1) {
 // Destroy selected
 void game::destroy_selected_blocks() {
   // Remove blocks
+  int num_destroyed = 0;
+
   for (int i = 0; i < BLOCKS_WIDE; i++) {
     for (int t = 0; t < BLOCKS_HIGH; t++) {
       if (MyBlocks[i][t].getSelected()) {
         MyBlocks[i][t].setSelected (false);
         MyBlocks[i][t].explode (particles);
         MyBlocks[i][t].setType (6);
-
-        if (config_sound) {
-          play_sample (block_break, 64, 100, random (400, 2000), 0);
-        }
+        num_destroyed ++;
       }
     }
+  }
+
+  if (config_sound) {
+    play_sample (block_break, 64 + num_destroyed * 5, 100, 900 + num_destroyed * 80, 0);
   }
 
   // Settle blocks downwards
@@ -216,22 +233,20 @@ void game::update() {
   }
   else {
     startAnimate = 0;
+
+    if (!game_time.IsRunning())
+      game_time.Start();
   }
 
   // In Game
   if (!game_over) {
-    // Updates Elasped Time
-    currentTime = clock();
-    elaspedTime = int (currentTime - startTime) / CLOCKS_PER_SEC;
-
     // Update particles
-    particles.update (currentTime - lastTickTime);
-
-    lastTickTime = currentTime;
+    particles.update (16);
+    done.Update();
 
     // Select blocks
-    if (mouseListener::mouse_pressed & 1) {
-      coordinate selected_block = get_block_index (mouseListener::res_mouse_x, mouseListener::res_mouse_y);
+    if (MouseListener::mouse_pressed & 1) {
+      coordinate selected_block = get_block_index (MouseListener::x, MouseListener::y);
 
       if (selected_block.x != -1) { // Ensure existing block
         if (blocks_selected > 1 && block_at (selected_block.x, selected_block.y) -> getSelected()) {
@@ -252,6 +267,7 @@ void game::update() {
       // Quit
       if (done.Hover()) {
         game_over = true;
+        clear_keybuf();
         game_over_message = "Game Over";
       }
     }
@@ -265,76 +281,29 @@ void game::update() {
         game_over_message = "Out of moves";
       }
 
+      clear_keybuf();
       game_over = true;
     }
   }
 
   // Game over state
   else {
+    if (game_time.IsRunning())
+      game_time.Stop();
+
     // Set score
     if (score == 0) {
-      score = difficulty * (((BLOCKS_WIDE * BLOCKS_HIGH) - count_blocks()) - elaspedTime);
+      score = difficulty * (((BLOCKS_WIDE * BLOCKS_HIGH) - count_blocks()) - game_time.GetElapsedTime<seconds>());
     }
-
-    if (score <= 0) {
+    else if (score <= 0) {
       score = 1;
     }
 
-    // Checks for button press
-    if (mouseListener::mouse_pressed & 1) {
-      if (dialog_yes.Hover()) {
-        highscores.add (edittext, score);
-        set_next_state (STATE_GAME);
-      }
-      else if (dialog_no.Hover()) {
-        highscores.add (edittext, score);
-        set_next_state (STATE_MENU);
-      }
-    }
-
     // Name input
-    if (keypressed()) {
-      int  newkey   = readkey();
-      char ASCII    = newkey & 0xff;
-      char scancode = newkey >> 8;
-
-      // a character key was pressed; add it to the string
-      if (ASCII >= 32 && ASCII <= 126 && edittext.length() < 14 && scancode != KEY_SPACE) {
-        // add the new char
-        iter = edittext.insert (iter, ASCII);
-        // increment both the caret and the iterator
-        iter++;
-      }
-      // some other, "special" key was pressed; handle it here
-      else {
-        if (scancode == KEY_DEL)
-          if (iter != edittext.end()) {
-            iter = edittext.erase (iter);
-          }
-
-        if (scancode == KEY_BACKSPACE) {
-          if (iter != edittext.begin()) {
-            iter--;
-            iter = edittext.erase (iter);
-          }
-        }
-
-        if (scancode == KEY_RIGHT)
-          if (iter != edittext.end()) {
-            iter++;
-          }
-
-        if (scancode == KEY_LEFT)
-          if (iter != edittext.begin()) {
-            iter--;
-          }
-
-        if (scancode == KEY_ENTER) {
-          highscores.add (edittext, score);
-          set_next_state (STATE_MENU);
-        }
-      }
-    }
+    ib_name.Focus();
+    ib_name.Update();
+    dialog_yes.Update();
+    dialog_no.Update();
   }
 }
 
@@ -345,30 +314,28 @@ void game::draw() {
   draw_sprite (buffer, background, 0, 0);
 
   // Draws Blocks
-  for (int i = 0; i < 14; i++)
+  for (int i = 0; i < 14; i++) {
     for (int t = 0; t < 9; t++) {
       MyBlocks[i][t].draw (buffer, startAnimate);
     }
+  }
+
+  // Draw particles
+  particles.draw (buffer);
 
   // Draws foreground
   set_alpha_blender();
   draw_trans_sprite (buffer, foreground, 0, 0);
 
   // Draw done button
-  done.draw (buffer);
-
-  // Draw particles
-  particles.draw (buffer);
+  done.Draw (buffer);
 
   // Draws text
   textprintf_right_ex (buffer, font, 1240, 16, makecol (0, 0, 0), -1, "Blocks Left: %i", count_blocks());
-  textprintf_ex (buffer, font, 40, 16, makecol (0, 0, 0), -1, "Time: %i", elaspedTime);
+  textprintf_ex (buffer, font, 40, 16, makecol (0, 0, 0), -1, "Time: %.0f", game_time.GetElapsedTime<seconds>());
 
   // End game dialog
   if (game_over) {
-    // Clear particle emitter particles
-    particles.clear_all();
-
     // Blur background
     set_alpha_blender();
     draw_trans_sprite (buffer, trans_overlay, 0, 0);
@@ -383,22 +350,15 @@ void game::draw() {
     textprintf_centre_ex (buffer, font, 640, 360, makecol (0, 0, 0), -1, "Score: %i", score);
 
     // Input rectangle
-    rectfill (buffer, 488, 408, 892, 452, makecol (0, 0, 0));
-    rectfill (buffer, 490, 410, 890, 450, makecol (255, 255, 255));
-
-    // output the string to the screen
-    textout_ex (buffer, font, edittext.c_str(), 494, 410, makecol (0, 0, 0), -1);
-
-    // draw the caret
-    vline (buffer, text_length (font, edittext.c_str()) + 494, 412, 448, makecol (0, 0, 0));
+    ib_name.Draw(buffer);
 
     // Buttons
-    dialog_yes.draw (buffer);
-    dialog_no.draw (buffer);
+    dialog_yes.Draw (buffer);
+    dialog_no.Draw (buffer);
   }
 
   // Draws Cursor
-  draw_sprite (buffer, cursor[ (mouse_b & 1)], mouseListener::res_mouse_x, mouseListener::res_mouse_y);
+  draw_sprite (buffer, cursor[ (mouse_b & 1)], MouseListener::x, MouseListener::y);
 
   // Buffer
   stretch_sprite (screen, buffer, 0, 0, SCREEN_W, SCREEN_H);

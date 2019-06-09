@@ -13,11 +13,11 @@
 class ScoreManager {
   public:
     ScoreManager();
-    ScoreManager(const char *path);
+    explicit ScoreManager(const std::string &path);
 
     virtual ~ScoreManager() {};
 
-    void add(std::string name, int score);
+    void add(const std::string &name, int score);
 
     int getScore(int index);
     std::string getName(int index);
@@ -25,7 +25,7 @@ class ScoreManager {
   private:
     static const char TABLE_SIZE = 10;
 
-    const char *path;
+    std::string path;
     std::string default_table;
 
     bool create();
