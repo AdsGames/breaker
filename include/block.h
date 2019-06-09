@@ -29,28 +29,28 @@ class Block {
     void change();
 
     // Get position on screen
-    int getX();
-    int getY();
+    int getX() const;
+    int getY() const;
 
     // Get width
-    int getWidth();
-    int getHeight();
+    static int getWidth();
+    static int getHeight();
 
     // Get type
-    int getType();
+    int getType() const;
 
     // Set type
     void setType(int type);
 
     // Check if its selected
-    bool getSelected();
+    bool getSelected() const;
 
     // Set wheather block is selected or not
     void setSelected (bool selected);
 
   private:
     // Load images
-    void loadImages();
+    static void loadImages();
     static BITMAP *images[8];
     static int block_count;
 

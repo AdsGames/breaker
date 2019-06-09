@@ -45,7 +45,7 @@ void particle_emitter::set_position(vec2 position) {
 void particle_emitter::update (int dt) {
   // Update each particle
   for (unsigned int i = 0; i < particles.size(); i++) {
-    if (particles.at (i).dead() || key[KEY_BACKSPACE]) {
+    if (particles.at (i).isDead() || key[KEY_BACKSPACE]) {
       particles.erase (particles.begin() + i);
     }
     else {

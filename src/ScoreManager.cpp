@@ -100,11 +100,11 @@ void ScoreManager::add(const std::string &name, int score) {
 }
 
 // Get names
-int ScoreManager::getScore(int index) {
+int ScoreManager::getScore(int index) const {
   return (index >= 0 && index < TABLE_SIZE) ? scores[index] : 0;
 }
 
 // Get scores
-std::string ScoreManager::getName(int index) {
+std::string ScoreManager::getName(int index) const {
   return (index >= 0 && index < TABLE_SIZE) ? names[index] : "";
 }

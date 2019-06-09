@@ -76,23 +76,23 @@ void Block::draw (BITMAP *buffer, int offset) {
 
 
 // Get position
-int Block::getX() {
+int Block::getX() const {
   return x;
 }
-int Block::getY() {
+int Block::getY() const {
   return y;
 }
 
 // Get width
 int Block::getWidth() {
-  return images[0] -> w;
+  return images[0] ? images[0] -> w : 0;
 }
 int Block::getHeight() {
-  return images[0] -> h;
+  return images[0] ? images[0] -> h : 0;
 }
 
 // Get type
-int Block::getType() {
+int Block::getType() const {
   return type;
 }
 
@@ -102,7 +102,7 @@ void Block::setType(int type) {
 }
 
 // Check if its selected
-bool Block::getSelected() {
+bool Block::getSelected() const {
   return selected;
 }
 

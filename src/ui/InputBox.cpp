@@ -24,11 +24,11 @@ void InputBox::Focus() {
   focused = true;
 }
 
-std::string InputBox::GetValue() {
+std::string InputBox::GetValue() const {
   return text;
 }
 
-bool InputBox::Hover() {
+bool InputBox::Hover() const {
   return (signed)MouseListener::x > x &&
          (signed)MouseListener::x < x + width &&
          (signed)MouseListener::y > y &&

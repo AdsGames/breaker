@@ -26,7 +26,7 @@ class Timer {
     void Stop();
 
     // Is running
-    bool IsRunning();
+    bool IsRunning() const;
 
     // Get ms since started
     template <typename Precision>

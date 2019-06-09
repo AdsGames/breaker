@@ -25,7 +25,7 @@ class particle {
     ~particle() {};
 
     // Is dead
-    bool dead();
+    bool isDead() const;
 
     // Set image
     void set_image (BITMAP *image);

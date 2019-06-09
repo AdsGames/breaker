@@ -36,7 +36,7 @@ void particle::mix_colors() {
 }
 
 // Is dead
-bool particle::dead() {
+bool particle::isDead() const {
   return (life <= 0);
 }
 
@@ -48,7 +48,7 @@ void particle::set_image (BITMAP *image) {
 
 // Logic
 void particle::update (int dt) {
-  if (!dead()) {
+  if (!isDead()) {
     life -= dt;
     x += velocity.x * dt;
     y += velocity.y * dt;
@@ -60,7 +60,7 @@ void particle::update (int dt) {
 
 // Draw
 void particle::draw (BITMAP *tempBitmap) {
-  if (!dead()) {
+  if (!isDead()) {
     if (trans_life) {
       set_trans_blender (255, 255, 255, int (float (life) / life_start * 255));
     }

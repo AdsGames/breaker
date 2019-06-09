@@ -19,8 +19,8 @@ class ScoreManager {
 
     void add(const std::string &name, int score);
 
-    int getScore(int index);
-    std::string getName(int index);
+    int getScore(int index) const;
+    std::string getName(int index) const;
 
   private:
     static const char TABLE_SIZE = 10;

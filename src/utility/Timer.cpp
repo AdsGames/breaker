@@ -26,7 +26,7 @@ void Timer::Stop() {
 }
 
 // Is running
-bool Timer::IsRunning() {
+bool Timer::IsRunning() const {
   return running;
 }
 
