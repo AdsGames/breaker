@@ -1,7 +1,6 @@
 #include "particle_emitter.h"
 
 #include <allegro.h>
-#include <loadpng.h>
 
 #include "globals.h"
 
@@ -22,9 +21,9 @@ particle_emitter::particle_emitter (vec2 position, vec2 size) {
   launch_velocity = vec2 (-10, 10);
 
   // Load image
-  image = load_png ("images/fuzzball.png", NULL);
-  image2 = load_png ("images/fuzzball2.png", NULL);
-  image3 = load_png ("images/fuzzball_blue.png", NULL);
+  image = load_png_ex ("images/fuzzball.png");
+  image2 = load_png_ex ("images/fuzzball2.png");
+  image3 = load_png_ex ("images/fuzzball_blue.png");
 }
 
 // Destructor

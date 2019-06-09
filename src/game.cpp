@@ -1,34 +1,32 @@
 #include "game.h"
 
-#include <loadpng.h>
-
 #include "globals.h"
 #include "mouseListener.h"
 
 // INIT
 game::game() {
   // Sets Cursors
-  cursor[0] = load_png ("images/cursor1.png", NULL);
-  cursor[1] = load_png ("images/cursor2.png", NULL);
+  cursor[0] = load_png_ex ("images/cursor1.png");
+  cursor[1] = load_png_ex ("images/cursor2.png");
 
   // Creates a buffer
   buffer = create_bitmap (1280, 960);
 
   // Sets background
-  background = load_png ("images/background.png", NULL);
+  background = load_png_ex ("images/background.png");
 
   // Sets Foreground
-  foreground = load_png ("images/foreground.png", NULL);
+  foreground = load_png_ex ("images/foreground.png");
 
   // Sets menu
-  dialog_box = load_png ("images/menu.png", NULL);
+  dialog_box = load_png_ex ("images/menu.png");
 
   // Trans overlay
-  trans_overlay = load_png ("images/overlay.png", NULL);
+  trans_overlay = load_png_ex ("images/overlay.png");
 
   // Sets Sounds
-  block_break = load_sample ("sounds/break.wav");
-  click = load_sample ("sounds/click.wav");
+  block_break = load_sample_ex ("sounds/break.wav");
+  click = load_sample_ex ("sounds/click.wav");
 
   // Sets Variables
   score = 0;
@@ -162,7 +160,7 @@ Block *game::block_at (int x, int y) {
     return &MyBlocks[x][y];
   }
 
-  return NULL;
+  return nullptr;
 }
 
 // Remaining blocks

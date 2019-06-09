@@ -1,11 +1,11 @@
 #include "splash.h"
 
-#include <loadpng.h>
+#include "globals.h"
 
 splash::splash() {
   // Sets Starting Images
-  title = load_png ("images/title.png", NULL);
-  intro = load_png ("images/intro.png", NULL);
+  title = load_png_ex ("images/title.png");
+  intro = load_png_ex ("images/intro.png");
 
   // Start timer
   intro_time = clock();

@@ -1,8 +1,7 @@
 #include "button.h"
 
-#include <loadpng.h>
-
 #include "mouseListener.h"
+#include "globals.h"
 
 Button::Button() {
   this -> x = 0;
@@ -24,8 +23,8 @@ Button::~Button() {
 
 // Load images from file
 void Button::SetImages (const char *image1, const char *image2) {
-  images[0] = load_png (image1, nullptr);
-  images[1] = load_png (image2, nullptr);
+  images[0] = load_png_ex (image1);
+  images[1] = load_png_ex (image2);
 }
 
 // Check if being hovered over

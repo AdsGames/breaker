@@ -1,5 +1,5 @@
 #include <allegro.h>
-#include <loadpng.h>
+#include <chrono>
 
 #include "mouseListener.h"
 
@@ -10,34 +10,27 @@
 #include "game.h"
 #include "globals.h"
 
+// Fixed update system
+using namespace std::chrono_literals;
+using namespace std::chrono;
+constexpr nanoseconds timestep(16ms);
+
 // Mouse listener
 mouseListener m_listener;
 
 // Current state object
-state *currentState = NULL;
+state *currentState = nullptr;
 
 // Are we closing?
 bool closing = false;
 
-// FPS Tickers
-volatile int ticks = 0;
-int fps;
-int frames_done;
-int old_time;
-int updates_per_second = 120;
-int frames_array[10];
-int frame_index = 0;
-
-void ticker() {
-  ticks++;
-}
-END_OF_FUNCTION (ticker)
-
-volatile int game_time = 0;
-void game_time_ticker() {
-  game_time++;
-}
-END_OF_FUNCTION (game_time_ticker)
+// Function declarations
+void draw();
+void update();
+void setup();
+void change_state();
+void clean_up();
+void close_button_handler();
 
 // Close button handler
 void close_button_handler (void) {
@@ -53,7 +46,7 @@ void clean_up() {
 // Change game screen
 void change_state() {
   // If the state needs to be changed
-  if (nextState != STATE_NULL) {
+  if (nextState != STATE_nullptr) {
     // Delete the current state
     if (nextState != STATE_EXIT) {
       delete currentState;
@@ -88,8 +81,8 @@ void change_state() {
     //Change the current state ID
     stateID = nextState;
 
-    //NULL the next state ID
-    nextState = STATE_NULL;
+    //nullptr the next state ID
+    nextState = STATE_nullptr;
   }
 }
 
@@ -98,23 +91,6 @@ void setup() {
   //Set the current state to INIT
   stateID = STATE_INIT;
   currentState = new init();
-
-  // Init vars will be set, use them here
-  updates_per_second = config_max_FPS;
-
-  // Setup for FPS system
-  LOCK_VARIABLE (ticks);
-  LOCK_FUNCTION (ticker);
-  install_int_ex (ticker, BPS_TO_TIMER (updates_per_second));
-
-  LOCK_VARIABLE (game_time);
-  LOCK_FUNCTION (game_time_ticker);
-  install_int_ex (game_time_ticker, BPS_TO_TIMER (10));
-
-  // FPS STUFF
-  for (int i = 0; i < 10; i++) {
-    frames_array[i] = 0;
-  }
 
   // Close button
   LOCK_FUNCTION (close_button_handler);
@@ -140,7 +116,7 @@ void draw() {
 
   // Draw fps if requested
   if (config_show_fps) {
-    textprintf_ex (screen, font, 0, 0, 0xFFFFFF, 0x000000, "%i", fps);
+    //textprintf_ex (screen, font, 0, 0, 0xFFFFFF, 0x000000, "%i", fps);
   }
 }
 
@@ -149,36 +125,22 @@ int main() {
   // Setup
   setup();
 
-  // FPS Counter
+  using clock = high_resolution_clock;
+  nanoseconds lag(0ns);
+  auto time_start = clock::now();
+
   while (!key[KEY_ESC] && !closing) {
-    while (ticks == 0) {
-      rest (1);
-    }
+    auto delta_time = clock::now() - time_start;
+    time_start = clock::now();
+    lag += duration_cast<nanoseconds>(delta_time);
 
-    while (ticks > 0) {
-      int old_ticks = ticks;
+    while(lag >= timestep) {
+      lag -= timestep;
       update();
-      ticks--;
-
-      if (old_ticks <= ticks) {
-        break;
-      }
-    }
-
-    if (game_time >= old_time + 1) { // i.e. a 0.1 second has passed since we last counted the frames{
-      fps -= frames_array[frame_index];// decrement the fps by the frames done a second ago
-      frames_array[frame_index] = frames_done;// store the number of frames done this 0.1 second
-      fps += frames_done;// increment the fps by the newly done frames
-      frame_index = (frame_index + 1) % 10;// increment the frame index and snap it to 10
-      frames_done = 0;
-      old_time += 1;
     }
 
     draw();
-    frames_done++;
   }
-
-  allegro_exit();
 
   return 0;
 }

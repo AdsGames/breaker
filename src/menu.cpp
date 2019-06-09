@@ -1,7 +1,5 @@
 #include "menu.h"
 
-#include <loadpng.h>
-
 #include "globals.h"
 
 // INIT
@@ -28,28 +26,28 @@ menu::menu() {
   back.SetPosition (380, 800);
 
   // Sets Cursors
-  cursor[0] = load_png ("images/cursor1.png", NULL);
-  cursor[1] = load_png ("images/cursor2.png", NULL);
+  cursor[0] = load_png_ex ("images/cursor1.png");
+  cursor[1] = load_png_ex ("images/cursor2.png");
 
   // Creates a buffer
   buffer = create_bitmap (1280, 960);
 
   // Sets help
-  menuHelp = load_png ("images/help.png", NULL);
+  menuHelp = load_png_ex ("images/help.png");
 
   // Sets main menu
-  mainmenu = load_png ("images/mainmenu.png", NULL);
+  mainmenu = load_png_ex ("images/mainmenu.png");
 
   // Sets the high score table image
-  highScoresTable = load_png ("images/highScoresTable.png", NULL);
+  highScoresTable = load_png_ex ("images/highScoresTable.png");
 
   // Trans overlay
-  trans_overlay = load_png ("images/overlay.png", NULL);
+  trans_overlay = load_png_ex ("images/overlay.png");
 
   if (config_sound) {
     // Samples
-    button_hover = load_sample ("sounds/button_click.wav");
-    button_select = load_sample ("sounds/button_select.wav");
+    button_hover = load_sample_ex ("sounds/button_click.wav");
+    button_select = load_sample_ex ("sounds/button_select.wav");
 
     // Sounds
     start_game.SetSamples (button_hover, button_select);

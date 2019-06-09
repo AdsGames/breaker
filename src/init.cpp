@@ -82,14 +82,14 @@ init::init() {
   mouseListener::res_y_multiplier = 960.0f / config_screen_height;
 
   // Seeds random generator with time
-  srand (time (NULL));
+  srand (time (nullptr));
 
   // Sets Font
-  font = load_font ("fonts/arial_black.pcx", NULL, NULL);
+  font = load_font ("fonts/arial_black.pcx", nullptr, nullptr);
 
   // Background Music
   if (config_sound) {
-    music = logg_load ("sounds/music.ogg");
+    music = load_ogg_ex ("sounds/music.ogg");
     play_sample (music, 255, 128, 1000, 1);
   }
 }

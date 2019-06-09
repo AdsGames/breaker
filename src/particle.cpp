@@ -17,12 +17,12 @@ particle::particle (int x = 0, int y = 0, vec2 velocity = vec2 (0), vec2 acceler
   this -> life = life;
   this -> life_start = life;
 
-  this -> image = NULL;
+  this -> image = nullptr;
 
   this -> type = type;
   this -> trans_life = trans_life;
 
-  this -> onDeath = NULL;
+  this -> onDeath = nullptr;
 
   mix_colors();
 }
@@ -40,7 +40,7 @@ void particle::mix_colors() {
 // Is dead
 bool particle::dead() {
   if (life <= 0) {
-    if (onDeath == NULL) {
+    if (onDeath == nullptr) {
       return true;
     }
     else {
@@ -90,7 +90,7 @@ void particle::draw (BITMAP *tempBitmap) {
       set_trans_blender (255, 255, 255, int (float (life) / life_start * 255));
     }
 
-    if (type == IMAGE && image != NULL) {
+    if (type == IMAGE && image != nullptr) {
       set_alpha_blender();
       draw_trans_sprite (tempBitmap, image, x - image -> w / 2, y - image -> w / 2);
     }

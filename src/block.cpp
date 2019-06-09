@@ -1,6 +1,5 @@
 #include "block.h"
 
-#include <loadpng.h>
 #include <math.h>
 
 #include "globals.h"
@@ -22,6 +21,7 @@ Block::Block() {
   if (!images[0]) {
     loadImages();
   }
+
   block_count++;
 }
 
@@ -37,6 +37,7 @@ Block::Block(int x, int y, int type) :
 // Deconstructor
 Block::~Block() {
   block_count--;
+
   if (block_count == 0) {
     for (int i = 0; i < 8; i++) {
       destroy_bitmap(images[i]);
@@ -47,14 +48,14 @@ Block::~Block() {
 
 // Sets block images
 void Block::loadImages() {
-  images[0] = load_png ("images/blocks/red.png", NULL);
-  images[1] = load_png ("images/blocks/orange.png", NULL);
-  images[2] = load_png ("images/blocks/yellow.png", NULL);
-  images[3] = load_png ("images/blocks/green.png", NULL);
-  images[4] = load_png ("images/blocks/blue.png", NULL);
-  images[5] = load_png ("images/blocks/purple.png", NULL);
-  images[6] = load_png ("images/blocks/none.png", NULL);
-  images[7] = load_png ("images/blocks/flash.png", NULL);
+  images[0] = load_png_ex ("images/blocks/red.png");
+  images[1] = load_png_ex ("images/blocks/orange.png");
+  images[2] = load_png_ex ("images/blocks/yellow.png");
+  images[3] = load_png_ex ("images/blocks/green.png");
+  images[4] = load_png_ex ("images/blocks/blue.png");
+  images[5] = load_png_ex ("images/blocks/purple.png");
+  images[6] = load_png_ex ("images/blocks/none.png");
+  images[7] = load_png_ex ("images/blocks/flash.png");
 }
 
 // Explode that block
@@ -76,7 +77,7 @@ void Block::explode (particle_emitter &emitter) {
 // Draw block to screen
 void Block::draw (BITMAP *buffer, int offset) {
   // Draw overlay if selected
-  if (selected && floor (frame / 8) == 1) {
+  if (selected && int(floor(frame / 8)) == 1) {
     draw_sprite (buffer, Block::images[7], x, y - offset);
   }
   else {
