@@ -379,7 +379,7 @@ void game::draw() {
     set_alpha_blender();
     draw_trans_sprite (buffer, foreground, 0, 0);
 
-    textprintf_centre_ex (buffer, font, 640, 310, makecol (0, 0, 0), -1, game_over_message.c_str());
+    textprintf_centre_ex (buffer, font, 640, 310, makecol (0, 0, 0), -1, "%s", game_over_message.c_str());
     textprintf_centre_ex (buffer, font, 640, 360, makecol (0, 0, 0), -1, "Score: %i", score);
 
     // Input rectangle
