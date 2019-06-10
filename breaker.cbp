@@ -16,7 +16,24 @@
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
-					<Add option="-lalleg44" />
+					<Add option="-lloadpng" />
+					<Add option="-lpng" />
+					<Add option="-lz" />
+					<Add option="-llogg" />
+					<Add option="-lvorbisfile" />
+					<Add option="-lvorbis" />
+					<Add option="-logg" />
+					<Add option="-lalleg" />
+					<Add option="-lkernel32" />
+					<Add option="-luser32" />
+					<Add option="-lgdi32" />
+					<Add option="-lcomdlg32" />
+					<Add option="-lole32" />
+					<Add option="-ldinput" />
+					<Add option="-lddraw" />
+					<Add option="-ldxguid" />
+					<Add option="-lwinmm" />
+					<Add option="-ldsound" />
 				</Linker>
 			</Target>
 			<Target title="debug-linux">
@@ -43,7 +60,24 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add option="-lalleg44" />
+					<Add option="-lloadpng" />
+					<Add option="-lpng" />
+					<Add option="-lz" />
+					<Add option="-llogg" />
+					<Add option="-lvorbisfile" />
+					<Add option="-lvorbis" />
+					<Add option="-logg" />
+					<Add option="-lalleg" />
+					<Add option="-lkernel32" />
+					<Add option="-luser32" />
+					<Add option="-lgdi32" />
+					<Add option="-lcomdlg32" />
+					<Add option="-lole32" />
+					<Add option="-ldinput" />
+					<Add option="-lddraw" />
+					<Add option="-ldxguid" />
+					<Add option="-lwinmm" />
+					<Add option="-ldsound" />
 				</Linker>
 			</Target>
 			<Target title="release-linux">
@@ -81,11 +115,13 @@
 			<Add option="-Wextra" />
 			<Add option="-Wall" />
 			<Add option="-std=c++14" />
+			<Add option="-DALLEGRO_STATICLINK" />
 			<Add directory="include" />
 		</Compiler>
 		<Linker>
-			<Add option="-llogg" />
-			<Add option="-lloadpng" />
+			<Add option="-static-libstdc++" />
+			<Add option="-static-libgcc" />
+			<Add option="-static" />
 		</Linker>
 		<Unit filename="include/ScoreManager.h" />
 		<Unit filename="include/block.h" />
@@ -99,6 +135,7 @@
 		<Unit filename="include/state.h" />
 		<Unit filename="include/ui/Button.h" />
 		<Unit filename="include/ui/InputBox.h" />
+		<Unit filename="include/utility/MouseListener.h" />
 		<Unit filename="include/utility/Timer.h" />
 		<Unit filename="include/utility/tools.h" />
 		<Unit filename="include/vec2.h" />
