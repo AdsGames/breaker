@@ -14,8 +14,12 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-DALLEGRO_STATICLINK" />
 				</Compiler>
 				<Linker>
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add option="-static" />
 					<Add option="-lloadpng" />
 					<Add option="-lpng" />
 					<Add option="-lz" />
@@ -47,6 +51,8 @@
 				</Compiler>
 				<Linker>
 					<Add option="-lalleg" />
+					<Add option="-lloadpng" />
+					<Add option="-llogg" />
 				</Linker>
 			</Target>
 			<Target title="release">
@@ -57,9 +63,13 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O3" />
+					<Add option="-DALLEGRO_STATICLINK" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add option="-static" />
 					<Add option="-lloadpng" />
 					<Add option="-lpng" />
 					<Add option="-lz" />
@@ -92,6 +102,8 @@
 				<Linker>
 					<Add option="-s" />
 					<Add option="-lalleg" />
+					<Add option="-lloadpng" />
+					<Add option="-llogg" />
 				</Linker>
 			</Target>
 		</Build>
@@ -115,14 +127,8 @@
 			<Add option="-Wextra" />
 			<Add option="-Wall" />
 			<Add option="-std=c++14" />
-			<Add option="-DALLEGRO_STATICLINK" />
 			<Add directory="include" />
 		</Compiler>
-		<Linker>
-			<Add option="-static-libstdc++" />
-			<Add option="-static-libgcc" />
-			<Add option="-static" />
-		</Linker>
 		<Unit filename="include/ScoreManager.h" />
 		<Unit filename="include/block.h" />
 		<Unit filename="include/game.h" />
