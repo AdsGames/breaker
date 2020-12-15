@@ -3,16 +3,15 @@
 #include <fstream>
 
 // Default CTOR
-ScoreManager::ScoreManager()
-  : ScoreManager("scores.dat") {
-
-}
+ScoreManager::ScoreManager() : ScoreManager("scores.dat") {}
 
 // Pass file to CTOR
-ScoreManager::ScoreManager(const std::string &path)
-  : path(path),
-    default_table("Allan\n400\nDanward\n350\nL.K.\n300\nDudefaceIII\n250\nJohnny\n200\nSlimeKnight\n175\nBilly\n150\nJimothy\n125\nCarter\n100\nAndrew\n10") {
-
+ScoreManager::ScoreManager(const std::string& path)
+    : path(path),
+      default_table(
+          "Allan\n400\nDanward\n350\nL.K."
+          "\n300\nDudefaceIII\n250\nJohnny\n200\nSlimeKnight\n175\nBilly\n150\n"
+          "Jimothy\n125\nCarter\n100\nAndrew\n10") {
   for (int i = 0; i < TABLE_SIZE; i++)
     scores[i] = 0;
 
@@ -24,7 +23,7 @@ ScoreManager::ScoreManager(const std::string &path)
 
 // Create table
 bool ScoreManager::create() {
-  std::ofstream w (path);
+  std::ofstream w(path);
 
   if (!w) {
     w.close();
@@ -39,7 +38,7 @@ bool ScoreManager::create() {
 
 // Read High Scores
 bool ScoreManager::read() {
-  std::ifstream r (path);
+  std::ifstream r(path);
 
   if (!r) {
     r.close();
@@ -75,7 +74,7 @@ bool ScoreManager::write() {
 }
 
 // Add score
-void ScoreManager::add(const std::string &name, int score) {
+void ScoreManager::add(const std::string& name, int score) {
   // Update List
   for (int i = 0; i < TABLE_SIZE; i++) {
     if (score > scores[i]) {

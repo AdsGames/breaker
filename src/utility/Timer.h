@@ -15,27 +15,27 @@ using namespace std::chrono;
 
 // Timer class
 class Timer {
-  public:
-    Timer();
-    virtual ~Timer() {};
+ public:
+  Timer();
+  virtual ~Timer(){};
 
-    // Start time
-    void Start();
+  // Start time
+  void Start();
 
-    // Stop
-    void Stop();
+  // Stop
+  void Stop();
 
-    // Is running
-    bool IsRunning() const;
+  // Is running
+  bool IsRunning() const;
 
-    // Get ms since started
-    template <typename Precision>
-    double GetElapsedTime();
+  // Get ms since started
+  template <typename Precision>
+  double GetElapsedTime();
 
-  private:
-    // Holds time points for start and end
-    time_point<high_resolution_clock> t1, t2;
-    bool running;
+ private:
+  // Holds time points for start and end
+  time_point<high_resolution_clock> t1, t2;
+  bool running;
 };
 
-#endif // TIMER_H
+#endif  // TIMER_H

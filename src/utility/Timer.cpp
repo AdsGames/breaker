@@ -1,16 +1,14 @@
-#include "utility/Timer.h"
+#include "Timer.h"
 
 // Available modes, fit to needs
 template double Timer::GetElapsedTime<milliseconds>();
 template double Timer::GetElapsedTime<seconds>();
 
 // Init
-Timer::Timer() :
-  t1(high_resolution_clock::now()),
-  t2(high_resolution_clock::now()),
-  running(false) {
-
-}
+Timer::Timer()
+    : t1(high_resolution_clock::now()),
+      t2(high_resolution_clock::now()),
+      running(false) {}
 
 // Start Timer
 void Timer::Start() {

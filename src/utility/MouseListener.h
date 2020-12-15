@@ -4,7 +4,7 @@
  * Listens for mouse buttons JUST pressed or JUST released
  *   since the last tick
  * 18/01/2017
-**/
+ **/
 
 //#include <iostream>
 #include <allegro.h>
@@ -15,18 +15,19 @@
 #define MAX_MOUSE_BUTTONS 3
 
 class MouseListener {
-  public:
-    static void update();
+ public:
+  static void update();
 
-    static unsigned int x;
-    static unsigned int y;
-    static unsigned char mouse_button;
-    static unsigned char mouse_pressed;
-    static unsigned char mouse_released;
-    static int mouse_z_change;
-  private:
-    static unsigned char mouse_old;
-    static int mouse_z_old;
+  static unsigned int x;
+  static unsigned int y;
+  static unsigned char mouse_button;
+  static unsigned char mouse_pressed;
+  static unsigned char mouse_released;
+  static int mouse_z_change;
+
+ private:
+  static unsigned char mouse_old;
+  static int mouse_z_old;
 };
 
-#endif // MouseListener_H
+#endif  // MouseListener_H

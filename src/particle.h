@@ -3,7 +3,7 @@
  * Allan Legemaate
  * 07/01/2017
  * A better particle
-**/
+ **/
 #ifndef PARTICLE_H
 #define PARTICLE_H
 
@@ -17,51 +17,58 @@
 #include "vec2.h"
 
 class particle {
-  public:
-    // Constructor
-    particle (int x, int y, vec2 velocity, vec2 acceleration, vec2 size, int colorStart, int colorEnd, int life, char type, bool trans_life);
+ public:
+  // Constructor
+  particle(int x,
+           int y,
+           vec2 velocity,
+           vec2 acceleration,
+           vec2 size,
+           int colorStart,
+           int colorEnd,
+           int life,
+           char type,
+           bool trans_life);
 
-    // Destructor
-    ~particle() {};
+  // Destructor
+  ~particle(){};
 
-    // Is dead
-    bool isDead() const;
+  // Is dead
+  bool isDead() const;
 
-    // Set image
-    void set_image (BITMAP *image);
+  // Set image
+  void set_image(BITMAP* image);
 
-    // Update
-    void update (int dt);
+  // Update
+  void update(int dt);
 
-    // Draw
-    void draw (BITMAP *tempBitmap);
+  // Draw
+  void draw(BITMAP* tempBitmap);
 
-    // Make new color
-    void mix_colors();
+  // Make new color
+  void mix_colors();
 
-    // Position / size
-    float x;
-    float y;
-    vec2 size;
+  // Position / size
+  float x;
+  float y;
+  vec2 size;
 
-    // Looks
-    int colorStart;
-    int colorEnd;
-    int color;
-    char type;
-    bool trans_life;
+  // Looks
+  int colorStart;
+  int colorEnd;
+  int color;
+  char type;
+  bool trans_life;
 
-    BITMAP *image;
+  BITMAP* image;
 
-    // Behavior
-    vec2 velocity;
-    vec2 acceleration;
-    int life;
-    int life_start;
+  // Behavior
+  vec2 velocity;
+  vec2 acceleration;
+  int life;
+  int life_start;
 
-  private:
-
+ private:
 };
 
 #endif
-

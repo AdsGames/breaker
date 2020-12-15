@@ -1,5 +1,5 @@
-#include "utility/MouseListener.h"
-#include "globals.h"
+#include "MouseListener.h"
+#include "../globals.h"
 
 unsigned char MouseListener::mouse_button = 0;
 unsigned char MouseListener::mouse_pressed = 0;
@@ -14,7 +14,7 @@ int MouseListener::mouse_z_old = 0;
 // Check those buttons!
 void MouseListener::update() {
   // Check button just pressed
-  for (int i = 0; i < MAX_MOUSE_BUTTONS; i ++) {
+  for (int i = 0; i < MAX_MOUSE_BUTTONS; i++) {
     // Clear old values
     mouse_pressed &= ~(1 << i);
     mouse_released &= ~(1 << i);

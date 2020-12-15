@@ -5,26 +5,32 @@
 #include <string>
 
 class InputBox {
-  public:
-    InputBox();
-    InputBox(int x, int y, int width, int height, const std::string &value = "", const std::string &type = "text");
-    virtual ~InputBox();
+ public:
+  InputBox();
+  InputBox(int x,
+           int y,
+           int width,
+           int height,
+           const std::string& value = "",
+           const std::string& type = "text");
+  virtual ~InputBox();
 
-    void Focus();
+  void Focus();
 
-    std::string GetValue() const;
-    void Update();
-    void Draw(BITMAP *buffer);
-    bool Hover() const;
-  private:
-    int x, y;
-    int width, height;
+  std::string GetValue() const;
+  void Update();
+  void Draw(BITMAP* buffer);
+  bool Hover() const;
 
-    std::string text;
-    std::string type;
+ private:
+  int x, y;
+  int width, height;
 
-    unsigned int text_iter;
-    bool focused;
+  std::string text;
+  std::string type;
+
+  unsigned int text_iter;
+  bool focused;
 };
 
-#endif // INPUTBOX_H
+#endif  // INPUTBOX_H

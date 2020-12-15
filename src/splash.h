@@ -2,7 +2,7 @@
  * SPLASH
  * Allan Legemaate
  * 26/10/2017
-**/
+ **/
 #ifndef SPLASH_H
 #define SPLASH_H
 
@@ -12,20 +12,20 @@
 #include "state.h"
 
 class splash : public state {
-  public:
-    splash();
-    virtual ~splash();
+ public:
+  splash();
+  virtual ~splash();
 
-    virtual void update() override;
-    virtual void draw() override;
+  virtual void update() override;
+  virtual void draw() override;
 
-  private:
-    // Title images
-    BITMAP *intro;
-    BITMAP *title;
+ private:
+  // Title images
+  BITMAP* intro;
+  BITMAP* title;
 
-    // Time
-    clock_t intro_time;
+  // Time
+  clock_t intro_time;
 };
 
-#endif // SPLASH_H
+#endif  // SPLASH_H

@@ -3,12 +3,12 @@
 
 #include "utility/MouseListener.h"
 
-#include "state.h"
-#include "init.h"
-#include "splash.h"
-#include "menu.h"
 #include "game.h"
 #include "globals.h"
+#include "init.h"
+#include "menu.h"
+#include "splash.h"
+#include "state.h"
 
 // Fixed update system
 using namespace std::chrono_literals;
@@ -19,7 +19,7 @@ constexpr nanoseconds timestep(16ms);
 MouseListener m_listener;
 
 // Current state object
-state *currentState = nullptr;
+state* currentState = nullptr;
 
 // Are we closing?
 bool closing = false;
@@ -33,10 +33,10 @@ void clean_up();
 void close_button_handler();
 
 // Close button handler
-void close_button_handler (void) {
+void close_button_handler(void) {
   closing = true;
 }
-END_OF_FUNCTION (close_button_handler)
+END_OF_FUNCTION(close_button_handler)
 
 // Delete game state and free state resources
 void clean_up() {
@@ -78,23 +78,23 @@ void change_state() {
         currentState = new game();
     }
 
-    //Change the current state ID
+    // Change the current state ID
     stateID = nextState;
 
-    //nullptr the next state ID
+    // nullptr the next state ID
     nextState = STATE_NULL;
   }
 }
 
 // Sets up game
 void setup() {
-  //Set the current state to INIT
+  // Set the current state to INIT
   stateID = STATE_INIT;
   currentState = new init();
 
   // Close button
-  LOCK_FUNCTION (close_button_handler);
-  set_close_button_callback (close_button_handler);
+  LOCK_FUNCTION(close_button_handler);
+  set_close_button_callback(close_button_handler);
 }
 
 // Does all game loops
@@ -106,17 +106,17 @@ void update() {
   m_listener.update();
 
   // Update state
-  currentState -> update();
+  currentState->update();
 }
 
 // Draw
 void draw() {
   // Update state
-  currentState -> draw();
+  currentState->draw();
 
   // Draw fps if requested
   if (config_show_fps) {
-    //textprintf_ex (screen, font, 0, 0, 0xFFFFFF, 0x000000, "%i", fps);
+    // textprintf_ex (screen, font, 0, 0, 0xFFFFFF, 0x000000, "%i", fps);
   }
 }
 
@@ -134,7 +134,7 @@ int main() {
     time_start = clock::now();
     lag += duration_cast<nanoseconds>(delta_time);
 
-    while(lag >= timestep) {
+    while (lag >= timestep) {
       lag -= timestep;
       update();
     }

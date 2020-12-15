@@ -49,4 +49,5 @@ install_manifest.txt
 bin
 docs
 lib
-build/Mazes*
+build/Breaker*
+build/scores.dat

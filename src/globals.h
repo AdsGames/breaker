@@ -2,7 +2,7 @@
  * GLOBALS
  * Allan Legemaate
  * 26/10/2017
-**/
+ **/
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
