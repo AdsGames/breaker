@@ -1,32 +1,39 @@
-#ifndef BUTTON_H
-#define BUTTON_H
+#ifndef UTIL_BUTTON_H
+#define UTIL_BUTTON_H
 
-#include <allegro.h>
+#include <asw/asw.h>
 #include <functional>
+#include <string>
 
 class Button {
  public:
   Button();
   Button(int x, int y);
-  ~Button();
 
-  void Update();
+  void update() const;
 
-  void SetImages(const char* image1, const char* image2);
+  void setImages(const std::string& image1, const std::string& image2);
 
-  void SetOnClick(std::function<void()> func);
+  int getX() const;
+  int getY() const;
 
-  void Draw(BITMAP* buffer);
+  void setOnClick(std::function<void()> func);
 
-  bool Hover();
+  void draw() const;
+
+  bool isHovering() const;
 
  private:
-  std::function<void(void)> OnClick;
+  std::function<void(void)> onClick{nullptr};
 
-  int x, y;
-  int width, height;
+  int x;
+  int y;
 
-  BITMAP* images[2];
+  int width{10};
+  int height{10};
+
+  asw::Texture image{nullptr};
+  asw::Texture imageHover{nullptr};
 };
 
 #endif
