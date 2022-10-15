@@ -1,123 +1,123 @@
 #include "InputBox.h"
 
-#include <iostream>
-
-#include "../utility/MouseListener.h"
-
-InputBox::InputBox() : InputBox(0, 0, 0, 0, "") {}
-
 InputBox::InputBox(int x,
                    int y,
                    int width,
                    int height,
+                   asw::Font font,
                    const std::string& value,
                    const std::string& type)
-    : x(x), y(y), width(width), height(height), text(value), type(type) {
-  this->focused = false;
-  text_iter = 0;
-}
+    : x(x),
+      y(y),
+      width(width),
+      height(height),
+      font(font),
+      text(value),
+      type(type) {}
 
-InputBox::~InputBox() {}
-
-void InputBox::Focus() {
+void InputBox::focus() {
   focused = true;
 }
 
-std::string InputBox::GetValue() const {
+std::string InputBox::getValue() const {
   return text;
 }
 
-bool InputBox::Hover() const {
-  return (signed)MouseListener::x > x && (signed)MouseListener::x < x + width &&
-         (signed)MouseListener::y > y && (signed)MouseListener::y < y + height;
+bool InputBox::hover() const {
+  return asw::input::mouse.x > x && asw::input::mouse.x < x + width &&
+         asw::input::mouse.y > y && asw::input::mouse.y < y + height;
 }
 
-void InputBox::Update() {
+void InputBox::update() {
   // Focus
-  if (MouseListener::mouse_pressed & 1) {
-    focused = Hover();
+  if (asw::input::mouse.pressed[1]) {
+    focused = hover();
 
     if (focused) {
       int closest = width;
 
       for (unsigned int i = 0; i <= text.length(); i++) {
-        int distance = abs(text_length(font, text.substr(0, i).c_str()) + x +
-                           6 - (signed)MouseListener::x);
+        int textSize = asw::util::getTextSize(font, text.substr(0, i)).x;
+
+        int distance = abs(textSize + x + 6 - asw::input::mouse.x);
 
         if (distance < closest) {
-          text_iter = i;
+          textIterator = i;
           closest = distance;
         }
       }
     }
-
-    clear_keybuf();
   }
 
-  if (!focused || !keypressed())
-    return;
+  int lastKey = asw::input::keyboard.lastPressed;
 
-  int newkey = readkey();
-  char ASCII = newkey & 0xff;
-  char scancode = newkey >> 8;
+  if (!focused || lastKey == -1) {
+    return;
+  }
 
   // a character key was pressed; add it to the string
-  if (type == "number") {
-    if (ASCII >= 48 && ASCII <= 57 &&
-        text_length(font, (text + ASCII).c_str()) < width) {
-      text.insert(text.begin() + text_iter, ASCII);
-      text_iter++;
-      return;
+  if (type == "number" || type == "text") {
+    // Numeric only
+    if (lastKey >= 30 && lastKey <= 38) {
+      text.insert(text.begin() + textIterator, lastKey + 19);
+      textIterator++;
+    }
+
+    if (lastKey == 39) {
+      text.insert(text.begin() + textIterator, lastKey + 9);
+      textIterator++;
     }
   }
 
-  else if (type == "text") {
-    if (ASCII >= 32 && ASCII <= 126 &&
-        text_length(font, (text + ASCII).c_str()) < width) {
-      text.insert(text.begin() + text_iter, ASCII);
-      text_iter++;
-      return;
+  if (type == "text" && lastKey >= 4 && lastKey <= 29) {
+    if (asw::input::keyboard.down[SDL_SCANCODE_LSHIFT] ||
+        asw::input::keyboard.down[SDL_SCANCODE_RSHIFT]) {
+      text.insert(text.begin() + textIterator, 'A' - 4 + lastKey);
+    } else {
+      text.insert(text.begin() + textIterator, 'a' - 4 + lastKey);
     }
+
+    textIterator++;
   }
 
   // some other, "special" key was pressed; handle it here
-  if (scancode == KEY_BACKSPACE) {
-    if (text_iter != 0) {
-      text_iter--;
-      text.erase(text.begin() + text_iter);
-    }
+  if (asw::input::keyboard.pressed[SDL_SCANCODE_BACKSPACE] &&
+      textIterator != 0) {
+    textIterator--;
+    text.erase(text.begin() + textIterator);
   }
 
-  else if (scancode == KEY_RIGHT) {
-    if (text_iter != text.size()) {
-      text_iter++;
-    }
+  if (asw::input::keyboard.pressed[SDL_SCANCODE_RIGHT] &&
+      textIterator != text.size()) {
+    textIterator++;
   }
 
-  else if (scancode == KEY_LEFT) {
-    if (text_iter != 0) {
-      text_iter--;
-    }
+  if (asw::input::keyboard.pressed[SDL_SCANCODE_LEFT] && textIterator != 0) {
+    textIterator--;
   }
 }
 
 // Draw box
-void InputBox::Draw(BITMAP* buffer) {
-  rectfill(buffer, x, y, x + width, y + height, makecol(12, 12, 12));
+void InputBox::draw() const {
+  asw::draw::rectFill(x, y, width, height, asw::util::makeColor(12, 12, 12));
 
-  int col =
-      (Hover() || focused) ? makecol(230, 230, 230) : makecol(245, 245, 245);
+  asw::Color col = (hover() || focused) ? asw::util::makeColor(230, 230, 230)
+                                        : asw::util::makeColor(245, 245, 245);
 
-  if (focused)
-    rectfill(buffer, x + 2, y + 2, x + width - 2, y + height - 2, col);
-  else
-    rectfill(buffer, x + 1, y + 1, x + width - 1, y + height - 1, col);
+  if (focused) {
+    asw::draw::rectFill(x + 2, y + 2, width - 4, height - 4, col);
+  } else {
+    asw::draw::rectFill(x + 1, y + 1, width - 2, height - 2, col);
+  }
 
   // Output the string to the screen
-  textout_ex(buffer, font, text.c_str(), x + 6, y, makecol(12, 12, 12), -1);
+  asw::draw::text(font, text, x + 6, y, asw::util::makeColor(22, 22, 22));
 
   // Draw the caret
-  if (focused)
-    vline(buffer, text_length(font, text.substr(0, text_iter).c_str()) + x + 6,
-          y + 8, y + height - 8, makecol(0, 0, 0));
+  if (focused) {
+    int textSize = asw::util::getTextSize(font, text.substr(0, textIterator)).x;
+
+    asw::draw::rectFill(textSize + x + 6, y + 8, 1, height - 16,
+                        asw::util::makeColor(0, 0, 0));
+  }
 }

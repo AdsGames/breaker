@@ -1,7 +1,5 @@
 #include "globals.h"
 
-#include <loadpng.h>
-#include <logg.h>
 #include <random>
 
 int NATIVE_SCREEN_W = 1280;

@@ -1,135 +1,89 @@
-#include <allegro.h>
+// Includes
+#include <asw/asw.h>
+
 #include <chrono>
+#include <memory>
 
-#include "utility/MouseListener.h"
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#include <emscripten/html5.h>
+#endif
 
-#include "game.h"
-#include "globals.h"
-#include "init.h"
-#include "menu.h"
-#include "splash.h"
-#include "state.h"
+// For state engine
+#include "State.h"
 
-// Fixed update system
 using namespace std::chrono_literals;
 using namespace std::chrono;
 constexpr nanoseconds timestep(16ms);
 
-// Mouse listener
-MouseListener m_listener;
+// State engine
+std::unique_ptr<StateEngine> state;
 
-// Current state object
-state* currentState = nullptr;
-
-// Are we closing?
-bool closing = false;
-
-// Function declarations
+// Functions
+void setup();
 void draw();
 void update();
-void setup();
-void change_state();
-void clean_up();
-void close_button_handler();
 
-// Close button handler
-void close_button_handler(void) {
-  closing = true;
-}
-END_OF_FUNCTION(close_button_handler)
+// FPS system
+int fps = 0;
+int frames_done = 0;
 
-// Delete game state and free state resources
-void clean_up() {
-  delete currentState;
-}
-
-// Change game screen
-void change_state() {
-  // If the state needs to be changed
-  if (nextState != STATE_NULL) {
-    // Delete the current state
-    if (nextState != STATE_EXIT) {
-      delete currentState;
-    }
-
-    // Change the state
-    switch (nextState) {
-      case STATE_INIT:
-        currentState = new init();
-        break;
-
-      case STATE_GAME:
-        currentState = new game();
-        break;
-
-      case STATE_MENU:
-        currentState = new menu();
-        break;
-
-      case STATE_SPLASH:
-        currentState = new splash();
-        break;
-
-      case STATE_EXIT:
-        closing = true;
-        break;
-
-      default:
-        currentState = new game();
-    }
-
-    // Change the current state ID
-    stateID = nextState;
-
-    // nullptr the next state ID
-    nextState = STATE_NULL;
-  }
-}
-
-// Sets up game
+// Setup game
 void setup() {
-  // Set the current state to INIT
-  stateID = STATE_INIT;
-  currentState = new init();
+  // Load allegro library
+  asw::core::init(1280, 960);
 
-  // Close button
-  LOCK_FUNCTION(close_button_handler);
-  set_close_button_callback(close_button_handler);
+  state = std::make_unique<StateEngine>();
 }
 
-// Does all game loops
+// Update
 void update() {
-  // Change state (if needed)
-  change_state();
+  // Update core
+  asw::core::update();
 
-  // Update listeners
-  m_listener.update();
+  // Do state logic
+  state->update();
 
-  // Update state
-  currentState->update();
-}
-
-// Draw
-void draw() {
-  // Update state
-  currentState->draw();
-
-  // Draw fps if requested
-  if (config_show_fps) {
-    // textprintf_ex (screen, font, 0, 0, 0xFFFFFF, 0x000000, "%i", fps);
+  // Handle exit
+  if (state->getStateId() == ProgramState::STATE_EXIT) {
+    asw::core::exit = true;
   }
 }
 
-// main function of program
-int main() {
-  // Setup
+// Do state rendering
+void draw() {
+  state->draw();
+}
+
+// Loop (emscripten compatibility)
+#ifdef __EMSCRIPTEN__
+void loop() {
+  update();
+  draw();
+}
+#endif
+
+// Main function*/
+int main(int argc, char* argv[]) {
+  // Setup basic functionality
   setup();
+
+  // Set the current state ID
+  state->setNextState(ProgramState::STATE_INIT);
+
+  // Background Music
+  asw::Sample music = asw::assets::loadSample("assets/sounds/music.ogg");
+  asw::sound::play(music, 255, 128, -1);
+
+#ifdef __EMSCRIPTEN__
+  emscripten_set_main_loop(loop, 0, 1);
+#else
 
   using clock = high_resolution_clock;
   nanoseconds lag(0ns);
   auto time_start = clock::now();
 
-  while (!key[KEY_ESC] && !closing) {
+  while (!asw::input::keyboard.down[SDL_SCANCODE_ESCAPE] && !asw::core::exit) {
     auto delta_time = clock::now() - time_start;
     time_start = clock::now();
     lag += duration_cast<nanoseconds>(delta_time);
@@ -140,10 +94,9 @@ int main() {
     }
 
     draw();
+    frames_done++;
   }
-
-  clean_up();
+#endif
 
   return 0;
 }
-END_OF_MAIN()
