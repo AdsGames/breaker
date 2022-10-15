@@ -2,58 +2,43 @@
 
 A simple clear the board style breaking game.
 
-## Getting started
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=AdsGames_Breaker&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=AdsGames_Breaker)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=AdsGames_Breaker&metric=bugs)](https://sonarcloud.io/summary/new_code?id=AdsGames_Breaker)
+
+## Demo
+
+[Web Demo](https://adsgames.github.io/Breaker/)
+
+## Setup
 
 ### Windows (MSYS2)
 
-#### Install Libraries
-
 ```bash
-https://www.allegro.cc/files/?v=4.4
-```
-
-#### Build
-
-```bash
-cmake -G "MSYS Makefiles" .
-```
-
-```bash
-make
+pacman -S mingw-w64-i686-gcc-libs mingw-w64-i686-SDL2 mingw-w64-i686-SDL2_mixer mingw-w64-i686-SDL2_image mingw-w64-i686-SDL2_ttf mingw-w64-i686-SDL2_gfx
 ```
 
 ### Mac OS
 
-#### Install Libraries
-
 ```bash
-https://github.com/msikma/liballeg.4.4.2-osx
-```
-
-#### Build
-
-```bash
-cmake -G "Unix Makefiles" .
-```
-
-```bash
-make
+brew install sdl2 sdl2_image sdl2_gfx sdl2_ttf sdl2_mixer
 ```
 
 ### Linux
 
-#### Install Libraries
-
 ```bash
-sudo apt-get install liballegro4-dev libloadpng4-dev liblogg4-dev
+sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev libsdl2-gfx-dev
 ```
 
-#### Build
+### Build
 
 ```bash
-cmake -G "Unix Makefiles" .
+cmake .
+make
 ```
 
+### Build Emscripten
+
 ```bash
+emcmake cmake .
 make
 ```
