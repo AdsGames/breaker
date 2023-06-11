@@ -11,6 +11,13 @@ A simple clear the board style breaking game.
 
 ## Setup
 
+### Submodules
+
+```bash
+git submodule init
+git submodule update
+```
+
 ### Windows (MSYS2)
 
 ```bash
