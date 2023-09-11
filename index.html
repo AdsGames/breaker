@@ -22,7 +22,12 @@
   </head>
 
   <body>
-    <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+    <canvas
+      id="canvas"
+      oncontextmenu="event.preventDefault()"
+      onclick="this.focus()"
+      tabindex="-1"
+    ></canvas>
 
     <script type="text/javascript">
       var Module = {
@@ -32,6 +37,6 @@
       };
     </script>
 
-    <script src="index.js"></script>
+    {{{ SCRIPT }}}
   </body>
 </html>
