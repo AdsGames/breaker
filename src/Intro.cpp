@@ -8,11 +8,11 @@ void Intro::init() {
   intro = asw::assets::loadTexture("assets/images/intro.png");
 
   // Start timer
-  timer.Start();
+  timer.start();
 }
 
 void Intro::update() {
-  auto time = timer.GetElapsedTime<milliseconds>();
+  auto time = timer.getElapsedTime<std::chrono::milliseconds>();
 
   if (time >= 3000 || asw::input::keyboard.anyPressed) {
     setNextState(ProgramState::STATE_MENU);
@@ -20,7 +20,7 @@ void Intro::update() {
 }
 
 void Intro::draw() {
-  auto time = timer.GetElapsedTime<milliseconds>();
+  auto time = timer.getElapsedTime<std::chrono::milliseconds>();
 
   if (time < 1500) {
     asw::draw::sprite(intro, 0, 0);

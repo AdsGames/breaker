@@ -11,11 +11,12 @@ A simple clear the board style breaking game.
 
 ## Setup
 
-### Submodules
+### Dependencies
+
+To pull the submodules, run the following command:
 
 ```bash
-git submodule init
-git submodule update
+git submodule update --init --recursive
 ```
 
 ### Windows (MSYS2)
