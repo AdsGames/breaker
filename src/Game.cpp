@@ -224,8 +224,8 @@ void Game::update() {
   } else {
     startAnimate = 0;
 
-    if (!game_time.IsRunning())
-      game_time.Start();
+    if (!game_time.isRunning())
+      game_time.start();
   }
 
   // In Game
@@ -278,13 +278,13 @@ void Game::update() {
 
   // Game over state
   else {
-    if (game_time.IsRunning())
-      game_time.Stop();
+    if (game_time.isRunning())
+      game_time.stop();
 
     // Set score
     if (score == 0) {
       score = difficulty * (((BLOCKS_WIDE * BLOCKS_HIGH) - countBlocks()) -
-                            game_time.GetElapsedTime<seconds>());
+                            game_time.getElapsedTime<std::chrono::seconds>());
     } else if (score <= 0) {
       score = 1;
     }
@@ -322,8 +322,10 @@ void Game::draw() {
   asw::draw::textRight(font, "Blocks Left: " + std::to_string(countBlocks()),
                        1240, 16, asw::util::makeColor(0, 0, 0));
   asw::draw::text(
-      font, "Time: " + std::to_string(game_time.GetElapsedTime<seconds>()), 40,
-      16, asw::util::makeColor(0, 0, 0));
+      font,
+      "Time: " +
+          std::to_string(game_time.getElapsedTime<std::chrono::seconds>()),
+      40, 16, asw::util::makeColor(0, 0, 0));
 
   // End game dialog
   if (game_over) {
