@@ -7,7 +7,7 @@ A simple clear the board style breaking game.
 
 ## Demo
 
-[Web Demo](https://adsgames.github.io/Breaker/)
+[Web Demo](https://adsgames.github.io/breaker/)
 
 ## Setup
 
