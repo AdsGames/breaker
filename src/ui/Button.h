@@ -7,17 +7,16 @@
 
 class Button {
  public:
-  Button();
-  Button(int x, int y);
+  Button() = default;
 
+  // Chaining
+  Button& setOnClick(const std::function<void()>& func);
+  Button& setPosition(const asw::Vec2<float>& position);
+  Button& setSize(const asw::Vec2<float>& size);
+  Button& setImages(const std::string& image1, const std::string& image2);
+
+  // Methods
   void update() const;
-
-  void setImages(const std::string& image1, const std::string& image2);
-
-  int getX() const;
-  int getY() const;
-
-  void setOnClick(std::function<void()> func);
 
   void draw() const;
 
@@ -26,11 +25,7 @@ class Button {
  private:
   std::function<void(void)> onClick{nullptr};
 
-  int x;
-  int y;
-
-  int width{10};
-  int height{10};
+  asw::Quad<float> transform;
 
   asw::Texture image{nullptr};
   asw::Texture imageHover{nullptr};

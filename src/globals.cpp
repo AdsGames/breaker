@@ -2,9 +2,6 @@
 
 #include <random>
 
-int NATIVE_SCREEN_W = 1280;
-int NATIVE_SCREEN_H = 960;
-
 // Config
 bool config_sound = true;
 int config_max_FPS = 100;

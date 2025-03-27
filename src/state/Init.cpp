@@ -1,9 +1,8 @@
-#include "Init.h"
+#include "./Init.h"
 
 #include <asw/asw.h>
 
-#include "globals.h"
-#include "utility/tools.h"
+#include "../globals.h"
 
 // Init state (and game)
 void Init::init() {
@@ -15,7 +14,7 @@ void Init::init() {
 }
 
 // Update
-void Init::update() {
+void Init::update(float _deltaTime) {
   // Goto splash
-  setNextState(ProgramState::STATE_INTRO);
+  sceneManager.setNextScene(States::Intro);
 }

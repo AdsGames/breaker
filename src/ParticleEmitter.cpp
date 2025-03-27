@@ -1,54 +1,55 @@
 #include "ParticleEmitter.h"
 
 #include <asw/asw.h>
+#include <algorithm>
 
-#include "utility/tools.h"
+ParticleEmitter& ParticleEmitter::setPosition(
+    const asw::Vec2<float>& position) {
+  transform.position = position;
+  return *this;
+}
 
-// Constructor basic
-ParticleEmitter::ParticleEmitter() : ParticleEmitter(vec2(0, 0), vec2(0, 0)) {}
-
-// Constructor with parameters
-ParticleEmitter::ParticleEmitter(vec2 position, vec2 size)
-    : position(position), size(size), launchVelocity(vec2(-10, 10)), type(0) {
-  // Load image
-  images[0] = asw::assets::loadTexture("assets/images/fuzzball.png");
-  images[1] = asw::assets::loadTexture("assets/images/fuzzball2.png");
-  images[2] = asw::assets::loadTexture("assets/images/fuzzball_blue.png");
+ParticleEmitter& ParticleEmitter::setSize(const asw::Vec2<float>& size) {
+  transform.size = size;
+  return *this;
 }
 
 // Create particles
 void ParticleEmitter::createParticle() {
-  Particle newPart(
-      random(position.x, position.x + size.x),
-      random(position.y, position.y + size.y),
-      vec2(randomf(-0.1, 0.2), randomf(-0.4, -0.9)), vec2(0.008, -0.008),
-      vec2(random(5, 10)), asw::util::makeColor(255, 255, 255),
-      asw::util::makeColor(0, 0, 0), random(500, 1000), IMAGE, true);
-  newPart.setImage(images[0]);
-  particles.push_back(newPart);
-}
+  auto part_size = asw::random::between(5.0F, 10.0F);
+  auto random_x = asw::random::between(transform.position.x,
+                                       transform.position.x + transform.size.x);
+  auto random_y = asw::random::between(transform.position.y,
+                                       transform.position.y + transform.size.y);
 
-// Set emitter position
-void ParticleEmitter::setPosition(vec2 position) {
-  this->position = position;
+  const Particle particle =
+      Particle()
+          .setPosition({random_x, random_y})
+          .setSize({part_size, part_size})
+          .setVelocity(asw::Vec2<float>(asw::random::between(-0.1F, 0.2F),
+                                        asw::random::between(-0.4F, -0.9F)))
+          .setAcceleration(asw::Vec2<float>(0.008, -0.008))
+          .setLife(asw::random::between(500.0F, 1000.0F))
+          .setImage(image);
+
+  particles.push_back(particle);
 }
 
 // Update
-void ParticleEmitter::update(int dt) {
-  // Update each particle
-  for (unsigned int i = 0; i < particles.size(); i++) {
-    if (particles.at(i).isDead() ||
-        asw::input::keyboard.down[SDL_SCANCODE_BACKSPACE]) {
-      particles.erase(particles.begin() + i);
-    } else {
-      particles.at(i).update(dt / 4);
-    }
+void ParticleEmitter::update(float deltaTime) {
+  // Erase dead particles
+  std::remove_if(particles.begin(), particles.end(),
+                 [](const Particle& particle) { return particle.isDead(); });
+
+  // Update particles
+  for (auto& particle : particles) {
+    particle.update(deltaTime / 4.0F);
   }
 }
 
 // Draw
-void ParticleEmitter::draw() {
-  for (unsigned int i = 0; i < particles.size(); i++) {
-    particles.at(i).draw();
+void ParticleEmitter::draw() const {
+  for (auto& particle : particles) {
+    particle.draw();
   }
 }

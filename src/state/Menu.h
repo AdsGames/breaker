@@ -8,16 +8,16 @@
 
 #include <asw/asw.h>
 
-#include "ScoreManager.h"
-#include "State.h"
-#include "ui/Button.h"
+#include "../ScoreManager.h"
+#include "../ui/Button.h"
+#include "./States.h"
 
-class Menu : public State {
+class Menu : public asw::scene::Scene<States> {
  public:
-  using State::State;
+  using asw::scene::Scene<States>::Scene;
 
   void init() override;
-  void update() override;
+  void update(float deltaTime) override;
   void draw() override;
   void cleanup() override {
     // Nothing to do

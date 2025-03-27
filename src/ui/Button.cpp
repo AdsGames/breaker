@@ -1,50 +1,53 @@
 #include "Button.h"
 
-Button::Button() : Button(0, 0) {}
-
-Button::Button(int x, int y) : x(x), y(y) {}
-
-void Button::setOnClick(std::function<void(void)> func) {
-  onClick = func;
+Button& Button::setPosition(const asw::Vec2<float>& position) {
+  transform.position = position;
+  return *this;
 }
 
-// Load images from file
-void Button::setImages(const std::string& image1, const std::string& image2) {
+Button& Button::setSize(const asw::Vec2<float>& size) {
+  transform.size = size;
+  return *this;
+}
+
+Button& Button::setImages(const std::string& image1,
+                          const std::string& image2) {
   image = asw::assets::loadTexture(image1);
   imageHover = asw::assets::loadTexture(image2);
+  transform.size = asw::util::getTextureSize(image);
 
-  // Size
-  auto size = asw::util::getTextureSize(image);
-  height = size.y;
-  width = size.x;
+  return *this;
+}
+
+Button& Button::setOnClick(const std::function<void(void)>& func) {
+  onClick = func;
+
+  return *this;
 }
 
 bool Button::isHovering() const {
-  return asw::input::mouse.x > x && asw::input::mouse.x < x + width &&
-         asw::input::mouse.y > y && asw::input::mouse.y < y + height;
+  return transform.contains({asw::input::mouse.x, asw::input::mouse.y});
 }
 
 void Button::update() const {
-  if (isHovering() && asw::input::mouse.pressed[1] && onClick != nullptr) {
+  if (onClick == nullptr) {
+    return;
+  }
+
+  if (isHovering() &&
+      asw::input::wasButtonPressed(asw::input::MouseButton::LEFT)) {
     onClick();
   }
 }
 
-int Button::getX() const {
-  return x;
-}
-
-int Button::getY() const {
-  return y;
-}
-
 void Button::draw() const {
-  if (isHovering() && imageHover) {
-    asw::draw::sprite(imageHover, x, y);
-  } else if (!isHovering() && image) {
-    asw::draw::sprite(image, x, y);
+  auto hovering = isHovering();
+
+  if (hovering && imageHover) {
+    asw::draw::sprite(imageHover, transform.position);
+  } else if (!hovering && image) {
+    asw::draw::sprite(image, transform.position);
   } else {
-    asw::draw::rectFill(x, y, x + width, y + height,
-                        asw::util::makeColor(60, 60, 60));
+    asw::draw::rectFill(transform, asw::util::makeColor(60, 60, 60));
   }
 }

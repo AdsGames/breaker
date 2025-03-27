@@ -8,17 +8,20 @@
 
 #include <asw/asw.h>
 
-#include "State.h"
+#include "./States.h"
 
-class Init : public State {
+class Init : public asw::scene::Scene<States> {
  public:
-  using State::State;
+  using asw::scene::Scene<States>::Scene;
 
   void init() override;
-  void update() override;
-  void draw() override{
-      // Nothing to do
+
+  void update(float deltaTime) override;
+
+  void draw() override {
+    // Nothing to do
   };
+
   void cleanup() override {
     // Nothing to do
   }

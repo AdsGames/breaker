@@ -9,9 +9,6 @@
 #include <asw/asw.h>
 #include <string>
 
-extern int NATIVE_SCREEN_W;
-extern int NATIVE_SCREEN_H;
-
 // Config
 extern bool config_sound;
 extern int config_max_FPS;

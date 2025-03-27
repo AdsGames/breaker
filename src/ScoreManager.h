@@ -15,8 +15,6 @@ class ScoreManager {
   ScoreManager();
   explicit ScoreManager(const std::string& path);
 
-  virtual ~ScoreManager(){};
-
   void add(const std::string& name, int score);
 
   int getScore(int index) const;

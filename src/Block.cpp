@@ -1,18 +1,11 @@
 #include "Block.h"
 
-#include <math.h>
-
-#include "utility/tools.h"
-
 // Images
-asw::Texture Block::images[8] = {nullptr};
-
-// Default Constructor
-Block::Block() : Block(0, 0, 0) {}
+std::array<asw::Texture, 8> Block::images = {nullptr};
 
 // Constructor
-Block::Block(int x, int y, int type)
-    : x(x), y(y), type(type), frame(0), selected(false) {
+Block::Block(const asw::Vec2<float>& position, int type)
+    : transform(position, {80, 80}), type(type) {
   if (!images[0]) {
     loadImages();
   }
@@ -31,46 +24,43 @@ void Block::loadImages() {
 }
 
 // Explode that block
-void Block::explode(ParticleEmitter& emitter) {
+void Block::explode(ParticleEmitter& emitter) const {
   // Number of particles to expode into
-  int num_particles = 10;
-  emitter.setPosition(vec2(x, y));
+  const int num_particles = 10;
+  emitter.setPosition(transform.position);
+  emitter.setSize(transform.size);
 
   for (int i = 0; i < num_particles; i++) {
     emitter.createParticle();
   }
 }
 
-// Draw block to screen
-void Block::draw(int offset) {
-  // Draw overlay if selected
-  if (selected && int(floor(frame / 8)) == 1) {
-    asw::draw::sprite(Block::images[7], x, y - offset);
-  } else {
-    asw::draw::sprite(Block::images[type], x, y - offset);
-  }
+// Get position on screen
+const asw::Quad<float>& Block::getTransform() const {
+  return transform;
+}
+
+// Update
+void Block::update(float deltaTime) {
+  acc += deltaTime;
 
   // Increase frame counter
-  frame = (frame + 1) % 16;
+  if (acc > 32) {
+    frame = (frame + 1) % 16;
+    acc -= 32;
+  }
 }
 
-// Get position
-int Block::getX() const {
-  return x;
-}
-int Block::getY() const {
-  return y;
-}
+// Draw block to screen
+void Block::draw(float offset) const {
+  auto position = transform.position - asw::Vec2<float>(0, offset);
 
-// Get width
-int Block::getWidth() {
-  auto size = asw::util::getTextureSize(images[0]);
-  return images[0] ? size.x : 0;
-}
-
-int Block::getHeight() {
-  auto size = asw::util::getTextureSize(images[0]);
-  return images[0] ? size.y : 0;
+  // Draw overlay if selected
+  if (selected && int(floor(frame / 8)) == 1) {
+    asw::draw::sprite(Block::images[7], position);
+  } else {
+    asw::draw::sprite(Block::images[type], position);
+  }
 }
 
 // Get type
