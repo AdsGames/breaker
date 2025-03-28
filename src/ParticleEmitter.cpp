@@ -38,8 +38,11 @@ void ParticleEmitter::createParticle() {
 // Update
 void ParticleEmitter::update(float deltaTime) {
   // Erase dead particles
-  std::remove_if(particles.begin(), particles.end(),
-                 [](const Particle& particle) { return particle.isDead(); });
+  particles.erase(std::remove_if(particles.begin(), particles.end(),
+                                 [](const Particle& particle) {
+                                   return particle.isDead();
+                                 }),
+                  particles.end());
 
   // Update particles
   for (auto& particle : particles) {
