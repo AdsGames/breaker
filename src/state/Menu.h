@@ -7,6 +7,8 @@
 #define MENU_H
 
 #include <asw/asw.h>
+#include <array>
+#include <memory>
 
 #include "../ScoreManager.h"
 #include "../ui/Button.h"
@@ -17,11 +19,10 @@ class Menu : public asw::scene::Scene<States> {
   using asw::scene::Scene<States>::Scene;
 
   void init() override;
+
   void update(float deltaTime) override;
+
   void draw() override;
-  void cleanup() override {
-    // Nothing to do
-  }
 
  private:
   // Score table
@@ -34,15 +35,20 @@ class Menu : public asw::scene::Scene<States> {
   enum menu_states { MENU_MAIN, MENU_DIFFICULTY, MENU_SCORES, MENU_HELP };
 
   // Init buttons
-  Button btn_start, btn_easy, btn_medium, btn_hard, btn_back, btn_help,
-      btn_quit, btn_scores;
+  std::shared_ptr<Button> btn_start;
+  std::shared_ptr<Button> btn_easy;
+  std::shared_ptr<Button> btn_medium;
+  std::shared_ptr<Button> btn_hard;
+  std::shared_ptr<Button> btn_back;
+  std::shared_ptr<Button> btn_help;
+  std::shared_ptr<Button> btn_quit;
+  std::shared_ptr<Button> btn_scores;
 
   // Images
-  asw::Texture mainmenu;
-  asw::Texture menuHelp;
-  asw::Texture highScoresTable;
-  asw::Texture cursor[2];
-  asw::Texture trans_overlay;
+  std::array<asw::Texture, 2> cursor;
+  std::shared_ptr<asw::game::Sprite> menu_help;
+  std::shared_ptr<asw::game::Sprite> high_scores_table;
+  std::shared_ptr<asw::game::Sprite> trans_overlay;
 
   // Button sounds
   asw::Sample button_hover;

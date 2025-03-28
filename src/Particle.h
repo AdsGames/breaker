@@ -41,7 +41,6 @@ class Particle {
   asw::Vec2<float> velocity{0, 0};
   asw::Vec2<float> acceleration{0, 0};
   float life{100.0F};
-  float lifeStart{100.0F};
 };
 
 #endif

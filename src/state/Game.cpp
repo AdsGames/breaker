@@ -4,12 +4,9 @@
 
 // INIT
 void Game::init() {
-  // Sets Cursors
-  cursor[0] = asw::assets::loadTexture("assets/images/cursor1.png");
-  cursor[1] = asw::assets::loadTexture("assets/images/cursor2.png");
-
   // Sets background
-  background = asw::assets::loadTexture("assets/images/background.png");
+  createObject<asw::game::Sprite>()->setTexture(
+      asw::assets::loadTexture("assets/images/background.png"));
 
   // Sets Foreground
   foreground = asw::assets::loadTexture("assets/images/foreground.png");
@@ -19,6 +16,10 @@ void Game::init() {
 
   // Trans overlay
   trans_overlay = asw::assets::loadTexture("assets/images/overlay.png");
+
+  // Sets Cursors
+  cursor[0] = asw::assets::loadTexture("assets/images/cursor1.png");
+  cursor[1] = asw::assets::loadTexture("assets/images/cursor2.png");
 
   // Sets Sounds
   block_break = asw::assets::loadSample("assets/sounds/break.wav");
@@ -222,6 +223,8 @@ asw::Vec2<int> Game::getBlockIndex(float screen_x, float screen_y) {
 
 // Update
 void Game::update(float deltaTime) {
+  Scene::update(deltaTime);
+
   // Animation for start of game
   if (startAnimate > 10) {
     startAnimate -= deltaTime;
@@ -236,7 +239,7 @@ void Game::update(float deltaTime) {
   if (!game_over) {
     // Update particles
     particles.update(deltaTime);
-    done.update();
+    // done.update();
 
     // Update Tiles
     for (auto& row : tiles) {
@@ -303,15 +306,14 @@ void Game::update(float deltaTime) {
 
     // Name input
     ib_name.update();
-    dialog_yes.update();
-    dialog_no.update();
+    dialog_yes.update(deltaTime);
+    dialog_no.update(deltaTime);
   }
 }
 
 // Draw
 void Game::draw() {
-  // Draws background
-  asw::draw::sprite(background, asw::Vec2<float>(0, 0));
+  Scene::draw();
 
   // Draws Tiles
   for (auto& row : tiles) {

@@ -27,11 +27,10 @@ class Game : public asw::scene::Scene<States> {
   using asw::scene::Scene<States>::Scene;
 
   void init() override;
+
   void update(float deltaTime) override;
+
   void draw() override;
-  void cleanup() override {
-    // Nothing to do
-  }
 
  private:
   // Init the blocks on screen
@@ -39,7 +38,6 @@ class Game : public asw::scene::Scene<States> {
 
   // Images
   std::array<asw::Texture, 2> cursor;
-  asw::Texture background;
   asw::Texture foreground;
   asw::Texture dialog_box;
   asw::Texture trans_overlay;

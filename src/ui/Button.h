@@ -5,7 +5,7 @@
 #include <functional>
 #include <string>
 
-class Button {
+class Button : public asw::game::Sprite {
  public:
   Button() = default;
 
@@ -16,16 +16,12 @@ class Button {
   Button& setImages(const std::string& image1, const std::string& image2);
 
   // Methods
-  void update() const;
-
-  void draw() const;
+  void update(float deltaTime) override;
 
   bool isHovering() const;
 
  private:
   std::function<void(void)> onClick{nullptr};
-
-  asw::Quad<float> transform;
 
   asw::Texture image{nullptr};
   asw::Texture imageHover{nullptr};

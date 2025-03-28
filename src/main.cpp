@@ -16,10 +16,10 @@ int main(int argc, char* argv[]) {
   asw::core::init(1280, 960);
 
   // Init states
-  app.registerScene(States::Init, new Init(app));
-  app.registerScene(States::Intro, new Intro(app));
-  app.registerScene(States::Menu, new Menu(app));
-  app.registerScene(States::Game, new Game(app));
+  app.registerScene<Init>(States::Init, app);
+  app.registerScene<Intro>(States::Intro, app);
+  app.registerScene<Menu>(States::Menu, app);
+  app.registerScene<Game>(States::Game, app);
   app.setNextScene(States::Init);
 
   // Background Music

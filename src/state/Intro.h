@@ -3,6 +3,7 @@
 
 #include <asw/asw.h>
 #include <asw/util/Timer.h>
+#include <memory>
 
 #include "./States.h"
 
@@ -15,15 +16,9 @@ class Intro : public asw::scene::Scene<States> {
 
   void update(float deltaTime) override;
 
-  void draw() override;
-
-  void cleanup() override {
-    // Nothing to do
-  };
-
  private:
-  asw::Texture intro;
-  asw::Texture title;
+  std::shared_ptr<asw::game::Sprite> intro;
+  std::shared_ptr<asw::game::Sprite> title;
 
   Timer timer;
 };

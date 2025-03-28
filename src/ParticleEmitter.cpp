@@ -49,7 +49,7 @@ void ParticleEmitter::update(float deltaTime) {
 
 // Draw
 void ParticleEmitter::draw() const {
-  for (auto& particle : particles) {
+  for (const auto& particle : particles) {
     particle.draw();
   }
 }

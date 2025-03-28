@@ -17,14 +17,6 @@ class Init : public asw::scene::Scene<States> {
   void init() override;
 
   void update(float deltaTime) override;
-
-  void draw() override {
-    // Nothing to do
-  };
-
-  void cleanup() override {
-    // Nothing to do
-  }
 };
 
 #endif  // INIT_H
