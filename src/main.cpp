@@ -8,7 +8,7 @@
 #include "./state/States.h"
 
 // Main function*/
-int main(int argc, char* argv[]) {
+int main() {
   // Game state object
   asw::scene::SceneManager<States> app;
 
