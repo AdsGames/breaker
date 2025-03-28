@@ -32,7 +32,6 @@ $RECYCLE.BIN/
 # Icon must ends with two \r.
 Icon
 
-
 # Thumbnails
 ._*
 
@@ -51,3 +50,4 @@ docs
 build/
 *.ninja*
 compile_commands.json
+_deps/

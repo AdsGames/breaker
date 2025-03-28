@@ -6,11 +6,8 @@
 
 class InputBox {
  public:
-  explicit InputBox(int x = 0,
-                    int y = 0,
-                    int width = 100,
-                    int height = 20,
-                    asw::Font font = nullptr,
+  explicit InputBox(const asw::Quad<float>& position = {0, 0, 100, 20},
+                    const asw::Font& font = nullptr,
                     const std::string& value = "",
                     const std::string& type = "text");
 
@@ -19,14 +16,9 @@ class InputBox {
   std::string getValue() const;
   void update();
   void draw() const;
-  bool hover() const;
 
  private:
-  int x;
-  int y;
-
-  int width;
-  int height;
+  asw::Quad<float> transform;
 
   asw::Font font;
 

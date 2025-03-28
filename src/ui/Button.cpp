@@ -1,50 +1,47 @@
 #include "Button.h"
 
-Button::Button() : Button(0, 0) {}
-
-Button::Button(int x, int y) : x(x), y(y) {}
-
-void Button::setOnClick(std::function<void(void)> func) {
-  onClick = func;
+Button& Button::setPosition(const asw::Vec2<float>& position) {
+  transform.position = position;
+  return *this;
 }
 
-// Load images from file
-void Button::setImages(const std::string& image1, const std::string& image2) {
+Button& Button::setSize(const asw::Vec2<float>& size) {
+  transform.size = size;
+  return *this;
+}
+
+Button& Button::setImages(const std::string& image1,
+                          const std::string& image2) {
   image = asw::assets::loadTexture(image1);
   imageHover = asw::assets::loadTexture(image2);
+  setTexture(image);
 
-  // Size
-  auto size = asw::util::getTextureSize(image);
-  height = size.y;
-  width = size.x;
+  return *this;
+}
+
+Button& Button::setOnClick(const std::function<void(void)>& func) {
+  onClick = func;
+
+  return *this;
 }
 
 bool Button::isHovering() const {
-  return asw::input::mouse.x > x && asw::input::mouse.x < x + width &&
-         asw::input::mouse.y > y && asw::input::mouse.y < y + height;
+  return transform.contains({asw::input::mouse.x, asw::input::mouse.y});
 }
 
-void Button::update() const {
-  if (isHovering() && asw::input::mouse.pressed[1] && onClick != nullptr) {
-    onClick();
-  }
-}
+void Button::update(float deltaTime) {
+  Sprite::update(deltaTime);
 
-int Button::getX() const {
-  return x;
-}
+  auto hovering = isHovering();
 
-int Button::getY() const {
-  return y;
-}
-
-void Button::draw() const {
-  if (isHovering() && imageHover) {
-    asw::draw::sprite(imageHover, x, y);
-  } else if (!isHovering() && image) {
-    asw::draw::sprite(image, x, y);
+  if (hovering) {
+    setTexture(imageHover);
   } else {
-    asw::draw::rectFill(x, y, x + width, y + height,
-                        asw::util::makeColor(60, 60, 60));
+    setTexture(image);
+  }
+
+  if (onClick != nullptr && hovering &&
+      asw::input::wasButtonPressed(asw::input::MouseButton::LEFT)) {
+    onClick();
   }
 }

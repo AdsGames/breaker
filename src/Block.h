@@ -8,31 +8,27 @@
 #define BLOCK_H
 
 #include <asw/asw.h>
+#include <array>
 
 #include "ParticleEmitter.h"
 
 class Block {
  public:
-  // Ctor / Dtor
-  Block();
-  Block(int x, int y, int type);
+  Block() = default;
+
+  Block(const asw::Vec2<float>& position, int type);
+
+  // Update
+  void update(float deltaTime);
 
   // Draw
-  void draw(int offset);
+  void draw(float offset) const;
 
   // Explode that block
-  void explode(ParticleEmitter& emitter);
-
-  // Change images depending on block
-  void change();
+  void explode(ParticleEmitter& emitter) const;
 
   // Get position on screen
-  int getX() const;
-  int getY() const;
-
-  // Get width
-  static int getWidth();
-  static int getHeight();
+  const asw::Quad<float>& getTransform() const;
 
   // Get type
   int getType() const;
@@ -49,19 +45,20 @@ class Block {
  private:
   // Load images
   static void loadImages();
-  static asw::Texture images[8];
+  static std::array<asw::Texture, 8> images;
 
   // Coordinates for screen
-  int x, y;
+  asw::Quad<float> transform{};
 
   // Type of block
-  int type;
+  int type{0};
 
   // Frame on for flashing
-  int frame;
+  int frame{0};
+  float acc{0.0F};
 
   // Selected by flash
-  bool selected;
+  bool selected{false};
 };
 
 #endif

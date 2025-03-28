@@ -5,32 +5,23 @@
 #include <functional>
 #include <string>
 
-class Button {
+class Button : public asw::game::Sprite {
  public:
-  Button();
-  Button(int x, int y);
+  Button() = default;
 
-  void update() const;
+  // Chaining
+  Button& setOnClick(const std::function<void()>& func);
+  Button& setPosition(const asw::Vec2<float>& position);
+  Button& setSize(const asw::Vec2<float>& size);
+  Button& setImages(const std::string& image1, const std::string& image2);
 
-  void setImages(const std::string& image1, const std::string& image2);
-
-  int getX() const;
-  int getY() const;
-
-  void setOnClick(std::function<void()> func);
-
-  void draw() const;
+  // Methods
+  void update(float deltaTime) override;
 
   bool isHovering() const;
 
  private:
   std::function<void(void)> onClick{nullptr};
-
-  int x;
-  int y;
-
-  int width{10};
-  int height{10};
 
   asw::Texture image{nullptr};
   asw::Texture imageHover{nullptr};

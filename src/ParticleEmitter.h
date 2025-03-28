@@ -10,45 +10,39 @@
 #include <vector>
 
 #include "Particle.h"
-#include "vec2.h"
 
 class ParticleEmitter {
  public:
   // Constructor
-  ParticleEmitter();
-  ParticleEmitter(vec2 position, vec2 size);
+  ParticleEmitter() {
+    image = asw::assets::loadTexture("assets/images/fuzzball.png");
+  };
+
+  // Set transform
+  ParticleEmitter& setPosition(const asw::Vec2<float>& position);
+  ParticleEmitter& setSize(const asw::Vec2<float>& size);
 
   // Create particle
   void createParticle();
 
-  // Set position
-  void setPosition(vec2 position);
-
   // Update
-  void update(int dt);
+  void update(float deltaTime);
 
   // Draw
-  void draw();
+  void draw() const;
 
  private:
   // Emitter area
-  vec2 position;
-  vec2 size;
-
-  // Velocity
-  vec2 launchVelocity;
-
-  // Type
-  int type;
-
-  // Fuzzy image
-  asw::Texture images[3];
+  asw::Quad<float> transform;
 
   // Create particle
-  void createParticle(int x, int y);
+  void createParticle(asw::Vec2<float> position);
 
   // Particles
   std::vector<Particle> particles;
+
+  // Texture
+  asw::Texture image;
 };
 
 #endif  // PARTICLE_EMITTER_H
