@@ -6,6 +6,9 @@ on:
       - main
     tags:
       - v*
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: read
@@ -49,6 +52,7 @@ jobs:
         run: emmake make -j4
 
       - uses: actions/upload-pages-artifact@v3
+        if: github.ref == 'refs/heads/main'
         with:
           path: ./build
 
