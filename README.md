@@ -12,16 +12,16 @@ A simple clear the board style breaking game.
 
 ## Setup
 
-### Build
+### CMake
 
 ```bash
-cmake .
-make -j<threads>
+cmake --preset debug
+cmake --build --preset debug
 ```
 
 ### Build Emscripten
 
 ```bash
-emcmake cmake .
-make -j<threads>
+emcmake cmake --preset debug
+cmake --build --preset debug
 ```

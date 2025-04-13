@@ -33,7 +33,7 @@ jobs:
       - name: Setup cache
         uses: actions/cache@v4
         with:
-          path: "_deps"
+          path: "./build/release/_deps"
           key: deps-${{ runner.os }}
 
       - uses: mymindstorm/setup-emsdk@v14
@@ -45,19 +45,17 @@ jobs:
         run: |
           embuilder build harfbuzz
 
-      - name: Run CMake
-        run: emcmake cmake -G "Unix Makefiles" .
+      - name: Configure
+        run: emcmake cmake --preset release
 
-      - name: Make
-        run: emmake make -j4
+      - name: Build
+        run: cmake --build --preset release
 
       - uses: actions/upload-pages-artifact@v3
-        if: github.ref == 'refs/heads/main'
         with:
-          path: ./build
+          path: ./build/release/target/
 
       - name: Deploy to GitHub Pages
-        if: github.ref == 'refs/heads/main'
         id: deployment
         uses: actions/deploy-pages@v4
 
@@ -66,7 +64,7 @@ jobs:
         uses: adsgames/deploy-to-adsgames@v1.1.2
         with:
           project-id: breaker
-          build-dir: ./build/
+          build-dir: ./build/release/target/
           platform: WEB
           bucket-access-key: ${{ secrets.LINODE_BUCKET_ACCESS_KEY }}
           bucket-secret-key: ${{ secrets.LINODE_BUCKET_SECRET_KEY }}
