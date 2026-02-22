@@ -12,9 +12,9 @@ Button& Button::setSize(const asw::Vec2<float>& size) {
 
 Button& Button::setImages(const std::string& image1,
                           const std::string& image2) {
-  image = asw::assets::loadTexture(image1);
-  imageHover = asw::assets::loadTexture(image2);
-  setTexture(image);
+  image = asw::assets::load_texture(image1);
+  imageHover = asw::assets::load_texture(image2);
+  set_texture(image);
 
   return *this;
 }
@@ -26,22 +26,22 @@ Button& Button::setOnClick(const std::function<void(void)>& func) {
 }
 
 bool Button::isHovering() const {
-  return transform.contains({asw::input::mouse.x, asw::input::mouse.y});
+  return transform.contains(asw::input::mouse.position);
 }
 
-void Button::update(float deltaTime) {
-  Sprite::update(deltaTime);
+void Button::update(float dt) {
+  Sprite::update(dt);
 
   auto hovering = isHovering();
 
   if (hovering) {
-    setTexture(imageHover);
+    set_texture(imageHover);
   } else {
-    setTexture(image);
+    set_texture(image);
   }
 
   if (onClick != nullptr && hovering &&
-      asw::input::wasButtonPressed(asw::input::MouseButton::LEFT)) {
+      asw::input::get_mouse_button_down(asw::input::MouseButton::Left)) {
     onClick();
   }
 }

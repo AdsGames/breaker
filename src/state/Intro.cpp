@@ -2,40 +2,36 @@
 
 void Intro::init() {
   // Intro
-  intro = createObject<asw::game::Sprite>();
-  intro->setTexture(asw::assets::loadTexture("assets/images/intro.png"));
+  intro_ = create_object<asw::game::Sprite>();
+  intro_->set_texture(asw::assets::load_texture("assets/images/intro.png"));
 
   // Title
-  title = createObject<asw::game::Sprite>();
-  title->setTexture(asw::assets::loadTexture("assets/images/title.png"));
-
-  // Start timer
-  timer.start();
+  title_ = create_object<asw::game::Sprite>();
+  title_->set_texture(asw::assets::load_texture("assets/images/title.png"));
 }
 
-void Intro::update(float deltaTime) {
-  Scene::update(deltaTime);
+void Intro::update(float dt) {
+  Scene::update(dt);
+  timer_ += dt;
 
-  auto time = timer.getElapsedTime<std::chrono::milliseconds>();
+  intro_->active = timer_ < 1.0F;
+  title_->active = timer_ > 1.0F;
 
-  intro->active = time < 1000;
-  title->active = time > 1000;
-
-  if (time < 200) {
-    intro->alpha =
-        asw::util::lerp(0.0F, 1.0F, static_cast<float>(time) / 200.0F);
-  } else if (time > 800 && time < 1000) {
-    intro->alpha =
-        asw::util::lerp(1.0F, 0.0F, static_cast<float>(time - 800) / 200.0F);
-  } else if (time > 1000 && time < 1200) {
-    title->alpha =
-        asw::util::lerp(0.0F, 1.0F, static_cast<float>(time - 1000) / 200.0F);
-  } else if (time > 2800 && time < 3000) {
-    title->alpha =
-        asw::util::lerp(1.0F, 0.0F, static_cast<float>(time - 2800) / 200.0F);
+  if (timer_ < 0.2F) {
+    intro_->alpha =
+        asw::util::lerp(0.0F, 1.0F, static_cast<float>(timer_) / 0.2F);
+  } else if (timer_ > 0.8F && timer_ < 1.0F) {
+    intro_->alpha =
+        asw::util::lerp(1.0F, 0.0F, static_cast<float>(timer_ - 0.8F) / 0.2F);
+  } else if (timer_ > 1.0F && timer_ < 1.2F) {
+    title_->alpha =
+        asw::util::lerp(0.0F, 1.0F, static_cast<float>(timer_ - 1.0F) / 0.2F);
+  } else if (timer_ > 2.8F && timer_ < 3.0F) {
+    title_->alpha =
+        asw::util::lerp(1.0F, 0.0F, static_cast<float>(timer_ - 2.8F) / 0.2F);
   }
 
-  if (time >= 3000 || asw::input::keyboard.anyPressed) {
-    sceneManager.setNextScene(States::Menu);
+  if (timer_ >= 3.0F || asw::input::keyboard.any_pressed) {
+    manager.set_next_scene(States::Menu);
   }
 }

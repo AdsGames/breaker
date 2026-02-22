@@ -13,26 +13,14 @@ Block::Block(const asw::Vec2<float>& position, int type)
 
 // Sets block images
 void Block::loadImages() {
-  images[0] = asw::assets::loadTexture("assets/images/blocks/red.png");
-  images[1] = asw::assets::loadTexture("assets/images/blocks/orange.png");
-  images[2] = asw::assets::loadTexture("assets/images/blocks/yellow.png");
-  images[3] = asw::assets::loadTexture("assets/images/blocks/green.png");
-  images[4] = asw::assets::loadTexture("assets/images/blocks/blue.png");
-  images[5] = asw::assets::loadTexture("assets/images/blocks/purple.png");
-  images[6] = asw::assets::loadTexture("assets/images/blocks/none.png");
-  images[7] = asw::assets::loadTexture("assets/images/blocks/flash.png");
-}
-
-// Explode that block
-void Block::explode(ParticleEmitter& emitter) const {
-  // Number of particles to expode into
-  const int num_particles = 10;
-  emitter.setPosition(transform.position);
-  emitter.setSize(transform.size);
-
-  for (int i = 0; i < num_particles; i++) {
-    emitter.createParticle();
-  }
+  images[0] = asw::assets::load_texture("assets/images/blocks/red.png");
+  images[1] = asw::assets::load_texture("assets/images/blocks/orange.png");
+  images[2] = asw::assets::load_texture("assets/images/blocks/yellow.png");
+  images[3] = asw::assets::load_texture("assets/images/blocks/green.png");
+  images[4] = asw::assets::load_texture("assets/images/blocks/blue.png");
+  images[5] = asw::assets::load_texture("assets/images/blocks/purple.png");
+  images[6] = asw::assets::load_texture("assets/images/blocks/none.png");
+  images[7] = asw::assets::load_texture("assets/images/blocks/flash.png");
 }
 
 // Get position on screen
@@ -41,8 +29,8 @@ const asw::Quad<float>& Block::getTransform() const {
 }
 
 // Update
-void Block::update(float deltaTime) {
-  acc += deltaTime;
+void Block::update(float dt) {
+  acc += dt;
 
   // Increase frame counter
   if (acc > 32) {

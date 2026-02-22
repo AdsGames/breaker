@@ -6,15 +6,15 @@
 
 // Init state (and game)
 void Init::init() {
-  asw::display::setTitle("Loading...");
+  asw::display::set_title("Loading...");
 
-  asw::display::setIcon("assets/images/icon.png");
+  asw::display::set_icon("assets/images/icon.png");
 
-  asw::display::setTitle("Breaker");
+  asw::display::set_title("Breaker");
 }
 
 // Update
-void Init::update(float _deltaTime) {
+void Init::update(float _dt) {
   // Goto splash
-  sceneManager.setNextScene(States::Intro);
+  manager.set_next_scene(States::Intro);
 }

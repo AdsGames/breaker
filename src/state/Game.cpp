@@ -4,33 +4,48 @@
 
 // INIT
 void Game::init() {
+  // Emitters
+  asw::ParticleConfig emitter_config;
+  emitter_config.lifetime_min = 5.0F;
+  emitter_config.lifetime_max = 1.0F;
+  emitter_config.speed_min = 10.0F;
+  emitter_config.speed_max = 100.0F;
+  emitter_config.texture =
+      asw::assets::load_texture("assets/images/fuzzball.png");
+  emitter_config.size_start = 30.0F;
+  emitter_config.size_end = 1.0F;
+  emitter_config.gravity = {1000.0F, -1000.0F};
+
+  emitter = asw::ParticleEmitter(emitter_config);
+  emitter.start();
+
   // Sets background
-  createObject<asw::game::Sprite>()->setTexture(
-      asw::assets::loadTexture("assets/images/background.png"));
+  create_object<asw::game::Sprite>()->set_texture(
+      asw::assets::load_texture("assets/images/background.png"));
 
   // Sets Foreground
-  foreground = asw::assets::loadTexture("assets/images/foreground.png");
+  foreground = asw::assets::load_texture("assets/images/foreground.png");
 
   // Sets menu
-  dialog_box = asw::assets::loadTexture("assets/images/menu.png");
+  dialog_box = asw::assets::load_texture("assets/images/menu.png");
 
   // Trans overlay
-  trans_overlay = asw::assets::loadTexture("assets/images/overlay.png");
+  trans_overlay = asw::assets::load_texture("assets/images/overlay.png");
 
   // Sets Cursors
-  cursor[0] = asw::assets::loadTexture("assets/images/cursor1.png");
-  cursor[1] = asw::assets::loadTexture("assets/images/cursor2.png");
+  cursor[0] = asw::assets::load_texture("assets/images/cursor1.png");
+  cursor[1] = asw::assets::load_texture("assets/images/cursor2.png");
 
   // Sets Sounds
-  block_break = asw::assets::loadSample("assets/sounds/break.wav");
-  click = asw::assets::loadSample("assets/sounds/click.wav");
+  block_break = asw::assets::load_sample("assets/sounds/break.wav");
+  click = asw::assets::load_sample("assets/sounds/click.wav");
 
   // Sets Font
-  font = asw::assets::loadFont("assets/fonts/ariblk.ttf", 24);
+  font = asw::assets::load_font("assets/fonts/ariblk.ttf", 24);
 
   // Sets Variables
   score = 0;
-  startAnimate = 1200.0F;
+  startAnimate = 1.2F;
   blocks_selected = 0;
   game_over = false;
   gameOverMessage = "Game Over";
@@ -59,7 +74,7 @@ void Game::init() {
                               "assets/images/buttons/yes_hover.png")
                    .setOnClick([this]() {
                      highscores.add(ib_name.getValue(), score);
-                     sceneManager.setNextScene(States::Game);
+                     manager.set_next_scene(States::Game);
                    });
 
   dialog_no = Button()
@@ -68,7 +83,7 @@ void Game::init() {
                              "assets/images/buttons/no_hover.png")
                   .setOnClick([this]() {
                     highscores.add(ib_name.getValue(), score);
-                    sceneManager.setNextScene(States::Menu);
+                    manager.set_next_scene(States::Menu);
                   });
 
   ib_name = InputBox({488, 405, 404, 44}, font, "Player");
@@ -115,7 +130,11 @@ void Game::destroySelectedBlocks() {
     for (auto& block : row) {
       if (block.getSelected()) {
         block.setSelected(false);
-        block.explode(particles);
+
+        emitter.transform.position =
+            block.getTransform().position + asw::Vec2<float>(40, 40);
+        emitter.emit(10);
+
         block.setType(6);
         num_destroyed++;
       }
@@ -222,36 +241,36 @@ asw::Vec2<int> Game::getBlockIndex(float screen_x, float screen_y) {
 }
 
 // Update
-void Game::update(float deltaTime) {
-  Scene::update(deltaTime);
+void Game::update(float dt) {
+  Scene::update(dt);
 
   // Animation for start of game
-  if (startAnimate > 10) {
-    startAnimate -= deltaTime;
+  if (startAnimate > 0.0F) {
+    startAnimate -= dt;
   } else {
     startAnimate = 0;
-    if (!game_time.isRunning()) {
-      game_time.start();
-    }
   }
 
   // In Game
   if (!game_over) {
+    if (startAnimate == 0) {
+      game_time += dt;
+    }
+
     // Update particles
-    particles.update(deltaTime);
-    // done.update();
+    emitter.update(dt);
 
     // Update Tiles
     for (auto& row : tiles) {
       for (auto& tile : row) {
-        tile.update(deltaTime);
+        tile.update(dt);
       }
     }
 
     // Select blocks
-    if (asw::input::wasButtonPressed(asw::input::MouseButton::LEFT)) {
-      auto selected_block =
-          getBlockIndex(asw::input::mouse.x, asw::input::mouse.y);
+    if (asw::input::get_mouse_button_down(asw::input::MouseButton::Left)) {
+      auto selected_block = getBlockIndex(asw::input::mouse.position.x,
+                                          asw::input::mouse.position.y);
 
       if (blocks_selected > 1 &&
           blockAt(selected_block.x, selected_block.y)->getSelected()) {
@@ -287,7 +306,7 @@ void Game::update(float deltaTime) {
       // Set score
       if (score == 0) {
         score = difficulty * (((BLOCKS_WIDE * BLOCKS_HIGH) - countBlocks()) -
-                              game_time.getElapsedTime<std::chrono::seconds>());
+                              static_cast<int>(game_time));
       } else if (score <= 0) {
         score = 1;
       }
@@ -300,14 +319,10 @@ void Game::update(float deltaTime) {
 
   // Game over state
   else {
-    if (game_time.isRunning()) {
-      game_time.stop();
-    }
-
     // Name input
     ib_name.update();
-    dialog_yes.update(deltaTime);
-    dialog_no.update(deltaTime);
+    dialog_yes.update(dt);
+    dialog_no.update(dt);
   }
 }
 
@@ -316,14 +331,14 @@ void Game::draw() {
   Scene::draw();
 
   // Draws Tiles
-  for (auto& row : tiles) {
-    for (auto& tile : row) {
-      tile.draw(startAnimate);
+  for (const auto& row : tiles) {
+    for (const auto& tile : row) {
+      tile.draw(startAnimate * 1000.0F);
     }
   }
 
   // Draw particles
-  particles.draw();
+  emitter.draw();
 
   // Draws foreground
   asw::draw::sprite(foreground, asw::Vec2<float>(0, 0));
@@ -332,14 +347,11 @@ void Game::draw() {
   done.draw();
 
   // Draws text
-  asw::draw::textRight(font, "Blocks Left: " + std::to_string(countBlocks()),
-                       asw::Vec2<float>(1240, 16),
-                       asw::util::makeColor(0, 0, 0));
-  asw::draw::text(
-      font,
-      "Time: " + std::to_string(static_cast<int>(
-                     game_time.getElapsedTime<std::chrono::seconds>())),
-      asw::Vec2<float>(40, 16), asw::util::makeColor(0, 0, 0));
+  asw::draw::text(font, std::format("Blocks Left: {}", countBlocks()),
+                  asw::Vec2<float>(1240, 16), asw::Color(0, 0, 0),
+                  asw::TextJustify::Right);
+  asw::draw::text(font, std::format("Time: {}", static_cast<int>(game_time)),
+                  asw::Vec2<float>(40, 16), asw::Color(0, 0, 0));
 
   // End game dialog
   if (game_over) {
@@ -351,11 +363,11 @@ void Game::draw() {
 
     asw::draw::sprite(foreground, asw::Vec2<float>(0, 0));
 
-    asw::draw::textCenter(font, gameOverMessage, asw::Vec2<float>(640, 310),
-                          asw::util::makeColor(0, 0, 0));
-    asw::draw::textCenter(font, "Score: " + std::to_string(score),
-                          asw::Vec2<float>(640, 360),
-                          asw::util::makeColor(0, 0, 0));
+    asw::draw::text(font, gameOverMessage, asw::Vec2<float>(640, 310),
+                    asw::Color(0, 0, 0), asw::TextJustify::Center);
+    asw::draw::text(font, std::format("Score: {}", score),
+                    asw::Vec2<float>(640, 360), asw::Color(0, 0, 0),
+                    asw::TextJustify::Center);
 
     // Input rectangle
     ib_name.draw();
@@ -366,11 +378,9 @@ void Game::draw() {
   }
 
   // Draws Cursor
-  if (asw::input::isButtonDown(asw::input::MouseButton::LEFT)) {
-    asw::draw::sprite(
-        cursor[1], asw::Vec2<float>(asw::input::mouse.x, asw::input::mouse.y));
+  if (asw::input::get_mouse_button(asw::input::MouseButton::Left)) {
+    asw::draw::sprite(cursor[1], asw::input::mouse.position);
   } else {
-    asw::draw::sprite(
-        cursor[0], asw::Vec2<float>(asw::input::mouse.x, asw::input::mouse.y));
+    asw::draw::sprite(cursor[0], asw::input::mouse.position);
   }
 }

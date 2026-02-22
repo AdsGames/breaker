@@ -16,7 +16,7 @@ class Button : public asw::game::Sprite {
   Button& setImages(const std::string& image1, const std::string& image2);
 
   // Methods
-  void update(float deltaTime) override;
+  void update(float dt) override;
 
   bool isHovering() const;
 

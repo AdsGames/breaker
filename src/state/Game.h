@@ -7,12 +7,9 @@
 #define GAME_H
 
 #include <asw/asw.h>
-#include <asw/util/Timer.h>
 #include <array>
 
 #include "../Block.h"
-#include "../Particle.h"
-#include "../ParticleEmitter.h"
 #include "../ScoreManager.h"
 #include "../ui/Button.h"
 #include "../ui/InputBox.h"
@@ -28,7 +25,7 @@ class Game : public asw::scene::Scene<States> {
 
   void init() override;
 
-  void update(float deltaTime) override;
+  void update(float dt) override;
 
   void draw() override;
 
@@ -46,6 +43,9 @@ class Game : public asw::scene::Scene<States> {
   asw::Sample block_break;
   asw::Sample click;
 
+  // Particles
+  asw::ParticleEmitter emitter;
+
   asw::Font font;
 
   // Buttons
@@ -60,7 +60,7 @@ class Game : public asw::scene::Scene<States> {
   std::string gameOverMessage;
 
   // Timers
-  Timer game_time;
+  float game_time;
 
   // Scores
   ScoreManager highscores;
@@ -73,9 +73,6 @@ class Game : public asw::scene::Scene<States> {
   void destroySelectedBlocks();
   int countBlocks();
   bool hasRemainingMoves();
-
-  // Particles
-  ParticleEmitter particles;
 };
 
 #endif  // GAME_H

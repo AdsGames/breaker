@@ -10,8 +10,6 @@
 #include <asw/asw.h>
 #include <array>
 
-#include "ParticleEmitter.h"
-
 class Block {
  public:
   Block() = default;
@@ -19,13 +17,10 @@ class Block {
   Block(const asw::Vec2<float>& position, int type);
 
   // Update
-  void update(float deltaTime);
+  void update(float dt);
 
   // Draw
   void draw(float offset) const;
-
-  // Explode that block
-  void explode(ParticleEmitter& emitter) const;
 
   // Get position on screen
   const asw::Quad<float>& getTransform() const;

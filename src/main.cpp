@@ -16,14 +16,14 @@ int main() {
   asw::core::init(1280, 960);
 
   // Init states
-  app.registerScene<Init>(States::Init, app);
-  app.registerScene<Intro>(States::Intro, app);
-  app.registerScene<Menu>(States::Menu, app);
-  app.registerScene<Game>(States::Game, app);
-  app.setNextScene(States::Init);
+  app.register_scene<Init>(States::Init, app);
+  app.register_scene<Intro>(States::Intro, app);
+  app.register_scene<Menu>(States::Menu, app);
+  app.register_scene<Game>(States::Game, app);
+  app.set_next_scene(States::Init);
 
   // Background Music
-  const auto music = asw::assets::loadSample("assets/sounds/music.ogg");
+  const auto music = asw::assets::load_sample("assets/sounds/music.ogg");
   asw::sound::play(music, 255, 128, -1);
 
   // Start app

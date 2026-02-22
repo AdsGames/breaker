@@ -17,21 +17,21 @@ std::string InputBox::getValue() const {
 }
 
 void InputBox::update() {
-  auto hovering =
-      transform.contains({asw::input::mouse.x, asw::input::mouse.y});
+  auto hovering = transform.contains(asw::input::mouse.position);
 
   // Focus
-  if (asw::input::isButtonDown(asw::input::MouseButton::LEFT)) {
+  if (asw::input::get_mouse_button_down(asw::input::MouseButton::Left)) {
     focused = hovering;
 
     if (focused) {
       int closest = transform.size.x;
 
       for (unsigned int i = 0; i <= text.length(); i++) {
-        const int textSize = asw::util::getTextSize(font, text.substr(0, i)).x;
+        const int textSize =
+            asw::util::get_text_size(font, text.substr(0, i)).x;
 
-        const int distance =
-            std::abs(textSize + transform.position.x + 6 - asw::input::mouse.x);
+        const int distance = std::abs(textSize + transform.position.x + 6 -
+                                      asw::input::mouse.position.x);
 
         if (distance < closest) {
           textIterator = i;
@@ -41,7 +41,7 @@ void InputBox::update() {
     }
   }
 
-  const int lastKey = asw::input::keyboard.lastPressed;
+  const int lastKey = asw::input::keyboard.last_pressed;
 
   if (!focused || lastKey == -1) {
     return;
@@ -91,33 +91,32 @@ void InputBox::update() {
 
 // Draw box
 void InputBox::draw() const {
-  asw::draw::rectFill(transform, asw::util::makeColor(12, 12, 12));
+  asw::draw::rect_fill(transform, asw::Color(12, 12, 12));
 
-  const auto hovering =
-      transform.contains({asw::input::mouse.x, asw::input::mouse.y});
+  const auto hovering = transform.contains(asw::input::mouse.position);
 
-  const auto col = (hovering || focused) ? asw::util::makeColor(230, 230, 230)
-                                         : asw::util::makeColor(245, 245, 245);
+  const auto col = (hovering || focused) ? asw::Color(230, 230, 230)
+                                         : asw::Color(245, 245, 245);
 
   if (focused) {
-    asw::draw::rectFill(transform + asw::Quad<float>(2, 2, -4, -4), col);
+    asw::draw::rect_fill(transform + asw::Quad<float>(2, 2, -4, -4), col);
   } else {
-    asw::draw::rectFill(transform + asw::Quad<float>(1, 1, -2, -2), col);
+    asw::draw::rect_fill(transform + asw::Quad<float>(1, 1, -2, -2), col);
   }
 
   // Output the string to the screen
   asw::draw::text(font, text, transform.position + asw::Vec2<float>(6, 0),
-                  asw::util::makeColor(22, 22, 22));
+                  asw::Color(22, 22, 22));
 
   // Draw the caret
   if (focused) {
     const int textSize =
-        asw::util::getTextSize(font, text.substr(0, textIterator)).x;
+        asw::util::get_text_size(font, text.substr(0, textIterator)).x;
 
     auto caratPosition =
         asw::Quad<float>(textSize + transform.position.x + 6,
                          transform.position.y + 8, 1, transform.size.y - 16);
 
-    asw::draw::rectFill(caratPosition, asw::util::makeColor(0, 0, 0));
+    asw::draw::rect_fill(caratPosition, asw::Color(0, 0, 0));
   }
 }
