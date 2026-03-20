@@ -72,7 +72,7 @@ void Menu::init() {
                  "assets/images/buttons/quit_hover.png")
       .setOnClick([this]() {
         asw::sound::play(button_select);
-        asw::core::exit = true;
+        asw::core::exit();
       });
 
   btn_easy = create_object<Button>();

@@ -7,7 +7,7 @@
 #include "./state/Menu.h"
 #include "./state/States.h"
 
-// Main function*/
+// Main function
 int main() {
   // Game state object
   asw::scene::SceneManager<States> app;
@@ -23,8 +23,8 @@ int main() {
   app.set_next_scene(States::Init);
 
   // Background Music
-  const auto music = asw::assets::load_sample("assets/sounds/music.ogg");
-  asw::sound::play(music, 255, 128, -1);
+  const auto music = asw::assets::load_music("assets/sounds/music.ogg");
+  asw::sound::play_music(music);
 
   // Start app
   app.start();

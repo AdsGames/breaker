@@ -33,9 +33,9 @@ void Block::update(float dt) {
   acc += dt;
 
   // Increase frame counter
-  if (acc > 32) {
+  if (acc > 0.032) {
     frame = (frame + 1) % 16;
-    acc -= 32;
+    acc -= 0.032;
   }
 }
 
