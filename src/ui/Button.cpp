@@ -26,7 +26,8 @@ Button& Button::setOnClick(const std::function<void(void)>& func) {
 }
 
 bool Button::isHovering() const {
-  return transform.contains(asw::input::mouse.position);
+  const auto& mouse = asw::input::get_mouse();
+  return transform.contains(mouse.position);
 }
 
 void Button::update(float dt) {

@@ -17,7 +17,9 @@ std::string InputBox::getValue() const {
 }
 
 void InputBox::update() {
-  auto hovering = transform.contains(asw::input::mouse.position);
+  const auto& mouse = asw::input::get_mouse();
+  const auto& keyboard = asw::input::get_keyboard();
+  auto hovering = transform.contains(mouse.position);
 
   // Focus
   if (asw::input::get_mouse_button_down(asw::input::MouseButton::Left)) {
@@ -30,8 +32,8 @@ void InputBox::update() {
         const int textSize =
             asw::util::get_text_size(font, text.substr(0, i)).x;
 
-        const int distance = std::abs(textSize + transform.position.x + 6 -
-                                      asw::input::mouse.position.x);
+        const int distance =
+            std::abs(textSize + transform.position.x + 6 - mouse.position.x);
 
         if (distance < closest) {
           textIterator = i;
@@ -41,7 +43,7 @@ void InputBox::update() {
     }
   }
 
-  const int lastKey = asw::input::keyboard.last_pressed;
+  const int lastKey = keyboard.last_pressed;
 
   if (!focused || lastKey == -1) {
     return;
@@ -62,8 +64,8 @@ void InputBox::update() {
   }
 
   if (type == "text" && lastKey >= 4 && lastKey <= 29) {
-    if (asw::input::keyboard.down[SDL_SCANCODE_LSHIFT] ||
-        asw::input::keyboard.down[SDL_SCANCODE_RSHIFT]) {
+    if (asw::input::get_key(asw::input::Key::LShift) ||
+        asw::input::get_key(asw::input::Key::RShift)) {
       text.insert(text.begin() + textIterator, 'A' - 4 + lastKey);
     } else {
       text.insert(text.begin() + textIterator, 'a' - 4 + lastKey);
@@ -73,18 +75,18 @@ void InputBox::update() {
   }
 
   // some other, "special" key was pressed; handle it here
-  if (asw::input::keyboard.pressed[SDL_SCANCODE_BACKSPACE] &&
+  if (asw::input::get_key_down(asw::input::Key::Backspace) &&
       textIterator != 0) {
     textIterator--;
     text.erase(text.begin() + textIterator);
   }
 
-  if (asw::input::keyboard.pressed[SDL_SCANCODE_RIGHT] &&
+  if (asw::input::get_key_down(asw::input::Key::Right) &&
       textIterator != text.size()) {
     textIterator++;
   }
 
-  if (asw::input::keyboard.pressed[SDL_SCANCODE_LEFT] && textIterator != 0) {
+  if (asw::input::get_key_down(asw::input::Key::Left) && textIterator != 0) {
     textIterator--;
   }
 }
@@ -92,8 +94,9 @@ void InputBox::update() {
 // Draw box
 void InputBox::draw() const {
   asw::draw::rect_fill(transform, asw::Color(12, 12, 12));
+  const auto& mouse = asw::input::get_mouse();
 
-  const auto hovering = transform.contains(asw::input::mouse.position);
+  const auto hovering = transform.contains(mouse.position);
 
   const auto col = (hovering || focused) ? asw::Color(230, 230, 230)
                                          : asw::Color(245, 245, 245);

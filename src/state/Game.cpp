@@ -243,6 +243,7 @@ asw::Vec2<int> Game::getBlockIndex(float screen_x, float screen_y) {
 // Update
 void Game::update(float dt) {
   Scene::update(dt);
+  const auto& mouse = asw::input::get_mouse();
 
   // Animation for start of game
   if (startAnimate > 0.0F) {
@@ -269,8 +270,7 @@ void Game::update(float dt) {
 
     // Select blocks
     if (asw::input::get_mouse_button_down(asw::input::MouseButton::Left)) {
-      auto selected_block = getBlockIndex(asw::input::mouse.position.x,
-                                          asw::input::mouse.position.y);
+      auto selected_block = getBlockIndex(mouse.position.x, mouse.position.y);
 
       if (blocks_selected > 1 &&
           blockAt(selected_block.x, selected_block.y)->getSelected()) {
@@ -329,6 +329,7 @@ void Game::update(float dt) {
 // Draw
 void Game::draw() {
   Scene::draw();
+  const auto& mouse = asw::input::get_mouse();
 
   // Draws Tiles
   for (const auto& row : tiles) {
@@ -379,8 +380,8 @@ void Game::draw() {
 
   // Draws Cursor
   if (asw::input::get_mouse_button(asw::input::MouseButton::Left)) {
-    asw::draw::sprite(cursor[1], asw::input::mouse.position);
+    asw::draw::sprite(cursor[1], mouse.position);
   } else {
-    asw::draw::sprite(cursor[0], asw::input::mouse.position);
+    asw::draw::sprite(cursor[0], mouse.position);
   }
 }

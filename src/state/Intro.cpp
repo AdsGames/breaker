@@ -13,6 +13,7 @@ void Intro::init() {
 void Intro::update(float dt) {
   Scene::update(dt);
   timer_ += dt;
+  const auto& keyboard = asw::input::get_keyboard();
 
   intro_->active = timer_ < 1.0F;
   title_->active = timer_ > 1.0F;
@@ -31,7 +32,7 @@ void Intro::update(float dt) {
         asw::util::lerp(1.0F, 0.0F, static_cast<float>(timer_ - 2.8F) / 0.2F);
   }
 
-  if (timer_ >= 3.0F || asw::input::keyboard.any_pressed) {
+  if (timer_ >= 3.0F || keyboard.any_pressed) {
     manager.set_next_scene(States::Menu);
   }
 }

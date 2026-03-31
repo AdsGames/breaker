@@ -145,6 +145,7 @@ void Menu::update(float dt) {
 // Draw
 void Menu::draw() {
   Scene::draw();
+  const auto& mouse = asw::input::get_mouse();
 
   // Main menu
   if (menu_state == MENU_SCORES) {
@@ -161,8 +162,8 @@ void Menu::draw() {
 
   // Draws Cursor
   if (asw::input::get_mouse_button(asw::input::MouseButton::Left)) {
-    asw::draw::sprite(cursor[1], asw::input::mouse.position);
+    asw::draw::sprite(cursor[1], mouse.position);
   } else {
-    asw::draw::sprite(cursor[0], asw::input::mouse.position);
+    asw::draw::sprite(cursor[0], mouse.position);
   }
 }
