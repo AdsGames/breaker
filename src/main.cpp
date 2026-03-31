@@ -29,5 +29,7 @@ int main() {
   // Start app
   app.start();
 
+  asw::core::shutdown();
+
   return 0;
 }
