@@ -1,13 +1,15 @@
 #include "./Game.h"
 
+#include <algorithm>
+
 #include "../globals.h"
 
 // INIT
 void Game::init() {
   // Emitters
   asw::ParticleConfig emitter_config;
-  emitter_config.lifetime_min = 5.0F;
-  emitter_config.lifetime_max = 1.0F;
+  emitter_config.lifetime_min = 1.0F;
+  emitter_config.lifetime_max = 5.0F;
   emitter_config.speed_min = 10.0F;
   emitter_config.speed_max = 100.0F;
   emitter_config.texture =
@@ -53,7 +55,8 @@ void Game::init() {
   // Sets block info
   for (int i = 0; i < 14; i++) {
     for (int t = 0; t < 9; t++) {
-      auto position = asw::Vec2<float>((i * 80) + 80, (t * 80) + 80);
+      auto position = asw::Vec2<float>((i * Block::SIZE) + Block::SIZE,
+                                       (t * Block::SIZE) + Block::SIZE);
       tiles[i][t] = Block(position, asw::random::between(0, difficulty));
     }
   }
@@ -73,7 +76,7 @@ void Game::init() {
                    .setImages("assets/images/buttons/yes.png",
                               "assets/images/buttons/yes_hover.png")
                    .setOnClick([this]() {
-                     highscores.add(ib_name.getValue(), score);
+                     highscores.add(ib_name->value, score);
                      manager.set_next_scene(States::Game);
                    });
 
@@ -82,11 +85,34 @@ void Game::init() {
                   .setImages("assets/images/buttons/no.png",
                              "assets/images/buttons/no_hover.png")
                   .setOnClick([this]() {
-                    highscores.add(ib_name.getValue(), score);
+                    highscores.add(ib_name->value, score);
                     manager.set_next_scene(States::Menu);
                   });
 
-  ib_name = InputBox({488, 405, 404, 44}, font, "Player");
+  // Name input, styled to match the dialog
+  ui.set_size(1280, 960);
+  ui.root.bg = asw::Color(0, 0, 0, 0);
+  ui.ctx.theme.input_bg = asw::Color(245, 245, 245);
+  ui.ctx.theme.text = asw::Color(22, 22, 22);
+  ui.ctx.theme.text_dim = asw::Color(120, 120, 120);
+  ui.ctx.theme.btn_bg = asw::Color(12, 12, 12);
+  ui.ctx.theme.btn_hover = asw::Color(12, 12, 12);
+
+  ib_name = &ui.root.add_child<asw::ui::InputBox>();
+  ib_name->transform = asw::Quad<float>(488, 405, 404, 44);
+  ib_name->font = font;
+  ib_name->value = "Player";
+  ib_name->placeholder = "Player";
+}
+
+// Cleanup
+void Game::cleanup() {
+  Scene::cleanup();
+
+  // Destroying the box also stops text input if it has focus
+  ui.root.children.clear();
+  ui.validate();
+  ib_name = nullptr;
 }
 
 // Deselect all blocks
@@ -107,7 +133,7 @@ int Game::selectBlock(int x, int y, int type = -1) {
   auto& tile = tiles[x][y];
 
   if ((type == -1 || tile.getType() == type) && !tile.getSelected() &&
-      tile.getType() != 6) {
+      tile.getType() != Block::TYPE_EMPTY) {
     // Select it
     tile.setSelected(true);
 
@@ -135,26 +161,35 @@ void Game::destroySelectedBlocks() {
             block.getTransform().position + asw::Vec2<float>(40, 40);
         emitter.emit(10);
 
-        block.setType(6);
+        block.setType(Block::TYPE_EMPTY);
         num_destroyed++;
       }
     }
   }
 
-  asw::sound::play(block_break, 64 + num_destroyed * 5,
-                   100);  // 900 + num_destroyed * 80
+  // Louder for bigger groups; slight pitch variation so repeats sound natural
+  asw::sound::PlayOptions break_options;
+  break_options.volume = static_cast<float>(64 + num_destroyed * 5) / 255.0F;
+  break_options.pitch_variation = 0.05F;
+  asw::sound::play(block_break, break_options);
 
   // Settle blocks downwards
   for (int i = 0; i < BLOCKS_WIDE; i++) {
     int num_blank = BLOCKS_HIGH - 1;
 
-    for (int t = BLOCKS_HIGH - 1; t >= 0; t--)
-      if (tiles[i][t].getType() != 6) {
-        tiles[i][num_blank--].setType(tiles[i][t].getType());
+    for (int t = BLOCKS_HIGH - 1; t >= 0; t--) {
+      if (tiles[i][t].getType() != Block::TYPE_EMPTY) {
+        // Block drops from row t to row num_blank; offset it upward by the
+        // distance fallen so update() eases it back down.
+        const float fall = static_cast<float>(num_blank - t) * Block::SIZE;
+        tiles[i][num_blank].setType(tiles[i][t].getType());
+        tiles[i][num_blank].setVisualOffset({0.0F, -fall});
+        num_blank--;
       }
+    }
 
     while (num_blank >= 0) {
-      tiles[i][num_blank--].setType(6);
+      tiles[i][num_blank--].setType(Block::TYPE_EMPTY);
     }
   }
 
@@ -162,18 +197,27 @@ void Game::destroySelectedBlocks() {
   int num_back = 0;
 
   for (int i = 0; i < BLOCKS_WIDE; i++) {
-    for (int t = 0; t < BLOCKS_HIGH; t++) {
-      tiles[i - num_back][t].setType(tiles[i][t].getType());
+    if (num_back > 0) {
+      const float slide = static_cast<float>(num_back) * Block::SIZE;
+
+      for (int t = 0; t < BLOCKS_HIGH; t++) {
+        // Column slides num_back cells left; carry any in-progress fall
+        // offset and add the horizontal slide distance.
+        const auto carried = tiles[i][t].getVisualOffset();
+        tiles[i - num_back][t].setType(tiles[i][t].getType());
+        tiles[i - num_back][t].setVisualOffset(carried +
+                                               asw::Vec2<float>(slide, 0.0F));
+      }
     }
 
-    if (tiles[i][BLOCKS_HIGH - 1].getType() == 6) {
+    if (tiles[i][BLOCKS_HIGH - 1].getType() == Block::TYPE_EMPTY) {
       num_back++;
     }
   }
 
   while (num_back > 0) {
     for (int t = 0; t < BLOCKS_HIGH; t++) {
-      tiles[BLOCKS_WIDE - num_back][t].setType(6);
+      tiles[BLOCKS_WIDE - num_back][t].setType(Block::TYPE_EMPTY);
     }
 
     num_back--;
@@ -195,7 +239,7 @@ int Game::countBlocks() {
 
   for (auto& row : tiles) {
     for (auto& block : row) {
-      if (block.getType() != 6) {
+      if (block.getType() != Block::TYPE_EMPTY) {
         blocks_left++;
       }
     }
@@ -208,7 +252,7 @@ int Game::countBlocks() {
 bool Game::hasRemainingMoves() {
   for (int i = 0; i < BLOCKS_WIDE; i++) {
     for (int t = 0; t < BLOCKS_HIGH; t++) {
-      if (tiles[i][t].getType() == 6) {
+      if (tiles[i][t].getType() == Block::TYPE_EMPTY) {
         continue;
       }
 
@@ -271,9 +315,9 @@ void Game::update(float dt) {
     // Select blocks
     if (asw::input::get_mouse_button_down(asw::input::MouseButton::Left)) {
       auto selected_block = getBlockIndex(mouse.position.x, mouse.position.y);
+      auto* clicked = blockAt(selected_block.x, selected_block.y);
 
-      if (blocks_selected > 1 &&
-          blockAt(selected_block.x, selected_block.y)->getSelected()) {
+      if (blocks_selected > 1 && clicked != nullptr && clicked->getSelected()) {
         destroySelectedBlocks();
         blocks_selected = 0;
       } else {
@@ -281,8 +325,8 @@ void Game::update(float dt) {
         blocks_selected = selectBlock(
             selected_block.x, selected_block.y);  // Select and count blocks
 
-        if (!config_double_click && blocks_selected > 1 &&
-            blockAt(selected_block.x, selected_block.y)->getSelected()) {
+        if (!config_double_click && blocks_selected > 1 && clicked != nullptr &&
+            clicked->getSelected()) {
           destroySelectedBlocks();
           blocks_selected = 0;
         }
@@ -292,6 +336,7 @@ void Game::update(float dt) {
       if (done.isHovering()) {
         game_over = true;
         gameOverMessage = "Game Over";
+        ui.ctx.focus.set_focus(ui.ctx, ib_name);
       }
     }
 
@@ -303,24 +348,21 @@ void Game::update(float dt) {
         gameOverMessage = "Out of moves";
       }
 
-      // Set score
-      if (score == 0) {
-        score = difficulty * (((BLOCKS_WIDE * BLOCKS_HIGH) - countBlocks()) -
-                              static_cast<int>(game_time));
-      } else if (score <= 0) {
-        score = 1;
-      }
+      // Set score, at least 1 even when time outweighs blocks cleared
+      score = std::max(
+          1, difficulty * (((BLOCKS_WIDE * BLOCKS_HIGH) - countBlocks()) -
+                           static_cast<int>(game_time)));
 
       game_over = true;
 
-      ib_name.focus();
+      ui.ctx.focus.set_focus(ui.ctx, ib_name);
     }
   }
 
   // Game over state
   else {
     // Name input
-    ib_name.update();
+    ui.update();
     dialog_yes.update(dt);
     dialog_no.update(dt);
   }
@@ -348,11 +390,13 @@ void Game::draw() {
   done.draw();
 
   // Draws text
-  asw::draw::text(font, std::format("Blocks Left: {}", countBlocks()),
-                  asw::Vec2<float>(1240, 16), asw::Color(0, 0, 0),
-                  asw::TextJustify::Right);
-  asw::draw::text(font, std::format("Time: {}", static_cast<int>(game_time)),
-                  asw::Vec2<float>(40, 16), asw::Color(0, 0, 0));
+  asw::draw::text_shadow(font, std::format("Blocks Left: {}", countBlocks()),
+                         asw::Vec2<float>(1240, 16), asw::Color(0, 0, 0),
+                         TEXT_SHADOW, SHADOW_OFFSET, asw::TextJustify::Right);
+  asw::draw::text_shadow(font,
+                         std::format("Time: {}", static_cast<int>(game_time)),
+                         asw::Vec2<float>(40, 16), asw::Color(0, 0, 0),
+                         TEXT_SHADOW, SHADOW_OFFSET);
 
   // End game dialog
   if (game_over) {
@@ -364,14 +408,16 @@ void Game::draw() {
 
     asw::draw::sprite(foreground, asw::Vec2<float>(0, 0));
 
-    asw::draw::text(font, gameOverMessage, asw::Vec2<float>(640, 310),
-                    asw::Color(0, 0, 0), asw::TextJustify::Center);
-    asw::draw::text(font, std::format("Score: {}", score),
-                    asw::Vec2<float>(640, 360), asw::Color(0, 0, 0),
-                    asw::TextJustify::Center);
+    asw::draw::text_shadow(font, gameOverMessage, asw::Vec2<float>(640, 310),
+                           asw::Color(0, 0, 0), TEXT_SHADOW, SHADOW_OFFSET,
+                           asw::TextJustify::Center);
+    asw::draw::text_shadow(font, std::format("Score: {}", score),
+                           asw::Vec2<float>(640, 360), asw::Color(0, 0, 0),
+                           TEXT_SHADOW, SHADOW_OFFSET,
+                           asw::TextJustify::Center);
 
     // Input rectangle
-    ib_name.draw();
+    ui.draw();
 
     // Buttons
     dialog_yes.draw();

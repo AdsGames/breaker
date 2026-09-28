@@ -12,7 +12,6 @@
 #include "../Block.h"
 #include "../ScoreManager.h"
 #include "../ui/Button.h"
-#include "../ui/InputBox.h"
 #include "./States.h"
 
 constexpr int BLOCKS_WIDE = 14;
@@ -28,6 +27,8 @@ class Game : public asw::scene::Scene<States> {
   void update(float dt) override;
 
   void draw() override;
+
+  void cleanup() override;
 
  private:
   // Init the blocks on screen
@@ -50,7 +51,10 @@ class Game : public asw::scene::Scene<States> {
 
   // Buttons
   Button done, dialog_yes, dialog_no;
-  InputBox ib_name;
+
+  // Name entry
+  asw::ui::Root ui;
+  asw::ui::InputBox* ib_name{nullptr};
 
   // Variables
   int score;
@@ -60,7 +64,7 @@ class Game : public asw::scene::Scene<States> {
   std::string gameOverMessage;
 
   // Timers
-  float game_time;
+  float game_time{0.0F};
 
   // Scores
   ScoreManager highscores;

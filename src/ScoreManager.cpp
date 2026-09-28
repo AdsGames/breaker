@@ -1,6 +1,7 @@
 #include "ScoreManager.h"
 
 #include <fstream>
+#include <limits>
 
 // Default CTOR
 ScoreManager::ScoreManager() : ScoreManager("scores.dat") {}
@@ -45,9 +46,11 @@ bool ScoreManager::read() {
     return false;
   }
 
+  // One name per line, so names can contain spaces
   for (int i = 0; i < TABLE_SIZE; i++) {
-    r >> names[i];
+    std::getline(r, names[i]);
     r >> scores[i];
+    r.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
   }
 
   r.close();
@@ -74,7 +77,14 @@ bool ScoreManager::write() {
 }
 
 // Add score
-void ScoreManager::add(const std::string& name, int score) {
+void ScoreManager::add(const std::string& raw_name, int score) {
+  // Trim whitespace; a blank line would break the one-name-per-line format
+  const auto first = raw_name.find_first_not_of(" \t\r\n");
+  const auto last = raw_name.find_last_not_of(" \t\r\n");
+  const std::string name = first == std::string::npos
+                               ? "Player"
+                               : raw_name.substr(first, last - first + 1);
+
   // Update List
   for (int i = 0; i < TABLE_SIZE; i++) {
     if (score > scores[i]) {
@@ -85,10 +95,6 @@ void ScoreManager::add(const std::string& name, int score) {
 
       scores[i] = score;
       names[i] = name;
-
-      if (name == "") {
-        names[i] = "Player";
-      }
 
       break;
     }

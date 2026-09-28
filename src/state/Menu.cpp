@@ -150,13 +150,13 @@ void Menu::draw() {
   // Main menu
   if (menu_state == MENU_SCORES) {
     for (int i = 0; i < 10; i++) {
-      asw::draw::text(font, highscores.getName(i),
-                      asw::Vec2<float>(400, (i * 50) + 260),
-                      asw::Color(0, 0, 0));
+      asw::draw::text_shadow(font, highscores.getName(i),
+                             asw::Vec2<float>(400, (i * 50) + 260),
+                             asw::Color(0, 0, 0), TEXT_SHADOW, SHADOW_OFFSET);
 
-      asw::draw::text(font, std::to_string(highscores.getScore(i)),
-                      asw::Vec2<float>(860, (i * 50) + 260),
-                      asw::Color(0, 0, 0));
+      asw::draw::text_shadow(font, std::to_string(highscores.getScore(i)),
+                             asw::Vec2<float>(860, (i * 50) + 260),
+                             asw::Color(0, 0, 0), TEXT_SHADOW, SHADOW_OFFSET);
     }
   }
 

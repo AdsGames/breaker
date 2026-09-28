@@ -11,6 +11,9 @@ void Init::init() {
   asw::display::set_icon("assets/images/icon.png");
 
   asw::display::set_title("Breaker");
+
+  // Game draws its own cursor
+  asw::input::set_cursor_visible(false);
 }
 
 // Update
