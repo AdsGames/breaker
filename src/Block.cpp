@@ -14,7 +14,7 @@ constexpr float SLIDE_SPEED = 12.0F;
 std::array<asw::Texture, Block::NUM_TYPES> Block::images = {nullptr};
 
 // Constructor
-Block::Block(const asw::Vec2<float>& position, int type)
+Block::Block(const asw::Vec2f& position, int type)
     : transform(position, {SIZE, SIZE}), type(type) {
   if (!images[0]) {
     loadImages();
@@ -29,12 +29,14 @@ void Block::loadImages() {
   images[3] = asw::assets::load_texture("assets/images/blocks/green.png");
   images[4] = asw::assets::load_texture("assets/images/blocks/blue.png");
   images[5] = asw::assets::load_texture("assets/images/blocks/purple.png");
-  images[TYPE_EMPTY] = asw::assets::load_texture("assets/images/blocks/none.png");
-  images[TYPE_FLASH] = asw::assets::load_texture("assets/images/blocks/flash.png");
+  images[TYPE_EMPTY] =
+      asw::assets::load_texture("assets/images/blocks/none.png");
+  images[TYPE_FLASH] =
+      asw::assets::load_texture("assets/images/blocks/flash.png");
 }
 
 // Get position on screen
-const asw::Quad<float>& Block::getTransform() const {
+const asw::Quadf& Block::getTransform() const {
   return transform;
 }
 
@@ -70,9 +72,8 @@ void Block::update(float dt) {
 }
 
 // Draw block to screen
-void Block::draw(float offset) const {
-  auto position =
-      transform.position + visual_offset - asw::Vec2<float>(0, offset);
+void Block::draw(const asw::Vec2f& offset) const {
+  auto position = transform.position + visual_offset + offset;
 
   // Draw overlay if selected
   if (selected && int(floor(frame / 8)) == 1) {
@@ -103,11 +104,11 @@ void Block::setSelected(bool selected) {
 }
 
 // Displace from resting position (reset fall velocity for a fresh fall)
-void Block::setVisualOffset(const asw::Vec2<float>& offset) {
+void Block::setVisualOffset(const asw::Vec2f& offset) {
   visual_offset = offset;
   fall_velocity = 0.0F;
 }
 
-const asw::Vec2<float>& Block::getVisualOffset() const {
+const asw::Vec2f& Block::getVisualOffset() const {
   return visual_offset;
 }

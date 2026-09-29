@@ -1,0 +1,19 @@
+name: Deploy GitHub Pages
+
+# Pages deploys main. The Release workflow checks pull requests and ships tags
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  pages:
+    uses: adsgames/deploy-to-adsgames/.github/workflows/deploy-asw-pages.yml@v1
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
