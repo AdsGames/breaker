@@ -11,7 +11,6 @@
 #include <memory>
 
 #include "../ScoreManager.h"
-#include "../ui/Button.h"
 #include "./States.h"
 
 class Menu : public asw::scene::Scene<States> {
@@ -24,6 +23,8 @@ class Menu : public asw::scene::Scene<States> {
 
   void draw() override;
 
+  void cleanup() override;
+
  private:
   // Score table
   ScoreManager highscores;
@@ -34,20 +35,23 @@ class Menu : public asw::scene::Scene<States> {
   // States
   enum menu_states { MENU_MAIN, MENU_DIFFICULTY, MENU_SCORES, MENU_HELP };
 
-  // Init buttons
-  std::shared_ptr<Button> btn_start;
-  std::shared_ptr<Button> btn_easy;
-  std::shared_ptr<Button> btn_medium;
-  std::shared_ptr<Button> btn_hard;
-  std::shared_ptr<Button> btn_back;
-  std::shared_ptr<Button> btn_help;
-  std::shared_ptr<Button> btn_quit;
-  std::shared_ptr<Button> btn_scores;
+  // Buttons
+  asw::ui::Root ui;
+  asw::ui::Button* btn_start{nullptr};
+  asw::ui::Button* btn_easy{nullptr};
+  asw::ui::Button* btn_medium{nullptr};
+  asw::ui::Button* btn_hard{nullptr};
+  asw::ui::Button* btn_back{nullptr};
+  asw::ui::Button* btn_help{nullptr};
+  asw::ui::Button* btn_quit{nullptr};
+  asw::ui::Button* btn_scores{nullptr};
+
+  // High score table and help
+  asw::ui::Panel* scores_panel{nullptr};
+  asw::ui::Panel* help_panel{nullptr};
 
   // Images
   std::array<asw::Texture, 2> cursor;
-  std::shared_ptr<asw::game::Sprite> menu_help;
-  std::shared_ptr<asw::game::Sprite> high_scores_table;
   std::shared_ptr<asw::game::Sprite> trans_overlay;
 
   // Button sounds
@@ -56,6 +60,8 @@ class Menu : public asw::scene::Scene<States> {
 
   // Fonts
   asw::Font font;
+  asw::Font font_title;
+  asw::Font font_help;
 };
 
 #endif  // INIT_H

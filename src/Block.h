@@ -22,16 +22,16 @@ class Block {
 
   Block() = default;
 
-  Block(const asw::Vec2<float>& position, int type);
+  Block(const asw::Vec2f& position, int type);
 
   // Update
   void update(float dt);
 
-  // Draw
-  void draw(float offset) const;
+  // Draw, shifted by offset (start animation and screen shake)
+  void draw(const asw::Vec2f& offset) const;
 
   // Get position on screen
-  const asw::Quad<float>& getTransform() const;
+  const asw::Quadf& getTransform() const;
 
   // Get type
   int getType() const;
@@ -47,8 +47,8 @@ class Block {
 
   // Displace the block from its resting position; update() eases it back to
   // zero, producing the fall (vertical) / slide (horizontal) animation.
-  void setVisualOffset(const asw::Vec2<float>& offset);
-  const asw::Vec2<float>& getVisualOffset() const;
+  void setVisualOffset(const asw::Vec2f& offset);
+  const asw::Vec2f& getVisualOffset() const;
 
  private:
   // Load images
@@ -56,7 +56,7 @@ class Block {
   static std::array<asw::Texture, NUM_TYPES> images;
 
   // Coordinates for screen
-  asw::Quad<float> transform{};
+  asw::Quadf transform{};
 
   // Type of block
   int type{0};
@@ -69,7 +69,7 @@ class Block {
   bool selected{false};
 
   // Animated offset from the resting position, and vertical fall velocity.
-  asw::Vec2<float> visual_offset{0.0F, 0.0F};
+  asw::Vec2f visual_offset{0.0F, 0.0F};
   float fall_velocity{0.0F};
 };
 
