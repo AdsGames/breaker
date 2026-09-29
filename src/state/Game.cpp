@@ -92,11 +92,12 @@ void Game::init() {
   // Name input, styled to match the dialog
   ui.set_size(1280, 960);
   ui.root.bg = asw::Color(0, 0, 0, 0);
-  ui.ctx.theme.input_bg = asw::Color(245, 245, 245);
-  ui.ctx.theme.text = asw::Color(22, 22, 22);
-  ui.ctx.theme.text_dim = asw::Color(120, 120, 120);
-  ui.ctx.theme.btn_bg = asw::Color(12, 12, 12);
-  ui.ctx.theme.btn_hover = asw::Color(12, 12, 12);
+  ui.ctx.theme.input.bg = asw::Color(245, 245, 245);
+  ui.ctx.theme.input.text = asw::Color(22, 22, 22);
+  ui.ctx.theme.input.caret = asw::Color(22, 22, 22);
+  ui.ctx.theme.input.placeholder = asw::Color(120, 120, 120);
+  ui.ctx.theme.input.border = asw::Color(12, 12, 12);
+  ui.ctx.theme.input.border_hover = asw::Color(12, 12, 12);
 
   ib_name = &ui.root.add_child<asw::ui::InputBox>();
   ib_name->transform = asw::Quad<float>(488, 405, 404, 44);
@@ -109,9 +110,9 @@ void Game::init() {
 void Game::cleanup() {
   Scene::cleanup();
 
-  // Destroying the box also stops text input if it has focus
-  ui.root.children.clear();
-  ui.validate();
+  // Losing focus stops text input. The box is freed on the next update
+  ui.clear_focus();
+  ui.root.clear_children();
   ib_name = nullptr;
 }
 
